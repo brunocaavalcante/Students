@@ -25,6 +25,7 @@ export class CadastroUserPage {
     public alertCtrl: AlertController
     ) {
 
+      //Validação dos campos
       this.registerForm = this.formbuilder.group({
         name:[null,[Validators.required,Validators.minLength(5)]],
         email:[null,[Validators.required,Validators.email]],
@@ -32,20 +33,24 @@ export class CadastroUserPage {
         confirmPassword:[null,[Validators.required,Validators.minLength(5),ValidateConfirmPassword]],
       })
   }
-
+//Botão submit enviando dados e criando um novo usuario no fire base
   submitForm(){
     this.afAuth.auth.createUserWithEmailAndPassword(this.registerForm.value.email,this.registerForm.value.password)
     .then((response) => {
-        this.presentAlert("Úsuario cadastrado",'Usuário cadastrado com sucesso.');
-        this.navCtrl.setRoot(TabsControllerPage);
+        this.presentAlert("Úsuario cadastrado",'Usuário cadastrado com sucesso.'); //Alerta de usuario criado com sucesso
+        this.navCtrl.setRoot(TabsControllerPage);// Redirecionamento para page principal do app
         
     })
     .catch((error)=>{
-      console.log("deu erro",error);
+      if(error.code == 'auth/email-already-in-use') { //Erro gerado pelo fire base quando criamos contas com email ja existentes
+        this.presentAlert('Erro', 'E-mail já cadastrado');
+      }
+      console.log(error);
     })
     
   }
 
+  //Função de alerta
   presentAlert(title: string, subtitle: string) {
     let alert = this.alertCtrl.create({
       title: title,
