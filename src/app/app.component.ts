@@ -2,10 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, NavController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { CameraTabDefaultPagePage } from '../pages/camera-tab-default-page/camera-tab-default-page';
-import { HomePage } from '../pages/home/home';
-import { TabsControllerPage } from '../pages/tabs-controller/tabs-controller';
-import { LoginPage } from '../pages/login/login';
+import { TestePage } from '../pages/teste/teste';
+import { TarefasPage } from '../pages/tarefas/tarefas';
 
 
 
@@ -14,7 +12,7 @@ import { LoginPage } from '../pages/login/login';
 })
 export class MyApp {
   @ViewChild(Nav) navCtrl: NavController;
-    rootPage:any = LoginPage;
+    rootPage:any = TestePage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {

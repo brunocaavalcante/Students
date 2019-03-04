@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { CadastroUserPage } from '../cadastro-user/cadastro-user';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController } from 'ionic-angular';
@@ -34,7 +33,8 @@ export class LoginPage {
   submitLogin(){
     this.afAuth.auth.signInWithEmailAndPassword(
       this.loginForm.value.email, this.loginForm.value.password)
-      .then(() => {
+      .then((response) => {
+        console.log(response);
         this.presentAlert('Usuário autenticado', '');
         this.navCtrl.setRoot(TabsControllerPage);
       })
@@ -63,8 +63,6 @@ export class LoginPage {
     console.log('ionViewDidLoad LoginPage');
   }
 
-  goToCadastroUser(){
-    this.navCtrl.push(CadastroUserPage);
-  }
+ 
 
 }

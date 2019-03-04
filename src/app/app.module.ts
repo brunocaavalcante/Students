@@ -15,6 +15,7 @@ import { ChatPage } from '../pages/chat/chat';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { TarefasPage } from '../pages/tarefas/tarefas';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
     LoginPage,
     CadastroUserPage,
     ChatPage,
+    TarefasPage
        
   ],
   imports: [
@@ -44,7 +46,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
     TestePage,
     LoginPage,
     CadastroUserPage,
-    ChatPage
+    ChatPage,
+    TarefasPage
   ],
   providers: [
     StatusBar,
