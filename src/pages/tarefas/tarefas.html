@@ -11,14 +11,41 @@
 
     <ion-item>
       <ion-label floating>Nome da Tarefa</ion-label>
-      <ion-input type="text"></ion-input>
+      <!--Aqui o ngModel esta criando uma variavel task que esta recebendo o conteudo do input-->
+      <ion-input type="text" [(ngModel)]="tarefa"></ion-input>
     </ion-item>
   
     <ion-item>
       <ion-label floating>Descricao da Tarefa</ion-label>
-      <ion-input type="password"></ion-input>
+      <ion-input type="text" [(ngModel)]="descricao"></ion-input>
     </ion-item>
-  <button ion-button block class="add">Adicionar Tarefa</button>
+  <button ion-button block class="add" (click)="addTarefa(tarefa,descricao,0)"
+  [disabled]="!tarefa || tarefa.length < 3">Adicionar Tarefa</button> 
+   <!--Na linha acima estamos dizendo que o botão ficará desabilitado caso não exista a variavel
+  task ou se essa variavel tiver menos de 3 char assim o usuario não criara tarefas vazias -->
+ 
   </ion-list>
+
+   
+    <ion-card *ngFor="let item of list">
+         <ion-card-content>
+          <ion-card-title class="card-titulo">
+           <h3>Tarefa: {{ item.tarefa }}</h3>
+          </ion-card-title>
+          <h3>Descrição:</h3>
+          <p>
+             {{ item.descricao }}
+          </p>
+          <ion-item>
+              <ion-range [(ngModel)]="item.porcent">
+                Porcentaem:
+                <ion-icon range-left small name="">{{ item.porcent }}%</ion-icon>
+                <ion-icon range-right name="star"></ion-icon>
+              </ion-range>
+          </ion-item>
+         
+        </ion-card-content>
+    </ion-card>
+ 
 
 </ion-content>

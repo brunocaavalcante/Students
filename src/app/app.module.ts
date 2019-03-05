@@ -16,6 +16,8 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TarefasPage } from '../pages/tarefas/tarefas';
+import { IonicStorageModule } from '@ionic/storage';
+import { AngularFireDatabase } from '@angular/fire/database';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { TarefasPage } from '../pages/tarefas/tarefas';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(environment.firebase)
+    AngularFireModule.initializeApp(environment.firebase),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -53,7 +56,11 @@ import { TarefasPage } from '../pages/tarefas/tarefas';
     StatusBar,
     SplashScreen,
     AngularFireAuth,
+    AngularFireDatabase,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
-export class AppModule {}
+export class AppModule {
+  
+ 
+}

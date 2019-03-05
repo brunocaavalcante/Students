@@ -4,6 +4,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController } from 'ionic-angular';
 import { TabsControllerPage } from '../tabs-controller/tabs-controller';
+import { Storage } from '@ionic/storage';
+import { storage } from 'firebase';
 
 
 @IonicPage({
@@ -22,7 +24,8 @@ export class LoginPage {
     public navParams: NavParams,
     public formbuilder:FormBuilder,
     public afAuth: AngularFireAuth,
-    public alertCtrl: AlertController) {
+    public alertCtrl: AlertController,
+    public storage: Storage) {
 
       this.loginForm = this.formbuilder.group({
         email: [null, [Validators.required, Validators.email]],
@@ -31,12 +34,15 @@ export class LoginPage {
   }
 
   submitLogin(){
+    
     this.afAuth.auth.signInWithEmailAndPassword(
-      this.loginForm.value.email, this.loginForm.value.password)
+      this.loginForm.value.email, this.loginForm.value.password)//Verificando através do firebase se o usuario é valido
       .then((response) => {
-        console.log(response);
-        this.presentAlert('Usuário autenticado', '');
-        this.navCtrl.setRoot(TabsControllerPage);
+        this.storage.set("user",response.user.uid) //Estamos salvando o id do usuario no banco do ionic sqlite(storage)
+      .then(()=>{//quando salvar então
+        this.navCtrl.setRoot(TabsControllerPage);//redirecionamos para page principal
+      })       
+        
       })
       .catch((error) => {
         if(error.code == 'auth/wrong-password') {//Erro de senha invalida
