@@ -33,7 +33,7 @@ export class CadastroUserPage {
 
       //Validação dos campos
       this.registerForm = this.formbuilder.group({
-        sobrenome:[null,[Validators.required,Validators.minLength(5)]],
+        sobrenome:[null,[Validators.required,Validators.minLength(3)]],
         semestre:[null],
         data_nasc:[null],
         faculdade:[null],

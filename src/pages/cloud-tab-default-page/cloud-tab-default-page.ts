@@ -11,10 +11,12 @@ export class CloudTabDefaultPagePage {
 
   uid: string;
   list;
+  disable: string;
   constructor(
     public navCtrl: NavController,
     public afAuth: AngularFireAuth,
     public db: AngularFireDatabase) {
+      this.getUser();
   }
 
   getUser(){
@@ -31,9 +33,18 @@ export class CloudTabDefaultPagePage {
     })
     
   }
-  ionViewDidLoad() {
+  ionViewCanEnter() {
    
+    this.disable = "1";
     this.getUser();
+  }
+
+  ativeCad(){
+    this.disable = "2";
+  }
+
+  updateCad(){
+    this.disable = "1";
   }
   
 }

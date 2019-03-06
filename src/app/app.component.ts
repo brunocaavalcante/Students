@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 import { TabsControllerPage } from '../pages/tabs-controller/tabs-controller';
 import { TestePage } from '../pages/teste/teste';
 import { ProjetosPage } from '../pages/projetos/projetos';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 
 
@@ -22,22 +23,18 @@ export class MyApp {
     platform: Platform, 
     statusBar: StatusBar, 
     splashScreen: SplashScreen,
-    public storage: Storage
+    public storage: Storage,
+    public afAuth: AngularFireAuth
     ) {
     platform.ready().then(() => {
 
-      this.storage.get('user')
-      .then((resolver)=>{
+      const user = this.afAuth.auth.currentUser; //pega usuario logado
       
-        if(resolver != null){
+        if(user != null){
           this.rootPage = TabsControllerPage;
         }else{
           this.rootPage = TestePage;
         }
-      })
-      .catch(()=>{
-        this.rootPage = TestePage;
-      })
 
       statusBar.styleDefault();
       splashScreen.hide();

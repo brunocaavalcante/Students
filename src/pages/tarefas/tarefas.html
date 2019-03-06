@@ -39,7 +39,7 @@
     <button ion-button block class="add" (click)="addTarefa(tarefa,descricao,0)"
     [disabled]="!tarefa || tarefa.length < 3">Adicionar Tarefa</button> 
     <!--Na linha acima estamos dizendo que o botão ficará desabilitado caso não exista a variavel
-    task ou se essa variavel tiver menos de 3 char assim o usuario não criara tarefas vazias -->
+    tarefa ou se essa variavel tiver menos de 3 char assim o usuario não criara tarefas vazias -->
 
     <ion-item *ngFor="let item of list">
       <ion-card class="card" >

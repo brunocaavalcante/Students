@@ -40,12 +40,8 @@ export class TarefasPage {
   ionViewDidLoad() {
   const user = this.afAuth.auth.currentUser;//pega usuario logado
   this.uid = user.uid;
-  //this.storage.get('user')
-  ///.then((resolve)=>{
-  //this.uid = resolve; //Recebendo id do usuario do storage
-  //})
-    this.getTarefa();
-    this.closeMenu();
+  this.getTarefa();
+  this.closeMenu();
  
   }
 
@@ -66,7 +62,7 @@ export class TarefasPage {
 
     listDB.on('value',(snapshot)=>{ //para on escuta qualquer alteração no banco de dados e grava na variavel snapshot 
       const items = snapshot.val(); //recebendo o valor da snapshot
-      console.log(items);
+    
       if(items){ //verificando se existe items
         this.list = Object.keys(items).map(i => items[i]);//Função atribui cada objeto retornado do banco na variavel list
       }
