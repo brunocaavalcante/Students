@@ -65,6 +65,9 @@ export class LoginPage {
     alert.present();
   }
 
+ 
+  
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
   }

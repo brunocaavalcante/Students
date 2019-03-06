@@ -18,6 +18,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { TarefasPage } from '../pages/tarefas/tarefas';
 import { IonicStorageModule } from '@ionic/storage';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { ProjetosPage } from '../pages/projetos/projetos';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { AngularFireDatabase } from '@angular/fire/database';
     LoginPage,
     CadastroUserPage,
     ChatPage,
-    TarefasPage
+    TarefasPage,
+    ProjetosPage
        
   ],
   imports: [
@@ -50,7 +52,8 @@ import { AngularFireDatabase } from '@angular/fire/database';
     LoginPage,
     CadastroUserPage,
     ChatPage,
-    TarefasPage
+    TarefasPage,
+    ProjetosPage
   ],
   providers: [
     StatusBar,

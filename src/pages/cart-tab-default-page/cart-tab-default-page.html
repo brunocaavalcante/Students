@@ -3,8 +3,8 @@
    
   </ion-navbar>-->
 
-  <ion-toolbar no-border-top >
-      <ion-segment [(ngModel)]="chats" >
+  <ion-toolbar no-border-top  >
+      <ion-segment [(ngModel)]="chats"  >
         <ion-segment-button large value="conversas" >
           Conversas
         </ion-segment-button>
@@ -15,8 +15,8 @@
           Contatos
         </ion-segment-button>
         <ion-segment-button large value="novaConversa">
-          <button ion-button icon-only outline color="danger">
-            <ion-icon name="add-circle"></ion-icon>
+          <button ion-button icon-only >
+            <ion-icon name="add"></ion-icon>
           </button>
         </ion-segment-button>
       </ion-segment>
@@ -38,7 +38,7 @@
   <div [ngSwitch]="chats">
     <ion-list *ngSwitchCase="'conversas'">
 
-      <ion-item >
+      <ion-item (click)="goToChat()">
         <ion-thumbnail item-start>
           <img src="../../assets/imgs/p1.jpg">
         </ion-thumbnail>
