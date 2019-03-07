@@ -22,7 +22,7 @@ export class CloudTabDefaultPagePage {
   getUser(){
     const user = this.afAuth.auth.currentUser;//pega usuario logado
     this.uid = user.uid;
-    let listDB = this.db.database.ref('user').child(this.uid);
+    let listDB = this.db.database.ref(this.uid).child("cadastro");
 
     listDB.on('value',(snapshot)=>{ //para on escuta qualquer alteração no banco de dados e grava na variavel snapshot 
       const items = snapshot.val(); //recebendo o valor da snapshot
