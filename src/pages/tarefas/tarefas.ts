@@ -46,7 +46,7 @@ export class TarefasPage {
   }
 
   addTarefa(tarefa,descricao,porcent: string){
-    this.db.database.ref('tarefas').child(this.uid).push({
+    this.db.database.ref(this.uid).child('tarefas').push({
       tarefa:tarefa,
       descricao:descricao,
       porcent:porcent
@@ -58,13 +58,14 @@ export class TarefasPage {
   }
 
   getTarefa(){
-    let listDB = this.db.database.ref('tarefas').child(this.uid);
+    let listDB = this.db.database.ref(this.uid).child('tarefas');
 
     listDB.on('value',(snapshot)=>{ //para on escuta qualquer alteração no banco de dados e grava na variavel snapshot 
       const items = snapshot.val(); //recebendo o valor da snapshot
-    
+      
       if(items){ //verificando se existe items
         this.list = Object.keys(items).map(i => items[i]);//Função atribui cada objeto retornado do banco na variavel list
+        console.log(this.list.key);
       }
     })
     

@@ -7,60 +7,78 @@
 </ion-header>
 <ion-content padding id="page4">
   
-  <ion-list *ngFor="let user of list">
+  <form novalidate [formGroup]="updateForm" (ngSubmit)="submitForm()" >
+      <ion-list *ngFor="let user of list">
 
      <ion-item>
       <ion-label stacked>Nome:</ion-label>
-      <ion-input type="text" [disabled]= "disable == 1" value="{{ user.name }}"></ion-input>
+      <ion-input type="text" [disabled]= "disable == 1" value="{{ user.name }}" formControlName="name"></ion-input>
     </ion-item>
 
     <ion-item>
         <ion-label stacked>Sobre Nome:</ion-label>
-        <ion-input type="text" [disabled]= "disable == 1" value="{{ user.sobrenome }}"></ion-input>
+        <ion-input type="text" [disabled]= "disable == 1" value="{{ user.sobrenome }}"
+        formControlName="sobrenome"></ion-input>
       </ion-item>
-
-      <ion-item>
-          <ion-label stacked>Email:</ion-label>
-          <ion-input type="email" [disabled]= "disable == 1" value="{{ user.email }}"></ion-input>
-        </ion-item>
 
         <ion-item>
             <ion-label stacked>Data Nascimento:</ion-label>
-            <ion-input type="text" [disabled]= "disable == 1" value= " {{ user.data_nasc }}"></ion-input>
+            <ion-input type="text" [disabled]= "disable == 1" value= " {{ user.data_nasc }}"
+            formControlName="data_nasc"></ion-input>
           </ion-item>
 
           <ion-item>
             <ion-label stacked>Sexo:</ion-label>
-            <ion-input type="text"  [disabled]= "disable == 1" value=" {{ user.sexo }}"></ion-input>
+            <ion-input type="text"  [disabled]= "disable == 1" value=" {{ user.sexo }}"
+             formControlName="sexo"></ion-input>
           </ion-item>
 
           <ion-item>
             <ion-label stacked>Situação:</ion-label>
-            <ion-input type="text" [disabled]= "disable == 1"></ion-input>
+            <ion-input type="text" [disabled]= "disable == 1" formControlName="situacao"></ion-input>
           </ion-item>
 
           <ion-item>
             <ion-label stacked>Faculdade:</ion-label>
-            <ion-input type="text" [disabled]= "disable == 1"></ion-input>
+            <ion-input type="text" [disabled]= "disable == 1" formControlName="faculdade"></ion-input>
           </ion-item>
 
           <ion-item>
             <ion-label stacked>Curso:</ion-label>
-            <ion-input type="text" [disabled]= "disable == 1"></ion-input>
+            <ion-input type="text" [disabled]= "disable == 1" formControlName="curso"></ion-input>
           </ion-item>
   
           <ion-item>
-            <ion-label stacked>Campos:</ion-label>
-            <ion-input type="text" [disabled]= "disable == 1"></ion-input>
+            <ion-label stacked>Campus:</ion-label>
+            <ion-input type="text" [disabled]= "disable == 1" formControlName="campus"></ion-input>
           </ion-item>
   
           <ion-item>
             <ion-label stacked>Semestre:</ion-label>
-            <ion-input type="text" [disabled]= "disable == 1"></ion-input>
+            <ion-input type="text" [disabled]= "disable == 1" formControlName="semestre" value="{{ user.semestre }}"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label stacked>Email:</ion-label>
+            <ion-input type="email" [disabled]= "disable == 1" value="{{ user.email }}"
+            formControlName="email"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label stacked>Senha:</ion-label>
+            <ion-input type="password" [disabled]= "disable == 1" value="{{ user.email }}"
+            formControlName="password"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label stacked>Redigite a Senha:</ion-label>
+            <ion-input type="password" [disabled]= "disable == 1" value="{{ user.email }}"
+            formControlName="confirmPassword"></ion-input>
           </ion-item>
   
-          <button ion-button [disabled]= "disable == 1" block class="add" (click)="updateCad()">Salvar Alterações</button>
+          <button ion-button type="submit" [disabled]= "disable == 1 || updateForm.invalid" block class="add">Salvar Alterações</button>
           <button ion-button color="danger" [disabled]= "disable == 2" block class="add" (click)="ativeCad()">Alterar Cadastro</button>
   </ion-list>
+</form>
 
 </ion-content>
