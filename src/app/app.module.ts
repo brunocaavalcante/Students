@@ -19,6 +19,7 @@ import { TarefasPage } from '../pages/tarefas/tarefas';
 import { IonicStorageModule } from '@ionic/storage';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { ProjetosPage } from '../pages/projetos/projetos';
+import { TarefasProjetoPage } from '../pages/tarefas-projeto/tarefas-projeto';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { ProjetosPage } from '../pages/projetos/projetos';
     CadastroUserPage,
     ChatPage,
     TarefasPage,
-    ProjetosPage
+    ProjetosPage,
+    TarefasProjetoPage
        
   ],
   imports: [
@@ -53,7 +55,8 @@ import { ProjetosPage } from '../pages/projetos/projetos';
     CadastroUserPage,
     ChatPage,
     TarefasPage,
-    ProjetosPage
+    ProjetosPage,
+    TarefasProjetoPage
   ],
   providers: [
     StatusBar,

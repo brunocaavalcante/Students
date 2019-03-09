@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Tarefas</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-item>
+    <ion-label floating>Nome da Tarefa</ion-label>
+    <!--Aqui o ngModel esta criando uma variavel task que esta recebendo o conteudo do input-->
+    <ion-input type="text" [(ngModel)]="tarefa"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label floating>Descricao da Tarefa</ion-label>
+    <ion-input type="text" [(ngModel)]="descricao"></ion-input>
+  </ion-item>
+  <button ion-button block class="add" (click)="addTarefa(tarefa,descricao,0)"
+    [disabled]="!tarefa || tarefa.length < 3">Adicionar Tarefa</button>
+  <!--Na linha acima estamos dizendo que o botão ficará desabilitado caso não exista a variavel
+    tarefa ou se essa variavel tiver menos de 3 char assim o usuario não criara tarefas vazias -->
+
+
+  <ion-list>
+    <div class="item-tarefa">
+    <ion-item *ngFor="let item of list">
+
+      <ion-label class="item-tarefa">{{ item.tarefa }}</ion-label>
+        <button ion-button clear color="danger" icon-only item-end>
+          <ion-icon name="trash"></ion-icon>
+      </button>
+      
+      <ion-checkbox disabled="false">
+
+      </ion-checkbox>
+
+    </ion-item>
+  </div>
+
+
+  </ion-list>
+</ion-content>

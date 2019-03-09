@@ -9,11 +9,14 @@
       <ion-segment-button large value="sobre">
         Sobre
       </ion-segment-button>
+
       <ion-segment-button large value="integrantes">
-        Integrantes
+          <ion-icon name="people"></ion-icon>
       </ion-segment-button>
-      <ion-segment-button large value="tarefas">
-        Tarefas
+
+
+      <ion-segment-button large value="">
+          <ion-icon name="chatbubbles"></ion-icon>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -23,49 +26,39 @@
 <ion-content padding>
 
   <div [ngSwitch]="myProjeto">
-    <ion-list *ngSwitchCase="'tarefas'">
+    <ion-list *ngSwitchCase="'integrantes'">
 
-      <ion-item>
-        <ion-label floating>Nome da Tarefa</ion-label>
-        <!--Aqui o ngModel esta criando uma variavel task que esta recebendo o conteudo do input-->
-        <ion-input type="text" [(ngModel)]="tarefa"></ion-input>
+      
+      <ion-item *ngFor="let item of list">
+
+        <ion-card class="card">
+          <ion-card-header>
+            <ion-item>
+              <ion-avatar item-start>
+                <img src="../../assets/imgs/p1.jpg">
+              </ion-avatar>
+              <h2>{{ item.name }}</h2>
+              <p>{{ item.email }}</p>
+            </ion-item>
+          </ion-card-header>
+
+          <ion-card-content>
+            <fieldset>
+              <legend>dsasadsadsad</legend>
+              <p>dasdasd</p>
+            </fieldset>
+            <button ion-button outline clear small color="danger">EXCLUIR</button>
+            <button ion-button outline clear small>ALTERAR</button>
+            <button ion-button outline clear small (click)="goToTarefas()">TAREFAS</button>
+          </ion-card-content>
+
+        </ion-card>
+
       </ion-item>
 
-      <ion-item>
-        <ion-label floating>Descricao da Tarefa</ion-label>
-        <ion-input type="text" [(ngModel)]="descricao"></ion-input>
-      </ion-item>
-      <button ion-button block class="add" (click)="addTarefa(tarefa,descricao,0)"
-        [disabled]="!tarefa || tarefa.length < 3">Adicionar Tarefa</button>
-      <!--Na linha acima estamos dizendo que o botão ficará desabilitado caso não exista a variavel
-    tarefa ou se essa variavel tiver menos de 3 char assim o usuario não criara tarefas vazias -->
-
-      <div *ngIf="list != null">
-        <ion-item *ngFor="let item of list">
-          <ion-card class="card">
-            <ion-card-header>
-              <h2>{{ item.tarefa }}</h2>
-            </ion-card-header>
-            <ion-card-content>
-              <fieldset>
-                <legend>Descrição:</legend>
-                <p>{{ item.descricao }}</p>
-              </fieldset>
-              <ion-item>
-                <ion-range [(ngModel)]="item.porcent">
-                  <ion-icon range-left small name="">{{ item.porcent }}%</ion-icon>
-                  <ion-icon range-right name="star"></ion-icon>
-                </ion-range>
-              </ion-item>
-            </ion-card-content>
-          </ion-card>
-
-        </ion-item>
-      </div>
 
     </ion-list>
   </div>
-
 
 
 </ion-content>

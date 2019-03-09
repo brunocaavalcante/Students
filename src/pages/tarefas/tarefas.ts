@@ -5,6 +5,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { MenuController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { TarefasProjetoPage } from '../tarefas-projeto/tarefas-projeto';
 
 
 
@@ -40,10 +41,11 @@ export class TarefasPage {
   ionViewDidLoad() {
   const user = this.afAuth.auth.currentUser;//pega usuario logado
   this.uid = user.uid;
-  this.getTarefa();
+  this.getUser();
   this.closeMenu();
  
   }
+  
 
   addTarefa(tarefa,descricao,porcent: string){
     this.db.database.ref(this.uid).child('tarefas').push({
@@ -57,8 +59,8 @@ export class TarefasPage {
     })
   }
 
-  getTarefa(){
-    let listDB = this.db.database.ref(this.uid).child('tarefas');
+  getUser(){
+    let listDB = this.db.database.ref(this.uid).child('cadastro');
 
     listDB.on('value',(snapshot)=>{ //para on escuta qualquer alteração no banco de dados e grava na variavel snapshot 
       const items = snapshot.val(); //recebendo o valor da snapshot
@@ -90,6 +92,9 @@ export class TarefasPage {
   //Fução fecha menu lateral do app
   closeMenu() {
     this.menuCtrl.close();
+  }
+  goToTarefas(){
+    this.navCtrl.push(TarefasProjetoPage);
   }
 
   
