@@ -72,35 +72,21 @@
         <ion-item>
           Adicionar Paticipantes:
           <ion-icon name="remove-circle" item-end color="danger" (click)="removeParticipante()"></ion-icon>
-          <ion-icon name="add-circle" item-end color="primary" (click)="addParticipante()"></ion-icon>
+          <ion-icon name="add-circle" item-end color="primary" (click)="presentPrompt()"></ion-icon>
         </ion-item>
 
-        <div *ngFor="let i of participante">
-          <div *ngIf=" i != null ">
-            <ion-item>
-              <ion-label floating> Email do Participante</ion-label>
-              <ion-input type="text" formControlName="email"></ion-input>
-            </ion-item>
-
-            <ion-item>
-              <ion-label floating> Função do Participante</ion-label>
-              <ion-input type="text" formControlName="funcao"></ion-input>
-            </ion-item>
-
-            <ion-item>
-              <ion-label>Credenciais</ion-label>
-              <ion-select multiple="false" cancelText="Cancelar" okText="Ok!" formControlName="campus">
-                <ion-option value="Santo Amaro" selected="false">Admin</ion-option>
-                <ion-option value="Vergueiro" selected="true">Padrão</ion-option>
-              </ion-select>
-            </ion-item>
-          </div>
+        <div *ngFor="let i of participante" class="add">
+          <h6>{{ i.email }}</h6>
+          <fieldset>
+            <legend>{{ i.funcao }}</legend>
+              <p>{{ i.desc_f }}</p>
+          </fieldset>
         </div>
 
       </ion-list>
 
       <div padding>
-        <button block ion-button>Criar Projeto</button>
+        <button block ion-button (click)="addProjeto()">Criar Projeto</button>
       </div>
     </form>
 

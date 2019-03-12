@@ -71,7 +71,7 @@ export class CadastroUserPage {
 //Cadastra usuario no fire base
   addCadastroUser(){
   
-    this.db.database.ref(this.uid).child('cadastro').push(this.registerForm.value)
+    this.db.database.ref('cadastro').push(this.registerForm.value)
     .then(()=>{
       console.log("salvou");
     })
