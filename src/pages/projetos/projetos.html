@@ -7,16 +7,19 @@
 <ion-content padding>
 
   <div [hidden]="operacao">
-    <ion-item (click)="goToProjetos()">
+    <ion-item *ngFor="let p of list" (click)="goToProjetos()">
       <ion-card>
         <img src="../../assets/imgs/projeto.png" />
         <ion-card-content>
           <ion-card-title>
-            Projeto Ionic App
+            {{ p.name }}
           </ion-card-title>
           <p>
-            Criar um app para area da saude.
+           {{ p.descricao }}
           </p>
+          <p *ngFor ="let part of p.participante">
+            {{ part.email }}
+           </p>
         </ion-card-content>
         <button ion-button clear color="danger" block>Excluir Projeto</button>
       </ion-card>
@@ -63,7 +66,7 @@
 
         <ion-item>
           <ion-label>Campus</ion-label>
-          <ion-select multiple="false" cancelText="Cancelar" okText="Ok!" formControlName="campus">
+          <ion-select multiple="false" cancelText="Cancelar" okText="Ok!">
             <ion-option value="Santo Amaro" selected="true">Santo Amaro</ion-option>
             <ion-option value="Vergueiro" selected="false">Vergueiro</ion-option>
           </ion-select>
@@ -72,35 +75,23 @@
         <ion-item>
           Adicionar Paticipantes:
           <ion-icon name="remove-circle" item-end color="danger" (click)="removeParticipante()"></ion-icon>
-          <ion-icon name="add-circle" item-end color="primary" (click)="addParticipante()"></ion-icon>
+          <ion-icon name="add-circle" item-end color="primary" (click)="presentPrompt()"></ion-icon>
         </ion-item>
 
-        <div *ngFor="let i of participante">
-          <div *ngIf=" i != null ">
-            <ion-item>
-              <ion-label floating> Email do Participante</ion-label>
-              <ion-input type="text" formControlName="email"></ion-input>
-            </ion-item>
 
-            <ion-item>
-              <ion-label floating> Função do Participante</ion-label>
-              <ion-input type="text" formControlName="funcao"></ion-input>
-            </ion-item>
+        <div *ngFor="let i of participante" class="part">
+          <h6>Email: {{ i.email }}</h6>
+          <fieldset>
+            <legend>{{ i.funcao }}</legend>
+            <p>Descrição:{{ i.desc_f }} </p>
+          </fieldset>
 
-            <ion-item>
-              <ion-label>Credenciais</ion-label>
-              <ion-select multiple="false" cancelText="Cancelar" okText="Ok!" formControlName="campus">
-                <ion-option value="Santo Amaro" selected="false">Admin</ion-option>
-                <ion-option value="Vergueiro" selected="true">Padrão</ion-option>
-              </ion-select>
-            </ion-item>
-          </div>
         </div>
 
       </ion-list>
 
       <div padding>
-        <button block ion-button>Criar Projeto</button>
+        <button block ion-button (click)="addProjeto()" [disabled]="newProjectForm.invalid">Criar Projeto</button>
       </div>
     </form>
 
