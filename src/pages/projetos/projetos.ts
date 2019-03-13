@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ɵConsole } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { MenuController } from 'ionic-angular';
 import { TarefasPage } from '../tarefas/tarefas';
@@ -20,14 +20,13 @@ export class ProjetosPage {
   operacao = false;
   participante = [{
     id: "",
-    email: "",
-    funcao: "",
-    desc_f: ""
+    email: ""
   }];
   listParticipante;
   id_projeto;
   newProjectForm: FormGroup;
   list;
+  uid;
 
 
 
@@ -60,29 +59,56 @@ export class ProjetosPage {
     this.participante.splice(0, 1);
     this.closeMenu();
   }
+
   closeMenu() {
     this.menuCtrl.close();
   }
+
   goToProjetos() {
     this.navCtrl.push(TarefasPage);
   }
+
   createProjeto() {
     this.operacao = true;
   }
+
   addProjeto() {
 
     this.validaParticipante();
-    this.id_projeto = this.db.database.ref('projetos').push({
-      descricao: this.newProjectForm.get('descricao').value,
-      data_ini: this.newProjectForm.get('data_ini').value,
-      data_fim: this.newProjectForm.get('data_fim').value,
-      faculdade: this.newProjectForm.get('faculdade').value,
-      campus: this.newProjectForm.get('campus').value,
-      nome: this.newProjectForm.get('name').value
-    }).key;
+    for (let i = 0; i < this.participante.length; i++) {
+      if (i == 0) {
+        this.id_projeto = this.db.database.ref('projetos').push({
 
-    if (this.id_projeto != null) {
-      this.presentAlert("" + this.newProjectForm.get('name').value, "Projeto criado com sucesso!");
+          descricao: this.newProjectForm.get('descricao').value,
+          data_ini: this.newProjectForm.get('data_ini').value,
+          data_fim: this.newProjectForm.get('data_fim').value,
+          faculdade: this.newProjectForm.get('faculdade').value,
+          campus: this.newProjectForm.get('campus').value,
+          nome: this.newProjectForm.get('name').value,
+          id_participante: this.participante[i].id,
+          id: this.id_projeto
+
+        }).key;
+
+      }else{
+
+        this.db.database.ref('projetos').push({
+
+          descricao: this.newProjectForm.get('descricao').value,
+          data_ini: this.newProjectForm.get('data_ini').value,
+          data_fim: this.newProjectForm.get('data_fim').value,
+          faculdade: this.newProjectForm.get('faculdade').value,
+          campus: this.newProjectForm.get('campus').value,
+          nome: this.newProjectForm.get('name').value,
+          id_participante: this.participante[i].id,
+          id: this.id_projeto
+
+        }).key;
+      }
+
+      if (this.id_projeto != null) {
+        this.presentAlert("" + this.newProjectForm.get('name').value, "Projeto criado com sucesso!");
+      }
     }
 
 
@@ -100,17 +126,7 @@ export class ProjetosPage {
           name: 'email',
           placeholder: 'Digite o Email do Participante',
           type: 'email'
-        },
-        {
-          name: 'funcao',
-          placeholder: 'Digite a função do participante',
-          type: 'text'
-        },
-        {
-          name: 'desc_f',
-          placeholder: 'Digite a descrição da função do participante',
-          type: 'text'
-        },
+        }
 
       ],
       buttons: [
@@ -125,7 +141,6 @@ export class ProjetosPage {
           text: 'OK',
           handler: data => {
             this.participante.push(data);
-            console.log(this.participante);
           }
         }
       ]
@@ -145,36 +160,28 @@ export class ProjetosPage {
 
   validaParticipante() {
 
-    let listDB = this.db.database.ref('cadastro')
+    for (let i = 0; i < this.participante.length; i++) {
 
-    console.log(listDB);
-    listDB.on('value', (snapshot) => { //para on escuta qualquer alteração no banco de dados e grava na variavel snapshot 
-      const items = snapshot.val(); //recebendo o valor da snapshot
+      this.db.database.ref("cadastro").orderByChild("email")
+        .equalTo(this.participante[i].email).once("value", snapshot => {
+          const items = snapshot.val();
 
-      if (items != null) {
-        this.participante.forEach(p => {
-
-
-          if (p.email == items.val().email) {
+          if (items != null) {
+            //Se existir cadastro
             this.listParticipante = Object.keys(items).map(i => items[i]);
-            console.log(this.listParticipante);
+            this.participante[i].id = Object.keys(items)[0];
+            console.log(this.participante[i].id)
 
           } else {
-            console.log("não tem");
-            this.db.database.ref('cadastro').push({
-              email: p.email,
-            })
-            this.afAuth.auth.createUserWithEmailAndPassword(p.email, "123456")
-              .then(() => {
-                console.log("Criado um pre cadastro");
-              })
+            //Se não existir cadastro criamos um pre cadastro para o usuario
+            this.participante[i].id =""+ this.db.database.ref('cadastro').push({
+              email: this.participante[i].email,
+            }).key
+            this.afAuth.auth.createUserWithEmailAndPassword(this.participante[i].email, "123456");
+
           }
-
-        });
-      }
-
-    });
-
+        })
+    }
 
   }
 

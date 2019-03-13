@@ -7,17 +7,18 @@
 <ion-content padding>
 
   <div [hidden]="operacao">
-    <ion-item (click)="goToProjetos()">
+    <ion-item *ngFor="let p of list" (click)="goToProjetos()">
       <ion-card>
         <img src="../../assets/imgs/projeto.png" />
         <ion-card-content>
           <ion-card-title>
-            Projeto Ionic App
+            {{ p.name }}
           </ion-card-title>
           <p>
-            Criar um app para area da saude.
+           {{ p.descricao }}
           </p>
         </ion-card-content>
+        
         <button ion-button clear color="danger" block>Excluir Projeto</button>
       </ion-card>
     </ion-item>
@@ -77,10 +78,6 @@
 
         <div *ngFor="let i of participante" class="add">
           <h6>{{ i.email }}</h6>
-          <fieldset>
-            <legend>{{ i.funcao }}</legend>
-              <p>{{ i.desc_f }}</p>
-          </fieldset>
         </div>
 
       </ion-list>
