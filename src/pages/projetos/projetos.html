@@ -78,20 +78,18 @@
           <ion-icon name="add-circle" item-end color="primary" (click)="presentPrompt()"></ion-icon>
         </ion-item>
 
-
-        <div *ngFor="let i of participante" class="part">
-          <h6>Email: {{ i.email }}</h6>
+        <div *ngFor="let i of participante" class="add">
+          <h6>{{ i.email }}</h6>
           <fieldset>
             <legend>{{ i.funcao }}</legend>
-            <p>Descrição:{{ i.desc_f }} </p>
+              <p>{{ i.desc_f }}</p>
           </fieldset>
-
         </div>
 
       </ion-list>
 
       <div padding>
-        <button block ion-button (click)="addProjeto()" [disabled]="newProjectForm.invalid">Criar Projeto</button>
+        <button block ion-button (click)="addProjeto()">Criar Projeto</button>
       </div>
     </form>
 

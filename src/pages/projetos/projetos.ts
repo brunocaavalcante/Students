@@ -3,9 +3,11 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 import { MenuController } from 'ionic-angular';
 import { TarefasPage } from '../tarefas/tarefas';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Storage } from '@ionic/storage';
+import { identifierModuleUrl } from '@angular/compiler';
+import { AngularFireDatabase } from '@angular/fire/database';
+import { DeprecatedI18NPipesModule } from '@angular/common';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFireDatabase} from '@angular/fire/database';
-
 
 
 @IonicPage()
@@ -16,16 +18,17 @@ import { AngularFireDatabase} from '@angular/fire/database';
 export class ProjetosPage {
 
   operacao = false;
-  uid;
-  id_projeto;
-  list;
-  
   participante = [{
+    id: "",
     email: "",
     funcao: "",
     desc_f: ""
   }];
+  listParticipante;
+  id_projeto;
   newProjectForm: FormGroup;
+  list;
+  uid;
 
 
 
@@ -34,26 +37,28 @@ export class ProjetosPage {
     public navParams: NavParams,
     public menuCtrl: MenuController,
     public formbuilder: FormBuilder,
+    public storage: Storage,
     public afAuth: AngularFireAuth,
-    public db: AngularFireDatabase,
-    public alertCtrl: AlertController) {
-     
+    public alertCtrl: AlertController,
+    public db: AngularFireDatabase) {
+
     this.operacao = false;
-    const user = this.afAuth.auth.currentUser;//pega usuario logado
-    this.uid = user.uid;
-    this.getProjeto();
     //Validação dos campos
     this.newProjectForm = this.formbuilder.group({
       descricao: [null, [Validators.required, Validators.minLength(10)]],
       data_ini: [null],
       data_fim: [null],
       faculdade: [null],
+      campus: [null],
+      funcao: [null],
+      email: [null],
       name: [null, [Validators.required, Validators.minLength(5)]],
     })
   }
 
   ionViewDidLoad() {
-    console.log(this.list);
+
+    this.participante.splice(0, 1);
     this.closeMenu();
     this.participante.splice(0, 1);
 
@@ -64,19 +69,7 @@ export class ProjetosPage {
   goToProjetos() {
     this.navCtrl.push(TarefasPage);
   }
-
-  addParticipante() {
-    this.presentPrompt();
-
-  }
-  removeParticipante() {
-    this.participante.splice(0, 1);
-  }
   createProjeto() {
-    this.operacao = true;
-  }
-
-  addProjeto() {
     this.operacao = true;
     // criar projeto
     this.id_projeto = this.db.database.ref(this.uid).child('projetos').push(this.newProjectForm.value).key
@@ -96,48 +89,50 @@ export class ProjetosPage {
     }
 
   }
+  addProjeto() {
 
-  getProjeto() {
+    this.validaParticipante();
+    this.id_projeto = this.db.database.ref('projetos').push({
+      descricao: this.newProjectForm.get('descricao').value,
+      data_ini: this.newProjectForm.get('data_ini').value,
+      data_fim: this.newProjectForm.get('data_fim').value,
+      faculdade: this.newProjectForm.get('faculdade').value,
+      campus: this.newProjectForm.get('campus').value,
+      nome: this.newProjectForm.get('name').value
+    }).key;
 
-    let listDB = this.db.database.ref(this.uid).child('projetos');
+    if (this.id_projeto != null) {
+      this.presentAlert("" + this.newProjectForm.get('name').value, "Projeto criado com sucesso!");
+    }
 
-    listDB.on('value', (snapshot)=> { //para on escuta qualquer alteração no banco de dados e grava na variavel snapshot 
-          const items = snapshot.val();
-          if(items){ //verificando se existe items
-            this.list = Object.keys(items).map(i => items[i]);//Função atribui cada objeto retornado do banco na variavel list
-            console.log(this.list);
-          }
-        }); 
+
   }
 
-  //Alerta de Inputs
+  removeParticipante() {
+    this.participante.splice(0, 1);
+  }
+
   presentPrompt() {
     let alert = this.alertCtrl.create({
       title: 'Participante',
       inputs: [
         {
           name: 'email',
-          placeholder: 'Digite o email do participante'
+          placeholder: 'Digite o Email do Participante',
+          type: 'email'
         },
         {
           name: 'funcao',
-          placeholder: 'Digite a Função',
+          placeholder: 'Digite a função do participante',
           type: 'text'
         },
         {
           name: 'desc_f',
-          placeholder: 'Descreva a Função',
-          type: 'text',
-
+          placeholder: 'Digite a descrição da função do participante',
+          type: 'text'
         },
-        {
-          name: 'radio1',
-          label: "teste",
-          type: 'checkbox'
 
-        }
       ],
-
       buttons: [
         {
           text: 'Cancel',
@@ -150,7 +145,7 @@ export class ProjetosPage {
           text: 'OK',
           handler: data => {
             this.participante.push(data);
-
+            console.log(this.participante);
           }
         }
       ]
@@ -166,6 +161,41 @@ export class ProjetosPage {
       buttons: ['OK']
     });
     alert.present();
+  }
+
+  validaParticipante() {
+
+    let listDB = this.db.database.ref('cadastro')
+
+    console.log(listDB);
+    listDB.on('value', (snapshot) => { //para on escuta qualquer alteração no banco de dados e grava na variavel snapshot 
+      const items = snapshot.val(); //recebendo o valor da snapshot
+
+      if (items != null) {
+        this.participante.forEach(p => {
+
+
+          if (p.email == items.val().email) {
+            this.listParticipante = Object.keys(items).map(i => items[i]);
+            console.log(this.listParticipante);
+
+          } else {
+            console.log("não tem");
+            this.db.database.ref('cadastro').push({
+              email: p.email,
+            })
+            this.afAuth.auth.createUserWithEmailAndPassword(p.email, "123456")
+              .then(() => {
+                console.log("Criado um pre cadastro");
+              })
+          }
+
+        });
+      }
+
+    });
+
+
   }
 
 
