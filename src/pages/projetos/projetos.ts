@@ -22,12 +22,12 @@ export class ProjetosPage {
     id: "",
     email: ""
   }];
-  listParticipante;
+  listParticipante=[];
+  id_participante;
   id_projeto;
   newProjectForm: FormGroup;
-  list;
+  list=[];
   uid;
-
 
 
   constructor(
@@ -75,47 +75,33 @@ export class ProjetosPage {
   addProjeto() {
 
     this.validaParticipante();
+    this.id_projeto = this.db.database.ref('projetos').push().key;
+
     for (let i = 0; i < this.participante.length; i++) {
-      if (i == 0) {
-        this.id_projeto = this.db.database.ref('projetos').push({
 
-          descricao: this.newProjectForm.get('descricao').value,
-          data_ini: this.newProjectForm.get('data_ini').value,
-          data_fim: this.newProjectForm.get('data_fim').value,
-          faculdade: this.newProjectForm.get('faculdade').value,
-          campus: this.newProjectForm.get('campus').value,
-          nome: this.newProjectForm.get('name').value,
-          id_participante: this.participante[i].id,
-          id: this.id_projeto
+      //this.id_participante = this.listParticipante[i].id
+      console.log(this.listParticipante[i].values);
 
-        }).key;
+      this.db.database.ref('projetos/' + this.id_projeto).push({
 
-      }else{
-
-        this.db.database.ref('projetos').push({
-
-          descricao: this.newProjectForm.get('descricao').value,
-          data_ini: this.newProjectForm.get('data_ini').value,
-          data_fim: this.newProjectForm.get('data_fim').value,
-          faculdade: this.newProjectForm.get('faculdade').value,
-          campus: this.newProjectForm.get('campus').value,
-          nome: this.newProjectForm.get('name').value,
-          id_participante: this.participante[i].id,
-          id: this.id_projeto
-
-        }).key;
-      }
-
-      if (this.id_projeto != null) {
-        this.presentAlert("" + this.newProjectForm.get('name').value, "Projeto criado com sucesso!");
-      }
+        descricao: this.newProjectForm.get('descricao').value,
+        data_ini: this.newProjectForm.get('data_ini').value,
+        data_fim: this.newProjectForm.get('data_fim').value,
+        faculdade: this.newProjectForm.get('faculdade').value,
+        campus: this.newProjectForm.get('campus').value,
+        nome: this.newProjectForm.get('name').value,
+        id: this.id_projeto,
+        id_participante: this.id_participante
+      });
     }
-
+    if (this.id_projeto != null) {
+      this.presentAlert("" + this.newProjectForm.get('name').value, "Projeto criado com sucesso!");
+    }
 
   }
 
   removeParticipante() {
-    this.participante.splice(0, 1);
+    this.participante.pop();
   }
 
   presentPrompt() {
@@ -168,21 +154,22 @@ export class ProjetosPage {
 
           if (items != null) {
             //Se existir cadastro
-            this.listParticipante = Object.keys(items).map(i => items[i]);
-            this.participante[i].id = Object.keys(items)[0];
-            console.log(this.participante[i].id)
+            this.list = Object.keys(items).map(i => items[i]);
+
+            this.list.forEach(data => {
+              this.listParticipante.push(data);
+            });
 
           } else {
             //Se não existir cadastro criamos um pre cadastro para o usuario
-            this.participante[i].id =""+ this.db.database.ref('cadastro').push({
+            this.listParticipante.push(this.db.database.ref('cadastro').push({
               email: this.participante[i].email,
-            }).key
+            }).key)
             this.afAuth.auth.createUserWithEmailAndPassword(this.participante[i].email, "123456");
 
           }
         })
     }
-
   }
 
 }

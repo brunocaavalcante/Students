@@ -71,7 +71,19 @@ export class CadastroUserPage {
 //Cadastra usuario no fire base
   addCadastroUser(){
   
-    this.db.database.ref('cadastro').push(this.registerForm.value)
+    this.db.database.ref('cadastro').push({
+      nome: this.registerForm.get('name').value,
+      sobrenome: this.registerForm.get('sobrenome').value,
+      data_nasc: this.registerForm.get('data_nasc').value,
+      sexo: this.registerForm.get('sexo').value,
+      id: this.uid,
+      faculdade: this.registerForm.get('faculdade').value,
+      campus: this.registerForm.get('campus').value,
+      semestre: this.registerForm.get('semestre').value,
+      curso: this.registerForm.get('curso').value,
+      email: this.registerForm.get('email').value,
+      senha: this.registerForm.get('password').value
+    })
     .then(()=>{
       console.log("salvou");
     })
