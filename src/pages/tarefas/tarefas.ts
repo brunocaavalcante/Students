@@ -42,6 +42,7 @@ export class TarefasPage {
   const user = this.afAuth.auth.currentUser;//pega usuario logado
   this.uid = user.uid;
   this.getUser();
+  
   this.closeMenu();
  
   }

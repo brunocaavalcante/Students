@@ -24,7 +24,7 @@ export class ProjetosPage {
     funcao: "",
     desc_f: ""
   }];
-  listParticipante;
+  listParticipante = [];
   id_projeto;
   newProjectForm: FormGroup;
   list;
@@ -69,47 +69,39 @@ export class ProjetosPage {
   goToProjetos() {
     this.navCtrl.push(TarefasPage);
   }
+
   createProjeto() {
-    this.operacao = true;
+
+    this.validaParticipante();
     // criar projeto
-    this.id_projeto = this.db.database.ref(this.uid).child('projetos').push(this.newProjectForm.value).key
+    this.id_projeto = this.db.database.ref('projetos').push(this.newProjectForm.value).key
 
     if (this.id_projeto != null) {
       // adiciona os participantes ao projeto
-      this.participante.forEach(data => {
-        this.db.database.ref(this.uid + '/projetos/' + this.id_projeto).child('participante').push({
-          email: data.email,
-          funcao: data.funcao,
-          desc_funcao: data.desc_f
-        })
-      });
+      for (let i = 0; i < this.listParticipante.length; i++) {
+        
+        
+          this.db.database.ref('/projetos/' + this.id_projeto).child('participante').push({
+            id: this.listParticipante[i].id
+          })
+        
 
-      this.presentAlert("Projeto Criado!", "Projeto criado com sucesso");
+      }
+
+      this.listParticipante.slice(0, this.listParticipante.length); // Remove todos items do array
+      this.participante.slice(0, this.participante.length);
+      this.presentAlert("Projeto " + this.newProjectForm.get('name').value, "Projeto criado com sucesso");
       this.operacao = false;
     }
 
   }
+
   addProjeto() {
-
-    this.validaParticipante();
-    this.id_projeto = this.db.database.ref('projetos').push({
-      descricao: this.newProjectForm.get('descricao').value,
-      data_ini: this.newProjectForm.get('data_ini').value,
-      data_fim: this.newProjectForm.get('data_fim').value,
-      faculdade: this.newProjectForm.get('faculdade').value,
-      campus: this.newProjectForm.get('campus').value,
-      nome: this.newProjectForm.get('name').value
-    }).key;
-
-    if (this.id_projeto != null) {
-      this.presentAlert("" + this.newProjectForm.get('name').value, "Projeto criado com sucesso!");
-    }
-
-
+    this.operacao = true;
   }
 
   removeParticipante() {
-    this.participante.splice(0, 1);
+    this.participante.pop();
   }
 
   presentPrompt() {
@@ -121,16 +113,6 @@ export class ProjetosPage {
           placeholder: 'Digite o Email do Participante',
           type: 'email'
         },
-        {
-          name: 'funcao',
-          placeholder: 'Digite a função do participante',
-          type: 'text'
-        },
-        {
-          name: 'desc_f',
-          placeholder: 'Digite a descrição da função do participante',
-          type: 'text'
-        },
 
       ],
       buttons: [
@@ -138,14 +120,13 @@ export class ProjetosPage {
           text: 'Cancel',
           role: 'cancel',
           handler: data => {
-            console.log('Cancel clicked');
+
           }
         },
         {
           text: 'OK',
           handler: data => {
             this.participante.push(data);
-            console.log(this.participante);
           }
         }
       ]
@@ -170,28 +151,39 @@ export class ProjetosPage {
     console.log(listDB);
     listDB.on('value', (snapshot) => { //para on escuta qualquer alteração no banco de dados e grava na variavel snapshot 
       const items = snapshot.val(); //recebendo o valor da snapshot
+      this.list = Object.keys(items).map(i => items[i]);//Função atribui cada objeto retornado do banco na variavel list
 
-      if (items != null) {
-        this.participante.forEach(p => {
-
-
-          if (p.email == items.val().email) {
-            this.listParticipante = Object.keys(items).map(i => items[i]);
-            console.log(this.listParticipante);
-
-          } else {
-            console.log("não tem");
-            this.db.database.ref('cadastro').push({
-              email: p.email,
-            })
-            this.afAuth.auth.createUserWithEmailAndPassword(p.email, "123456")
-              .then(() => {
-                console.log("Criado um pre cadastro");
-              })
+      if (this.list != null) {
+        for (let i = 0; i < this.participante.length; i++) {
+          if (this.participante[i].email == this.list[i].email) {
+            this.listParticipante.push(this.list[i]);
           }
-
-        });
+        }
       }
+
+
+      /* if (items != null) {
+         this.participante.forEach(p => {
+   
+   
+           if (p.email == items.val().email) {
+             this.listParticipante.push({
+               id:snapshot.key });
+             console.log(this.listParticipante);
+   
+           } else {
+             console.log("não tem");
+             this.db.database.ref('cadastro').push({
+               email: p.email,
+             })
+             this.afAuth.auth.createUserWithEmailAndPassword(p.email, "123456")
+               .then(() => {
+                 console.log("Criado um pre cadastro");
+               })
+           }
+   
+         });
+       }*/
 
     });
 
