@@ -72,17 +72,18 @@ export class CadastroUserPage {
   addCadastroUser(){
   
     this.db.database.ref('cadastro').push({
-      nome: this.registerForm.get('name').value,
-      sobrenome: this.registerForm.get('sobrenome').value,
-      data_nasc: this.registerForm.get('data_nasc').value,
-      sexo: this.registerForm.get('sexo').value,
-      id: this.uid,
-      faculdade: this.registerForm.get('faculdade').value,
-      campus: this.registerForm.get('campus').value,
-      semestre: this.registerForm.get('semestre').value,
-      curso: this.registerForm.get('curso').value,
-      email: this.registerForm.get('email').value,
-      senha: this.registerForm.get('password').value
+      sobrenome:"",
+      semestre:"",
+      data_nasc:[null],
+      faculdade:[null],
+      campus:[null],
+      curso:[null],
+      sexo:[null],
+      name:[null,[Validators.required,Validators.minLength(5)]],
+      email:[null,[Validators.required,Validators.email]],
+      password:[null,[Validators.required,Validators.minLength(5)]],
+      confirmPassword:[null,[Validators.required,Validators.minLength(5),ValidateConfirmPassword]],
+
     })
     .then(()=>{
       console.log("salvou");

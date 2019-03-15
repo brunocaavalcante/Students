@@ -42,6 +42,7 @@ export class TarefasPage {
   const user = this.afAuth.auth.currentUser;//pega usuario logado
   this.uid = user.uid;
   this.getUser();
+  
   this.closeMenu();
  
   }
@@ -67,7 +68,7 @@ export class TarefasPage {
       
       if(items){ //verificando se existe items
         this.list = Object.keys(items).map(i => items[i]);//Função atribui cada objeto retornado do banco na variavel list
-        console.log(this.list.key);
+        
       }
     })
     

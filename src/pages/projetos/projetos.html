@@ -7,23 +7,24 @@
 <ion-content padding>
 
   <div [hidden]="operacao">
-    <ion-item *ngFor="let p of list" (click)="goToProjetos()">
+    <ion-item  (click)="goToProjetos()">
       <ion-card>
         <img src="../../assets/imgs/projeto.png" />
         <ion-card-content>
           <ion-card-title>
-            {{ p.name }}
+             p.name 
           </ion-card-title>
           <p>
-           {{ p.descricao }}
+            p.descricao 
           </p>
+          
         </ion-card-content>
         
         <button ion-button clear color="danger" block>Excluir Projeto</button>
       </ion-card>
     </ion-item>
 
-    <button ion-button block (click)="createProjeto()">Criar Novo Projeto</button>
+    <button ion-button block (click)="addProjeto()">Criar Novo Projeto</button>
   </div>
 
 
@@ -64,7 +65,7 @@
 
         <ion-item>
           <ion-label>Campus</ion-label>
-          <ion-select multiple="false" cancelText="Cancelar" okText="Ok!" formControlName="campus">
+          <ion-select multiple="false" cancelText="Cancelar" okText="Ok!">
             <ion-option value="Santo Amaro" selected="true">Santo Amaro</ion-option>
             <ion-option value="Vergueiro" selected="false">Vergueiro</ion-option>
           </ion-select>
@@ -83,7 +84,7 @@
       </ion-list>
 
       <div padding>
-        <button block ion-button (click)="addProjeto()">Criar Projeto</button>
+        <button block ion-button (click)="createProjeto()">Criar Projeto</button>
       </div>
     </form>
 
