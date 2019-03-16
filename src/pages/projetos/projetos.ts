@@ -8,6 +8,7 @@ import { identifierModuleUrl } from '@angular/compiler';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { DeprecatedI18NPipesModule } from '@angular/common';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { TabsControllerPage } from '../tabs-controller/tabs-controller';
 
 
 @IonicPage()
@@ -80,16 +81,14 @@ export class ProjetosPage {
       // adiciona os participantes ao projeto
       for (let i = 0; i < this.listParticipante.length; i++) {
         
-        
+          
           this.db.database.ref('/projetos/' + this.id_projeto).child('participante').push({
             id: this.listParticipante[i].id
           })
         
 
       }
-
-      this.listParticipante.slice(0, this.listParticipante.length); // Remove todos items do array
-      this.participante.slice(0, this.participante.length);
+      this.navCtrl.push(TabsControllerPage);
       this.presentAlert("Projeto " + this.newProjectForm.get('name').value, "Projeto criado com sucesso");
       this.operacao = false;
     }
