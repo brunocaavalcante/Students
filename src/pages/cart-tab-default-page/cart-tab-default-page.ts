@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NavController, Platform } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, Platform, Segment } from 'ionic-angular';
 import { ChatPage } from '../chat/chat';
 
 @Component({
@@ -8,8 +8,13 @@ import { ChatPage } from '../chat/chat';
 })
 export class CartTabDefaultPagePage {
 
+@ViewChild(Segment) segment: Segment;
+
   constructor(public navCtrl: NavController) {
     
+  }
+  ionViewDidLoad() {
+    this.segment.value ='conversas';
   }
 
   goToChat(){

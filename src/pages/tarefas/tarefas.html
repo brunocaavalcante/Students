@@ -11,12 +11,12 @@
       </ion-segment-button>
 
       <ion-segment-button large value="integrantes">
-          <ion-icon name="people"></ion-icon>
+        <ion-icon name="people"></ion-icon>
       </ion-segment-button>
 
 
       <ion-segment-button large value="">
-          <ion-icon name="chatbubbles"></ion-icon>
+        <ion-icon name="chatbubbles"></ion-icon>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -28,8 +28,8 @@
   <div [ngSwitch]="myProjeto">
     <ion-list *ngSwitchCase="'integrantes'">
 
-      
-      <ion-item *ngFor="let item of list">
+
+      <ion-item *ngFor="let item of p">
 
         <ion-card class="card">
           <ion-card-header>
@@ -37,15 +37,15 @@
               <ion-avatar item-start>
                 <img src="../../assets/imgs/p1.jpg">
               </ion-avatar>
-              <h2>{{ item.name }}</h2>
+              <h2>{{ item.nome }}</h2>
               <p>{{ item.email }}</p>
             </ion-item>
           </ion-card-header>
 
           <ion-card-content>
             <fieldset>
-              <legend>dsasadsadsad</legend>
-              <p>dasdasd</p>
+              <legend>{{ item.faculdade }}</legend>
+              <p>{{ item.curso }}</p>
             </fieldset>
             <button ion-button outline clear small color="danger">EXCLUIR</button>
             <button ion-button outline clear small>ALTERAR</button>
@@ -56,6 +56,28 @@
 
       </ion-item>
 
+
+    </ion-list>
+    <ion-list *ngSwitchCase="'sobre'">
+
+      <h3 class="titulo">{{ projeto.nome }}</h3>
+
+      <img src="../../assets/imgs/projeto_2.jpg" class="s_img">
+
+      <fieldset>
+        <legend>Descricao:</legend>
+        <p>{{ projeto.descricao }}</p>
+      </fieldset>
+
+
+      <fieldset>
+        <legend>Prazo:</legend>
+        <p>Data de Inicio: {{ projeto.data_ini }}</p>
+        <p>Data de Inicio: {{ projeto.data_fim }}</p>
+      </fieldset>
+
+      <p>Faculdade: {{ projeto.faculdade }}</p>
+      <p>Campus: {{ projeto.campus }}</p>
 
     </ion-list>
   </div>

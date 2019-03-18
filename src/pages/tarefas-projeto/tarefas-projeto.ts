@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController, AlertController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { identifierModuleUrl } from '@angular/compiler';
 
 /**
  * Generated class for the TarefasProjetoPage page.
@@ -22,6 +23,7 @@ export class TarefasProjetoPage {
   descricao;
   porcent;
   list;
+  projeto = [];
 
   constructor(
     public navCtrl: NavController,
@@ -30,20 +32,29 @@ export class TarefasProjetoPage {
     public alertCtrl: AlertController,
     public menuCtrl: MenuController,
     public afAuth: AngularFireAuth) {
+
+
   }
 
   ionViewDidLoad() {
     const user = this.afAuth.auth.currentUser;//pega usuario logado
     this.uid = user.uid;
     this.getTarefa();
+    this.projeto.push(this.navParams.get('projeto'));
+    console.log(this.projeto);
   }
 
-  addTarefa(tarefa, descricao, porcent: string) {
-    this.db.database.ref(this.uid).child('projetos').push({
-      tarefa: tarefa,
-      descricao: descricao,
-      porcent: porcent
-     
+  addTarefa(item) {
+    this.id_projeto = this.db.database.ref('tarefas').push().key;
+    this.db.database.ref('tarefas').push({
+      tarefa: item.tarefa,
+      descricao: item.descricao,
+      porcent: item.porcent,
+      id: item.id,
+      id_projeto: this.id_projeto,
+      id_participante: id_participante,
+      id_dono: id_dono
+
     })
       .then(() => {
         this.presentAlert("Tarefa Cadastrada", "");
@@ -53,20 +64,20 @@ export class TarefasProjetoPage {
       })
   }
 
-  getTarefa(){
+  getTarefa() {
     let listDB = this.db.database.ref(this.uid).child('tarefas');
 
-    listDB.on('value',(snapshot)=>{ //para on escuta qualquer alteração no banco de dados e grava na variavel snapshot 
+    listDB.on('value', (snapshot) => { //para on escuta qualquer alteração no banco de dados e grava na variavel snapshot 
       const items = snapshot.val(); //recebendo o valor da snapshot
-      
-      if(items){ //verificando se existe items
+
+      if (items) { //verificando se existe items
         this.list = Object.keys(items).map(i => items[i]);//Função atribui cada objeto retornado do banco na variavel list
         console.log(this.list.key);
       }
     })
-    
+
   }
-  
+
   //Função para limpar inputs após insert/update
   limpar() {
     this.tarefa = "";
