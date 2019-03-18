@@ -23,9 +23,9 @@
 
   <ion-list>
     <div class="item-tarefa">
-    <ion-item >
+    <ion-item *ngFor ="let item of list">
 
-      <ion-label class="item-tarefa"> item.tarefa </ion-label>
+      <ion-label class="item-tarefa"> {{ item.tarefa }} </ion-label>
         <button ion-button clear color="danger" icon-only item-end>
           <ion-icon name="trash"></ion-icon>
       </button>

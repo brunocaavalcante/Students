@@ -1,13 +1,27 @@
 page-tarefas {
-
-    .card-titulo{
-        font-size: 15px;
-      
-    }
-    .card p{
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-   
+  .titulo {
+    text-align: center;
+  }
+  .card p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .s_img {
+    border-radius: 20%;
+    border: 1px solid #ddd;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2em;
+    margin-bottom: 1em;
+  }
+  ion-card {
+    display: flex;
+    flex-direction: column;
+    width:  100% !important;
+    margin: 0 !important;
+  }
 }
