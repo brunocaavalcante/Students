@@ -4,12 +4,9 @@ import { MenuController } from 'ionic-angular';
 import { TarefasPage } from '../tarefas/tarefas';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
-import { identifierModuleUrl } from '@angular/compiler';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { DeprecatedI18NPipesModule } from '@angular/common';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TabsControllerPage } from '../tabs-controller/tabs-controller';
-import { Observable } from 'rxjs';
 
 
 @IonicPage()
