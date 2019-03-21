@@ -12,14 +12,14 @@
         <img src="../../assets/imgs/projeto.png" />
         <ion-card-content>
           <ion-card-title>
-            {{ item.name }}
+            {{ item.name }} 
           </ion-card-title>
           <p>
             {{ item.descricao }}
           </p>
 
         </ion-card-content>
-        <button ion-button clear color="danger" (click)="removeProjeto(item.id)" class="btn_p">Excluir</button>
+        <button ion-button clear color="danger" (click)="presentShowConfirm(item.id)" class="btn_p">Excluir</button>
         <button ion-button clear (click)="goToProjetos(item)" class="btn_p">Detalhes</button>
       </ion-card>
 

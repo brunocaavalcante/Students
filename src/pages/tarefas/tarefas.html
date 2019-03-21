@@ -26,31 +26,44 @@
 <ion-content padding>
 
   <div [ngSwitch]="myProjeto">
+
     <ion-list *ngSwitchCase="'integrantes'">
 
-
-      <ion-item *ngFor="let item of p">
+      <ion-item *ngFor="let item of list">
 
         <ion-card class="card">
           <ion-card-header>
             <ion-item>
               <ion-avatar item-start>
-                <img src="../../assets/imgs/p1.jpg">
+                <img src="../../assets/imgs/p2.jpg">
               </ion-avatar>
-              <h2>{{ item.nome }}</h2>
-              <p>{{ item.email }}</p>
+              <h2> {{ item.nome }} </h2>
+              <p> {{ item.email }}</p>
             </ion-item>
           </ion-card-header>
 
           <ion-card-content>
-            <fieldset>
-              <legend>{{ item.faculdade }}</legend>
-              <p>{{ item.curso }}</p>
+
+            <fieldset *ngIf="item.funcao != null; else funcao">
+              <legend> {{ item.funcao }} </legend>
+              <p> {{ item.desc_f }} </p>
             </fieldset>
-            <button ion-button outline clear small color="danger">EXCLUIR</button>
-            <button ion-button outline clear small>ALTERAR</button>
-            <button ion-button outline clear small (click)="goToTarefas()">TAREFAS</button>
-          </ion-card-content>
+            <fieldset *ngIf="item.faculdade != null">
+              <legend> {{ item.faculdade }} </legend>
+              <p> {{ item.curso }} </p>
+            </fieldset>
+
+            <ng-template #funcao>
+              <p>
+                Click em alterar para definir função
+              </p><br>
+            </ng-template>
+
+
+            <button ion-button outline clear small color="danger" (click)="presentShowConfirm(item)">EXCLUIR</button>
+            <button ion-button outline clear small (click)="presentPrompt(item)">ALTERAR</button>
+            <button ion-button outline clear small (click)="goToTarefas(item)">TAREFAS</button>
+          </ion-card-content> 
 
         </ion-card>
 
@@ -58,6 +71,7 @@
 
 
     </ion-list>
+
     <ion-list *ngSwitchCase="'sobre'">
 
       <h3 class="titulo">{{ projeto.nome }}</h3>
@@ -73,13 +87,32 @@
       <fieldset>
         <legend>Prazo:</legend>
         <p>Data de Inicio: {{ projeto.data_ini }}</p>
-        <p>Data de Inicio: {{ projeto.data_fim }}</p>
+        <p>Data de Termino: {{ projeto.data_fim }}</p>
       </fieldset>
 
-      <p>Faculdade: {{ projeto.faculdade }}</p>
-      <p>Campus: {{ projeto.campus }}</p>
+      <fieldset>
+        <p>Faculdade: {{ projeto.faculdade }}</p>
+        <p>Campus: {{ projeto.campus }}</p>
+        <p>Administrador: {{ projeto.dono }}</p>
+      </fieldset>
+
+      <button ion-button block outline icon-start (click)="presentShowConfirm(item)">
+        <ion-icon name="contact"></ion-icon>
+        Adicionar Participantes
+      </button>
+
+      <button ion-button block outline color="dark" icon-start (click)="presentShowConfirm(item)">
+        <ion-icon name="contact"></ion-icon>
+        Editar informações do Projeto
+      </button>
+
+      <button ion-button block outline color="secondary" icon-start (click)="presentShowConfirm(item)">
+        <ion-icon name="contact"></ion-icon>
+        Finalizar o Projeto
+      </button>
 
     </ion-list>
+
   </div>
 
 

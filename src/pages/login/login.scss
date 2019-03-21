@@ -1,15 +1,16 @@
 page-login {
-  /* .custom-title{
+   .custom-title{
         padding-top: 2em;
     }
     .titulo{
         padding-top: 2em;
         padding-bottom: 2em;
         text-align: center;
+        color:white;
     }
     .botao{
         margin-top: 1em;
-    }*/
+    }
   .fundo_login {
     background-image: url("../../assets/imgs/login1.jpg");
   }
@@ -28,7 +29,7 @@ page-login {
 
   ion-card.card {
     box-shadow: none;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.5);
     border-radius: 5px;
   }
 

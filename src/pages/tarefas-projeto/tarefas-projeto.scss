@@ -1,7 +1,14 @@
 page-tarefas-projeto {
 
-   
-    .item-tarefa{
-        width: 300px;
-    }
+  .item-tarefa {
+    width: 300px;
+  }
+  ion-card {
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    margin-top: 15px !important;
+    margin-left: 0 !important;
+  }
+
 }

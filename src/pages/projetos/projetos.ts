@@ -61,20 +61,21 @@ export class ProjetosPage {
     this.closeMenu();
   }
 
-  closeMenu() { 
+  closeMenu() {
     this.menuCtrl.close();
   }
 
   goToProjetos(item) {
-    
+
     var projeto = {
       nome: item.name,
       descricao: item.descricao,
       data_ini: item.data_ini,
       data_fim: item.data_fim,
       faculdade: item.faculdade,
-      id:item.id,
-      campus:item.campus
+      id: item.id,
+      campus: item.campus,
+      dono: item.dono
     }
 
     this.navCtrl.push(TarefasPage, { projeto });
@@ -99,7 +100,7 @@ export class ProjetosPage {
               //Inseri participante no projeto
               this.list = Object.keys(items).map(i => items[i]);
 
-              this.db.database.ref('projetos').push({
+              this.db.database.ref('projetos/'+this.id_projeto).update({
                 descricao: this.newProjectForm.get('descricao').value,
                 data_ini: this.newProjectForm.get('data_ini').value,
                 data_fim: this.newProjectForm.get('data_fim').value,
@@ -108,15 +109,18 @@ export class ProjetosPage {
                 email: this.newProjectForm.get('email').value,
                 name: this.newProjectForm.get('name').value,
                 id: this.id_projeto,
-                id_participante: this.list[0].email
+                id_participante: this.list[0].email,
+                dono: this.user.email,
+                
               })
 
             } else {
-
-              this.db.database.ref('cadastro').push({ // Cria pré cadastro
-                email: this.participante[i].email
+              var id = this.db.database.ref('cadastro').push().key
+              this.db.database.ref('cadastro/'+id).update({ // Cria pré cadastro
+                email: this.participante[i].email,
+                id: id
               })
-              this.db.database.ref('projetos').push({  //Insere no projeto
+              this.db.database.ref('projetos/'+this.id_projeto).update({  //Insere no projeto
                 descricao: this.newProjectForm.get('descricao').value,
                 data_ini: this.newProjectForm.get('data_ini').value,
                 data_fim: this.newProjectForm.get('data_fim').value,
@@ -129,8 +133,6 @@ export class ProjetosPage {
               })
             }
           });
-        var p = this.db.database.ref('projetos/' + this.id_projeto);
-        p.remove();
       }
     }
     this.navCtrl.push(TabsControllerPage);
@@ -148,19 +150,16 @@ export class ProjetosPage {
 
   removeProjeto(id: string) {
 
-    this.presentShowConfirm("Atenção deseja excluir o projeto?", "A exclusão será permanente");
-    if (this.delete == true) {
-      this.db.database.ref('projetos').orderByChild("id")
-        .equalTo(id).on("value", snapshot => {
-          snapshot.forEach(item => {
-            var rv = this.db.database.ref('projetos/' + item.key);
-            rv.remove();
-            this.getProjetos();
-          });
+    this.db.database.ref('projetos').orderByChild("id")
+      .equalTo(id).on("value", snapshot => {
+        snapshot.forEach(item => {
+          var rv = this.db.database.ref('projetos/' + item.key);
+          rv.remove();
+          this.navCtrl.push(TabsControllerPage);
+        });
 
-        })
-      this.presentAlert("Projeto removido com sucesso", "");
-    }
+      })
+    this.presentAlert("Projeto removido com sucesso", "");
 
   }
 
@@ -173,7 +172,6 @@ export class ProjetosPage {
         if (items) {
           this.listProjetos = Object.keys(items).map(i => items[i])
         }
-
       });
   }
 
@@ -217,11 +215,11 @@ export class ProjetosPage {
     alert.present();
   }
 
-  presentShowConfirm(title: string, subtitle: string) {
+  presentShowConfirm(id) {
 
     const alert = this.alertCtrl.create({
-      title: title,
-      message: subtitle,
+      title: "Atenção deseja excluir o projeto?",
+      message: "A exclusão será permanente",
       buttons: [
         {
           text: 'Cancelar',
@@ -235,8 +233,7 @@ export class ProjetosPage {
           text: 'Excluir',
           role: 'excluir',
           handler: () => {
-            alert.dismiss(true);
-            return false;
+            this.removeProjeto(id);
           }
         }
       ]
