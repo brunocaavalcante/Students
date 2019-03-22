@@ -80,7 +80,7 @@ export class TarefasPage {
 
                 if (items) {
                   this.p = Object.keys(items).map(i => items[i]);
-                  this.list.push({
+                  this.list[i] = ({
                     id_participante: this.p[0].id,
                     nome: this.p[0].nome,
                     funcao: this.participantes[i].funcao,
@@ -116,8 +116,6 @@ export class TarefasPage {
           }
         });
       });
-
-    this.navCtrl.push(ProjetosPage);
   }
 
   deleteParticipante(item) {
@@ -136,7 +134,6 @@ export class TarefasPage {
           }
         });
       });
-    this.navCtrl.push(ProjetosPage);
   }
 
   //Função para apresenta alertas

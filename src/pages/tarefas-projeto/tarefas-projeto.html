@@ -35,7 +35,7 @@
           <ion-icon name="trash"></ion-icon>
         </button>
 
-        <ion-checkbox disabled="false">
+        <ion-checkbox disabled="false" [(ngModel)]="item.checked" (ionChange)="updateCheck(item)">
         </ion-checkbox>
       </ion-item>
 

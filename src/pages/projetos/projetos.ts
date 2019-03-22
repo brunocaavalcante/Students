@@ -6,7 +6,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { TabsControllerPage } from '../tabs-controller/tabs-controller';
 
 
 @IonicPage()
@@ -100,7 +99,7 @@ export class ProjetosPage {
               //Inseri participante no projeto
               this.list = Object.keys(items).map(i => items[i]);
 
-              this.db.database.ref('projetos/'+this.id_projeto).update({
+              this.db.database.ref('projetos/' + this.id_projeto).update({
                 descricao: this.newProjectForm.get('descricao').value,
                 data_ini: this.newProjectForm.get('data_ini').value,
                 data_fim: this.newProjectForm.get('data_fim').value,
@@ -111,16 +110,16 @@ export class ProjetosPage {
                 id: this.id_projeto,
                 id_participante: this.list[0].email,
                 dono: this.user.email,
-                
+
               })
 
             } else {
               var id = this.db.database.ref('cadastro').push().key
-              this.db.database.ref('cadastro/'+id).update({ // Cria pré cadastro
+              this.db.database.ref('cadastro/' + id).update({ // Cria pré cadastro
                 email: this.participante[i].email,
                 id: id
               })
-              this.db.database.ref('projetos/'+this.id_projeto).update({  //Insere no projeto
+              this.db.database.ref('projetos/' + this.id_projeto).update({  //Insere no projeto
                 descricao: this.newProjectForm.get('descricao').value,
                 data_ini: this.newProjectForm.get('data_ini').value,
                 data_fim: this.newProjectForm.get('data_fim').value,
@@ -135,7 +134,6 @@ export class ProjetosPage {
           });
       }
     }
-    this.navCtrl.push(TabsControllerPage);
     this.presentAlert("Projeto " + this.newProjectForm.get('name').value, "Projeto criado com sucesso");
     this.operacao = false;
   }
@@ -155,7 +153,6 @@ export class ProjetosPage {
         snapshot.forEach(item => {
           var rv = this.db.database.ref('projetos/' + item.key);
           rv.remove();
-          this.navCtrl.push(TabsControllerPage);
         });
 
       })
@@ -166,11 +163,12 @@ export class ProjetosPage {
   getProjetos() {
 
     this.db.database.ref('projetos').orderByChild("id_participante")
-      .equalTo(this.user.email).once("value", snapshot => {
-        const items = snapshot.val();
+      .equalTo(this.user.email).on("value", snapshot => {
+        var items = snapshot.val();
 
+        console.log(items);
         if (items) {
-          this.listProjetos = Object.keys(items).map(i => items[i])
+          this.listProjetos = Object.keys(items).map(i => items[i]);
         }
       });
   }
