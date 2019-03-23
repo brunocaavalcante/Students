@@ -34,6 +34,7 @@ export class TarefasProjetoPage {
   }
 
   ionViewDidLoad() {
+    console.log(this.list);
     const user = this.afAuth.auth.currentUser;//pega usuario logado
     this.uid = user.uid;
     this.getTarefa();
@@ -51,7 +52,8 @@ export class TarefasProjetoPage {
       observacao: "",
       id_projeto: this.projeto.id,
       id_criador: this.projeto.dono,
-      id_participante: this.participante.id_participante
+      id_participante: this.participante.id_participante,
+      checked: "false"
 
     })
       .then(() => {
@@ -92,6 +94,17 @@ export class TarefasProjetoPage {
     var ano = d.getFullYear();
     var data = "" + dia + "/" + mes + "/" + ano;
     return data;
+  }
+
+  updateCheck(item,ck){
+
+    if(ck){
+      ck = "true";
+    }else{
+      ck = "false"
+    }
+  this.db.database.ref('tarefas/'+item.id).update({checked:ck});
+
   }
 
   presentShowConfirm(item) {
