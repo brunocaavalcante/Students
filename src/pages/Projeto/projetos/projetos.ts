@@ -1,12 +1,11 @@
 import { Component, ɵConsole, Query } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { MenuController } from 'ionic-angular';
-import { TarefasPage } from '../tarefas/tarefas';
+import { TarefasPage } from '../myProjeto/tarefas';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { TabsControllerPage } from '../tabs-controller/tabs-controller';
 
 
 @IonicPage()
@@ -50,9 +49,10 @@ export class ProjetosPage {
       faculdade: [null],
       campus: [null],
       funcao: [null],
-      email: [null],
       name: [null, [Validators.required, Validators.minLength(5)]],
     })
+    this.user = this.afAuth.auth.currentUser;//pega usuario logado
+    this.getProjetos();
   }
 
   ionViewDidLoad() {
@@ -68,12 +68,13 @@ export class ProjetosPage {
   goToProjetos(item) {
 
     var projeto = {
-      nome: item.name,
+      nome: item.nome,
       descricao: item.descricao,
       data_ini: item.data_ini,
       data_fim: item.data_fim,
       faculdade: item.faculdade,
       id: item.id,
+      adm: item.adm,
       campus: item.campus,
       dono: item.dono
     }
@@ -85,7 +86,6 @@ export class ProjetosPage {
 
     this.id_projeto = this.db.database.ref('projetos').push().key// criar projeto
     this.participante.push({ id: "", email: this.user.email });
-
     //verifica se o participante esta cadastrado no sistema 
     if (this.id_projeto != null) {
       for (let i = 1; i < this.participante.length; i++) {
@@ -100,33 +100,32 @@ export class ProjetosPage {
               //Inseri participante no projeto
               this.list = Object.keys(items).map(i => items[i]);
 
-              this.db.database.ref('projetos/'+this.id_projeto).update({
+              this.db.database.ref('projetos/').push({
                 descricao: this.newProjectForm.get('descricao').value,
                 data_ini: this.newProjectForm.get('data_ini').value,
                 data_fim: this.newProjectForm.get('data_fim').value,
                 faculdade: this.newProjectForm.get('faculdade').value,
                 campus: this.newProjectForm.get('campus').value,
-                email: this.newProjectForm.get('email').value,
                 name: this.newProjectForm.get('name').value,
                 id: this.id_projeto,
                 id_participante: this.list[0].email,
                 dono: this.user.email,
-                
+                adm:(this.list[0].email == this.user.email?"sim":"não")
+
               })
 
             } else {
               var id = this.db.database.ref('cadastro').push().key
-              this.db.database.ref('cadastro/'+id).update({ // Cria pré cadastro
+              this.db.database.ref('cadastro/' + id).update({ // Cria pré cadastro
                 email: this.participante[i].email,
                 id: id
               })
-              this.db.database.ref('projetos/'+this.id_projeto).update({  //Insere no projeto
+              this.db.database.ref('projetos/').push({  //Insere no projeto
                 descricao: this.newProjectForm.get('descricao').value,
                 data_ini: this.newProjectForm.get('data_ini').value,
                 data_fim: this.newProjectForm.get('data_fim').value,
                 faculdade: this.newProjectForm.get('faculdade').value,
                 campus: this.newProjectForm.get('campus').value,
-                email: this.newProjectForm.get('email').value,
                 name: this.newProjectForm.get('name').value,
                 id: this.id_projeto,
                 id_participante: this.participante[i].email
@@ -135,17 +134,10 @@ export class ProjetosPage {
           });
       }
     }
-    this.navCtrl.push(TabsControllerPage);
     this.presentAlert("Projeto " + this.newProjectForm.get('name').value, "Projeto criado com sucesso");
     this.operacao = false;
-  }
-
-  addProjeto() {
-    this.operacao = true;
-  }
-
-  removeParticipante() {
-    this.participante.pop();
+    var rm = this.db.database.ref('projetos/' + this.id_projeto);
+    rm.remove();
   }
 
   removeProjeto(id: string) {
@@ -155,7 +147,6 @@ export class ProjetosPage {
         snapshot.forEach(item => {
           var rv = this.db.database.ref('projetos/' + item.key);
           rv.remove();
-          this.navCtrl.push(TabsControllerPage);
         });
 
       })
@@ -166,13 +157,21 @@ export class ProjetosPage {
   getProjetos() {
 
     this.db.database.ref('projetos').orderByChild("id_participante")
-      .equalTo(this.user.email).once("value", snapshot => {
-        const items = snapshot.val();
+      .equalTo(this.user.email).on("value", snapshot => {
+        var items = snapshot.val();
 
         if (items) {
-          this.listProjetos = Object.keys(items).map(i => items[i])
+          this.listProjetos = Object.keys(items).map(i => items[i]);
         }
       });
+  }
+
+  addProjeto() {
+    this.operacao = true;
+  }
+
+  removeParticipante() {
+    this.participante.pop();
   }
 
   //Função para apresenta alertas

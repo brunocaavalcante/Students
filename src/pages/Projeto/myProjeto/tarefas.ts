@@ -1,11 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, ItemSliding, Segment } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ItemSliding, Segment, UrlSerializer } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { MenuController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TarefasProjetoPage } from '../tarefas-projeto/tarefas-projeto';
-import { ProjetosPage } from '../projetos/projetos';
+import { EditProjetoPage } from '../edit-projeto/edit-projeto';
 
 
 @IonicPage()
@@ -19,7 +19,10 @@ export class TarefasPage {
   tarefa;
   descricao;
   participantes = [];
+  id_projeto;
   p;
+  adm;
+  user;
   porcent;
   list = [];
   projeto;
@@ -36,30 +39,22 @@ export class TarefasPage {
     public afAuth: AngularFireAuth
 
   ) {
+    this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.projeto = this.navParams.get('projeto');
+    if(this.user.email == this.projeto.dono){
+      this.adm = true;
+    }
+    console.log(this.projeto);
   }
 
   ionViewDidLoad() {
 
-    const user = this.afAuth.auth.currentUser;//pega usuario logado
-    this.uid = user.uid;
+    this.user = this.afAuth.auth.currentUser;//pega usuario logado
+    this.uid = this.user.uid;
     this.segment.value = 'sobre';
     this.getParticipantes();
     this.closeMenu();
 
-  }
-
-
-  addTarefa(tarefa, descricao, porcent: string) {
-    this.db.database.ref(this.uid).child('tarefas').push({
-      tarefa: tarefa,
-      descricao: descricao,
-      porcent: porcent
-    })
-      .then(() => {
-        this.presentAlert("Tarefa Cadastrada", "");
-        this.limpar();
-      })
   }
 
   getParticipantes() {
@@ -80,9 +75,10 @@ export class TarefasPage {
 
                 if (items) {
                   this.p = Object.keys(items).map(i => items[i]);
-                  this.list.push({
+                  this.list[i] = ({
                     id_participante: this.p[0].id,
                     nome: this.p[0].nome,
+                    sobrenome:this.p[0].sobrenome,
                     funcao: this.participantes[i].funcao,
                     desc_f: this.participantes[i].descricao_f,
                     email: this.participantes[i].id_participante,
@@ -116,8 +112,6 @@ export class TarefasPage {
           }
         });
       });
-
-    this.navCtrl.push(ProjetosPage);
   }
 
   deleteParticipante(item) {
@@ -136,7 +130,56 @@ export class TarefasPage {
           }
         });
       });
-    this.navCtrl.push(ProjetosPage);
+  }
+
+  insertParticipante(item) {
+
+    //verifica se o participante esta cadastrado no sistema 
+    this.db.database.ref('cadastro').orderByChild("email")
+      .equalTo(item.id_participante).once("value", snapshot => {
+        const items = snapshot.val();
+
+        if (items != null) {
+
+          //Inseri participante no projeto
+          this.list = Object.keys(items).map(i => items[i]);
+          console.log(this.list);
+          console.log(this.projeto);
+          this.db.database.ref('projetos/').push({
+            descricao: (this.projeto.descricao != null ? this.projeto.descricao:"Indefinido"),
+            data_ini: (this.projeto.data_ini != null ? this.projeto.data_ini:"Indefinido"),
+            data_fim: (this.projeto.data_fim != null ? this.projeto.data_fim:"Indefinido"),
+            faculdade: (this.projeto.faculdade != null ? this.projeto.faculdade:"Indefinido"),
+            campus: (this.projeto.campus != null ? this.projeto.campus:"Indefinido"),
+            nome: (this.projeto.nome != null ? this.projeto.nome:"Indefinido"),
+            id: this.projeto.id,
+            id_participante: this.list[0].email,
+            dono: this.projeto.dono,
+
+          })
+
+        } else {
+          var id = this.db.database.ref('cadastro').push().key
+          this.db.database.ref('cadastro/' + id).update({ // Cria pré cadastro
+            email: item.email,
+            id: id
+          })
+          this.db.database.ref('projetos/' + this.id_projeto).push({  //Insere no projeto
+            descricao: (this.projeto.descricao != null ? this.projeto.descricao:"Indefinido"),
+            data_ini: (this.projeto.data_ini != null ? this.projeto.data_ini:"Indefinido"),
+            data_fim: (this.projeto.data_fim != null ? this.projeto.data_fim:"Indefinido"),
+            faculdade: (this.projeto.faculdade != null ? this.projeto.faculdade:"Indefinido"),
+            campus: (this.projeto.campus != null ? this.projeto.campus:"Indefinido"),
+            nome: (this.projeto.nome != null ? this.projeto.nome:"Indefinido"),
+            id: this.projeto.id,
+            id_participante: this.list[0].email,
+            dono: this.projeto.dono,
+
+          })
+        }
+      });
+    this.presentAlert("Participante adicionado", "");
+
   }
 
   //Função para apresenta alertas
@@ -147,10 +190,6 @@ export class TarefasPage {
       buttons: ['OK']
     });
     alert.present();
-  }
-
-  limpar() {
-
   }
 
   presentPrompt(item) {
@@ -199,6 +238,52 @@ export class TarefasPage {
     alert.present();
   }
 
+  presentAddParticipante() {
+
+    let alert = this.alertCtrl.create({
+      title: 'Participante',
+      inputs: [
+        {
+          name: 'id_participante',
+          placeholder: 'Digite o Email do Participante',
+          type: 'email',
+          value: ""
+        },
+        {
+          name: 'funcao',
+          placeholder: 'Função',
+          type: 'text',
+          value: ""
+        },
+        {
+          name: 'descricao_f',
+          label: 'Descreva a Função',
+          placeholder: 'Descreva a Função',
+          type: 'text',
+          value: ""
+        },
+
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: data => {
+
+          }
+        },
+        {
+          text: 'Adicionar',
+          handler: data => {
+            this.insertParticipante(data);
+
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
   presentShowConfirm(item) {
 
     const alert = this.alertCtrl.create({
@@ -231,8 +316,14 @@ export class TarefasPage {
 
   goToTarefas(participante) {
     var p = this.projeto;
-    
-    this.navCtrl.push(TarefasProjetoPage, { p,participante });
+
+    this.navCtrl.push(TarefasProjetoPage, { p, participante });
+  }
+
+  goToEditProjeto(){
+    var p = this.projeto;
+    var participantes = this.list;
+    this.navCtrl.push(EditProjetoPage, {p,participantes});
   }
 
 }

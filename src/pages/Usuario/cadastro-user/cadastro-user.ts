@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ValidateConfirmPassword } from '../../validators/confirmPassword';
+import { ValidateConfirmPassword } from '../../../validators/confirmPassword';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController } from 'ionic-angular';
-import { TabsControllerPage } from '../tabs-controller/tabs-controller';
+import { TabsControllerPage } from '../../tabs-controller/tabs-controller';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
 

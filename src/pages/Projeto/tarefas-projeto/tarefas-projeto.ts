@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController, AlertController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { TarefasPage } from '../tarefas/tarefas';
 
 
 
@@ -19,7 +18,7 @@ export class TarefasProjetoPage {
   id_dono;
   list = [];
   projeto;
-
+  check: boolean;
 
   constructor(
     public navCtrl: NavController,
@@ -67,9 +66,11 @@ export class TarefasProjetoPage {
     this.db.database.ref('tarefas').orderByChild('id_projeto')
       .equalTo(this.projeto.id).on("value", snapshot => {
         if (snapshot) {
+          let i = 0;
           snapshot.forEach(data => {
             if (data.val().id_participante == this.participante.id_participante) {
-              this.list.push( data.val());
+              this.list[i] = data.val();
+              i++;
             }
           });
         } else {
@@ -82,8 +83,8 @@ export class TarefasProjetoPage {
 
     var rm = this.db.database.ref('tarefas/' + tarefa.id);
     rm.remove();
+    this.getTarefa();
     this.presentAlert("Tarefa excluida com sucesso!", "");
-    this.navCtrl.setRoot(TarefasPage);
 
   }
 
@@ -95,17 +96,12 @@ export class TarefasProjetoPage {
     var data = "" + dia + "/" + mes + "/" + ano;
     return data;
   }
-
-  updateCheck(item,ck){
-
-    if(ck){
-      ck = "true";
-    }else{
-      ck = "false"
-    }
-  this.db.database.ref('tarefas/'+item.id).update({checked:ck});
-
+  
+  updateCheck(item) {
+    this.check = item.checked;
+    this.db.database.ref('tarefas/' + item.id).update({ checked: this.check });
   }
+
 
   presentShowConfirm(item) {
 

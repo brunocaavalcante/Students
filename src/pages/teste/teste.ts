@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { CadastroUserPage } from '../cadastro-user/cadastro-user';
+import { CadastroUserPage } from '../Usuario/cadastro-user/cadastro-user';
 import { LoginPage } from '../login/login';
 import { Storage } from '@ionic/storage';
 import { TabsControllerPage } from '../tabs-controller/tabs-controller';
