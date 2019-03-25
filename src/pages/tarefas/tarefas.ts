@@ -188,7 +188,6 @@ export class TarefasPage {
           text: 'Alterar',
           handler: data => {
             this.updateParticipante(data);
-
           }
         }
       ]
@@ -228,8 +227,8 @@ export class TarefasPage {
 
   goToTarefas(participante) {
     var p = this.projeto;
-    
-    this.navCtrl.push(TarefasProjetoPage, { p,participante });
+
+    this.navCtrl.push(TarefasProjetoPage, { p, participante });
   }
 
 }
