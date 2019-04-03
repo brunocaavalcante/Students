@@ -4,8 +4,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController } from 'ionic-angular';
 import { TabsControllerPage } from '../tabs-controller/tabs-controller';
-import { Storage } from '@ionic/storage';
-import { storage } from 'firebase';
+import { AngularFireDatabase } from '@angular/fire/database';
+import { CadastroUserPage } from '../Usuario/cadastro-user/cadastro-user';
 
 
 @IonicPage({
@@ -22,34 +22,43 @@ export class LoginPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public formbuilder:FormBuilder,
+    public formbuilder: FormBuilder,
     public afAuth: AngularFireAuth,
     public alertCtrl: AlertController,
-    public storage: Storage) {
+    public db: AngularFireDatabase) {
 
-      this.loginForm = this.formbuilder.group({
-        email: [null, [Validators.required, Validators.email]],
-        password: [null, [Validators.required, Validators.minLength(6)]]
-      })
+    this.loginForm = this.formbuilder.group({
+      email: [null, [Validators.required, Validators.email]],
+      password: [null, [Validators.required, Validators.minLength(6)]]
+    })
   }
 
-  submitLogin(){
-    
+  submitLogin() {
+
     this.afAuth.auth.signInWithEmailAndPassword(
       this.loginForm.value.email, this.loginForm.value.password)//Verificando através do firebase se o usuario é valido
       .then((response) => {
-        this.storage.set("user",response.user.uid) //Estamos salvando o id do usuario no banco do ionic sqlite(storage)
-      .then(()=>{//quando salvar então
-        this.navCtrl.setRoot(TabsControllerPage);//redirecionamos para page principal
-      })       
-        
+
+        this.db.database.ref('cadastro').orderByChild('email')
+          .equalTo(response.user.email).on("value", snapshot => {
+
+            snapshot.forEach(data => {
+              if (data.val().nome == null) {
+                console.log(data.val().nome);
+                this.navCtrl.setRoot(CadastroUserPage);
+                this.presentAlert("Por favor conclua seu cadastro", "");
+              } else {
+                this.navCtrl.setRoot(TabsControllerPage);//redirecionamos para page principal
+              }
+            });
+          })
       })
       .catch((error) => {
-        if(error.code == 'auth/wrong-password') {//Erro de senha invalida
+        if (error.code == 'auth/wrong-password') {//Erro de senha invalida
           this.presentAlert('Erro', 'Senha incorreta, digite novamente.');//Alerta apresentado
           this.loginForm.controls['password'].setValue(null);//Lipando o campo de senha
         }
-        if(error.code == 'auth/user-not-found') {
+        if (error.code == 'auth/user-not-found') {
           this.presentAlert('Erro', 'Email incorreto, digite novamente.');
           this.loginForm.controls['password'].setValue(null);
         }
@@ -65,13 +74,10 @@ export class LoginPage {
     alert.present();
   }
 
- 
-  
-
   ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
+
   }
 
- 
+
 
 }

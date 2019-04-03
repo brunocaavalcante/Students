@@ -4,8 +4,11 @@ import { MenuController } from 'ionic-angular';
 import { TarefasPage } from '../myProjeto/tarefas';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operator/map';
+
 
 
 @IonicPage()
@@ -20,7 +23,7 @@ export class ProjetosPage {
     id: "",
     email: ""
   }];
-  listProjetos;
+  listProjetos = [];
   id_projeto;
   newProjectForm: FormGroup;
   list;
@@ -110,7 +113,7 @@ export class ProjetosPage {
                 id: this.id_projeto,
                 id_participante: this.list[0].email,
                 dono: this.user.email,
-                adm:(this.list[0].email == this.user.email?"sim":"não")
+                adm: (this.list[0].email == this.user.email ? "sim" : "não")
 
               })
 
@@ -155,11 +158,9 @@ export class ProjetosPage {
   }
 
   getProjetos() {
-
     this.db.database.ref('projetos').orderByChild("id_participante")
       .equalTo(this.user.email).on("value", snapshot => {
         var items = snapshot.val();
-
         if (items) {
           this.listProjetos = Object.keys(items).map(i => items[i]);
         }
