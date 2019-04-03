@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { NavController, Platform, Segment } from 'ionic-angular';
-import { ChatPage } from '../chat/chat';
+import { ChatPage } from '../Menssagens/chat/chat';
 
 @Component({
   selector: 'page-cart-tab-default-page',

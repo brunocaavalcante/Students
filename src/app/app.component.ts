@@ -2,11 +2,11 @@ import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, NavController} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { TarefasPage } from '../pages/tarefas/tarefas';
+import { TarefasPage } from '../pages/Projeto/myProjeto/tarefas';
 import { Storage } from '@ionic/storage';
 import { TabsControllerPage } from '../pages/tabs-controller/tabs-controller';
 import { TestePage } from '../pages/teste/teste';
-import { ProjetosPage } from '../pages/projetos/projetos';
+import { ProjetosPage } from '../pages/Projeto/projetos/projetos';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 

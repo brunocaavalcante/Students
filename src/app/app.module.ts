@@ -10,16 +10,18 @@ import { TestePage } from '../pages/teste/teste';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
-import { CadastroUserPage } from '../pages/cadastro-user/cadastro-user';
-import { ChatPage } from '../pages/chat/chat';
+import { CadastroUserPage } from '../pages/Usuario/cadastro-user/cadastro-user';
+import { ChatPage } from '../pages/Menssagens/chat/chat';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { TarefasPage } from '../pages/tarefas/tarefas';
+import { TarefasPage } from '../pages/Projeto/myProjeto/tarefas';
 import { IonicStorageModule } from '@ionic/storage';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { ProjetosPage } from '../pages/projetos/projetos';
-import { TarefasProjetoPage } from '../pages/tarefas-projeto/tarefas-projeto';
+import { ProjetosPage } from '../pages/Projeto/projetos/projetos';
+import { TarefasProjetoPage } from '../pages/Projeto/tarefas-projeto/tarefas-projeto';
+import { EditProjetoPage } from '../pages/Projeto/edit-projeto/edit-projeto';
+
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import { TarefasProjetoPage } from '../pages/tarefas-projeto/tarefas-projeto';
     CadastroUserPage,
     ChatPage,
     TarefasPage,
+    EditProjetoPage,
     ProjetosPage,
     TarefasProjetoPage
        
@@ -54,6 +57,7 @@ import { TarefasProjetoPage } from '../pages/tarefas-projeto/tarefas-projeto';
     LoginPage,
     CadastroUserPage,
     ChatPage,
+    EditProjetoPage,
     TarefasPage,
     ProjetosPage,
     TarefasProjetoPage

@@ -1,10 +1,10 @@
 import { Component, ɵConsole, Query } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { MenuController } from 'ionic-angular';
-import { TarefasPage } from '../tarefas/tarefas';
+import { TarefasPage } from '../myProjeto/tarefas';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 
@@ -20,12 +20,13 @@ export class ProjetosPage {
     id: "",
     email: ""
   }];
-  listProjetos;
+  listProjetos =[];
   id_projeto;
   newProjectForm: FormGroup;
   list;
   user;
   delete;
+  pj;
   uemail;
 
 
@@ -49,9 +50,10 @@ export class ProjetosPage {
       faculdade: [null],
       campus: [null],
       funcao: [null],
-      email: [null],
       name: [null, [Validators.required, Validators.minLength(5)]],
     })
+    this.user = this.afAuth.auth.currentUser;//pega usuario logado
+    this.getProjetos();
   }
 
   ionViewDidLoad() {
@@ -67,14 +69,16 @@ export class ProjetosPage {
   goToProjetos(item) {
 
     var projeto = {
-      nome: item.name,
+      nome: item.nome,
       descricao: item.descricao,
       data_ini: item.data_ini,
       data_fim: item.data_fim,
       faculdade: item.faculdade,
       id: item.id,
+      adm: item.adm,
       campus: item.campus,
-      dono: item.dono
+      dono: item.dono,
+      id_participante:item.id_participante
     }
 
     this.navCtrl.push(TarefasPage, { projeto });
@@ -84,7 +88,6 @@ export class ProjetosPage {
 
     this.id_projeto = this.db.database.ref('projetos').push().key// criar projeto
     this.participante.push({ id: "", email: this.user.email });
-
     //verifica se o participante esta cadastrado no sistema 
     if (this.id_projeto != null) {
       for (let i = 1; i < this.participante.length; i++) {
@@ -99,17 +102,17 @@ export class ProjetosPage {
               //Inseri participante no projeto
               this.list = Object.keys(items).map(i => items[i]);
 
-              this.db.database.ref('projetos/' + this.id_projeto).update({
+              this.db.database.ref('projetos/').push({
                 descricao: this.newProjectForm.get('descricao').value,
                 data_ini: this.newProjectForm.get('data_ini').value,
                 data_fim: this.newProjectForm.get('data_fim').value,
                 faculdade: this.newProjectForm.get('faculdade').value,
                 campus: this.newProjectForm.get('campus').value,
-                email: this.newProjectForm.get('email').value,
                 name: this.newProjectForm.get('name').value,
                 id: this.id_projeto,
                 id_participante: this.list[0].email,
                 dono: this.user.email,
+                adm:(this.list[0].email == this.user.email?"true":"false")
 
               })
 
@@ -119,16 +122,16 @@ export class ProjetosPage {
                 email: this.participante[i].email,
                 id: id
               })
-              this.db.database.ref('projetos/' + this.id_projeto).update({  //Insere no projeto
+              this.db.database.ref('projetos/').push({  //Insere no projeto
                 descricao: this.newProjectForm.get('descricao').value,
                 data_ini: this.newProjectForm.get('data_ini').value,
                 data_fim: this.newProjectForm.get('data_fim').value,
                 faculdade: this.newProjectForm.get('faculdade').value,
                 campus: this.newProjectForm.get('campus').value,
-                email: this.newProjectForm.get('email').value,
                 name: this.newProjectForm.get('name').value,
                 id: this.id_projeto,
-                id_participante: this.participante[i].email
+                id_participante: this.participante[i].email,
+                adm:"false"
               })
             }
           });
@@ -136,14 +139,8 @@ export class ProjetosPage {
     }
     this.presentAlert("Projeto " + this.newProjectForm.get('name').value, "Projeto criado com sucesso");
     this.operacao = false;
-  }
-
-  addProjeto() {
-    this.operacao = true;
-  }
-
-  removeParticipante() {
-    this.participante.pop();
+    var rm = this.db.database.ref('projetos/' + this.id_projeto);
+    rm.remove();
   }
 
   removeProjeto(id: string) {
@@ -166,11 +163,22 @@ export class ProjetosPage {
       .equalTo(this.user.email).on("value", snapshot => {
         var items = snapshot.val();
 
-        console.log(items);
         if (items) {
-          this.listProjetos = Object.keys(items).map(i => items[i]);
+          var list = Object.keys(items).map(i => items[i]);
+
+          for (let i = 0; i < list.length; i++) {
+            this.listProjetos[i] = list[i];
+          }
         }
       });
+  }
+
+  addProjeto() {
+    this.operacao = true;
+  }
+
+  removeParticipante() {
+    this.participante.pop();
   }
 
   //Função para apresenta alertas
@@ -241,7 +249,6 @@ export class ProjetosPage {
       this.delete = data;
     });
   }
-
 
 
 }

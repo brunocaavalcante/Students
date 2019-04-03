@@ -12,7 +12,7 @@
         <img src="../../assets/imgs/projeto.png" />
         <ion-card-content>
           <ion-card-title>
-            {{ item.name }} 
+            {{ item.nome }} 
           </ion-card-title>
           <p>
             {{ item.descricao }}
@@ -66,7 +66,7 @@
 
         <ion-item>
           <ion-label>Campus</ion-label>
-          <ion-select multiple="false" cancelText="Cancelar" okText="Ok!">
+          <ion-select multiple="false" cancelText="Cancelar" formControlName="campus" okText="Ok!">
             <ion-option value="Santo Amaro" selected="true">Santo Amaro</ion-option>
             <ion-option value="Vergueiro" selected="false">Vergueiro</ion-option>
           </ion-select>

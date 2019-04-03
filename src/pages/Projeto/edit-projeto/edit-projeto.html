@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Editar Projeto</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <form novalidate [formGroup]="newProjectForm">
+
+    <ion-list>
+
+      <ion-item>
+        <ion-label floating> Nome do Projeto</ion-label>
+        <ion-input type="text" value="{{ p.nome }}" formControlName="nome"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Descrição do Projeto</ion-label>
+        <ion-textarea value="{{ p.descricao }}" formControlName="descricao" rows="4"></ion-textarea>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked>Data de Inicio</ion-label>
+        <ion-input type="date" value="{{ p.data_ini }}" formControlName="data_ini"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked>Data de Termino</ion-label>
+        <ion-input type="date" value="{{ p.data_fim }}" formControlName="data_fim"></ion-input>
+      </ion-item>
+
+
+      <ion-item>
+        <ion-label>Faculdade</ion-label>
+        <ion-select multiple="false" cancelText="Cancelar" okText="Ok!" formControlName="faculdade">
+          <ion-option value="Uninove" selected="true">Uninove</ion-option>
+          <ion-option value="Unip" selected="false">Unip</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Campus</ion-label>
+        <ion-select multiple="false" cancelText="Cancelar" formControlName="campus" okText="Ok!">
+          <ion-option value="Santo Amaro" selected="true">Santo Amaro</ion-option>
+          <ion-option value="Vergueiro" selected="false">Vergueiro</ion-option>
+        </ion-select>
+      </ion-item>
+
+    </ion-list>
+  </form>
+
+  <ion-list *ngFor="let item of participantes">
+    <ion-card>
+
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="../../../assets/imgs/p2.jpg">
+        </ion-avatar>
+        <h2>{{ item.nome }} {{ item.sobrenome}}</h2>
+        <p>{{ item.email }}</p>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Tornar administrador?</ion-label>
+        <ion-checkbox [(ngModel)]="item.adm"  (ionChange)="updateCheck(item)"></ion-checkbox>
+      </ion-item>
+
+    </ion-card>
+
+  </ion-list>
+  <div padding>
+    <button block ion-button (click)="alterProjeto()">Alterar Projeto</button>
+  </div>
+
+
+
+</ion-content>
