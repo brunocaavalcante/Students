@@ -6,6 +6,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operator/map';
+
 
 
 @IonicPage()
@@ -158,11 +161,9 @@ export class ProjetosPage {
   }
 
   getProjetos() {
-
     this.db.database.ref('projetos').orderByChild("id_participante")
       .equalTo(this.user.email).on("value", snapshot => {
         var items = snapshot.val();
-
         if (items) {
           var list = Object.keys(items).map(i => items[i]);
 

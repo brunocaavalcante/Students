@@ -56,14 +56,16 @@
 
 
     <ion-item *ngFor="let tf of subTarefas">
-      <ion-label>{{ tf.descricao }}</ion-label>
+      <div *ngIf="tf.id_tarefa == item.id">
+        <ion-label>{{ tf.descricao }}</ion-label>
 
-      <button ion-button clear color="danger" icon-only item-end (click)="presentShowConfirm(item)">
-        <ion-icon name="trash"></ion-icon>
-      </button>
+        <button ion-button clear color="danger" icon-only item-end (click)="presentShowConfirm(item)">
+          <ion-icon name="trash"></ion-icon>
+        </button>
 
-      <ion-checkbox disabled="false" (ionChange)="updateCheck(item)">
-      </ion-checkbox>
+        <ion-checkbox disabled="false" (ionChange)="updateCheck(item)">
+        </ion-checkbox>
+      </div>
     </ion-item>
 
   </div>
