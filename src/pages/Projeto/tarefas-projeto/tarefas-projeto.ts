@@ -33,7 +33,6 @@ export class TarefasProjetoPage {
   }
 
   ionViewDidLoad() {
-    console.log(this.list);
     const user = this.afAuth.auth.currentUser;//pega usuario logado
     this.uid = user.uid;
     this.getTarefa();
@@ -79,6 +78,22 @@ export class TarefasProjetoPage {
       });
   }
 
+  getSubTarefa(item) {
+    const listSub = [];
+    this.db.database.ref('subTarefas').orderByChild('id_tarefa')
+      .equalTo(item.id).on("value", snapshot => {
+        if (snapshot) {
+          let i = 0;
+          snapshot.forEach(data => {
+
+            listSub[i] = data.val();
+            i++;
+          });
+          return listSub;
+        }
+      });
+  }
+
   deleteTarefa(tarefa) {
 
     var rm = this.db.database.ref('tarefas/' + tarefa.id);
@@ -96,7 +111,7 @@ export class TarefasProjetoPage {
     var data = "" + dia + "/" + mes + "/" + ano;
     return data;
   }
-  
+
   updateCheck(item) {
     this.check = item.checked;
     this.db.database.ref('tarefas/' + item.id).update({ checked: this.check });
@@ -126,6 +141,16 @@ export class TarefasProjetoPage {
       ]
     });
     alert.present();
+  }
+
+ /* <script>
+  $(document).ready(function () {
+    $('.html').animate({ width: '90%' }, 2000);
+
+  });
+</script>*/
+  status(item){
+
   }
 
   //Função para apresenta alertas
