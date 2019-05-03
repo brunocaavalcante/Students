@@ -6,6 +6,7 @@ import { AlertController } from 'ionic-angular';
 import { TabsControllerPage } from '../tabs-controller/tabs-controller';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { CadastroUserPage } from '../Usuario/cadastro-user/cadastro-user';
+import { Storage } from '@ionic/storage';
 
 
 @IonicPage({
@@ -25,7 +26,9 @@ export class LoginPage {
     public formbuilder: FormBuilder,
     public afAuth: AngularFireAuth,
     public alertCtrl: AlertController,
-    public db: AngularFireDatabase) {
+    public db: AngularFireDatabase,
+    public storage: Storage
+  ) {
 
     this.loginForm = this.formbuilder.group({
       email: [null, [Validators.required, Validators.email]],
@@ -39,12 +42,12 @@ export class LoginPage {
       this.loginForm.value.email, this.loginForm.value.password)//Verificando através do firebase se o usuario é valido
       .then((response) => {
 
+        this.storage.set("user", response.user.uid); // Salvando o id do usuario no sqlite 
         this.db.database.ref('cadastro').orderByChild('email')
           .equalTo(response.user.email).on("value", snapshot => {
 
             snapshot.forEach(data => {
               if (data.val().nome == null) {
-                console.log(data.val().nome);
                 this.navCtrl.setRoot(CadastroUserPage);
                 this.presentAlert("Por favor conclua seu cadastro", "");
               } else {

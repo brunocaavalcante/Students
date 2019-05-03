@@ -35,7 +35,6 @@ export class TarefasProjetoPage {
   }
 
   ionViewDidLoad() {
-    console.log(this.list);
     const user = this.afAuth.auth.currentUser;//pega usuario logado
     this.uid = user.uid;
     this.getTarefa();
@@ -73,11 +72,8 @@ export class TarefasProjetoPage {
           let i = 0;
 
           snapshot.forEach(data => {
-
             if (data.val().id_participante == this.participante.id_participante) { //verificando participante
               this.list[i] = data.val();
-              this.getSubTarefa(data);
-
               i++;
             }
           });
@@ -95,32 +91,6 @@ export class TarefasProjetoPage {
     });
     this.presentAlert("Tarefa excluida com sucesso!", "");
 
-  }
-
-  addSubTarefa(item, data) {
-
-    console.log(data);
-    var key = this.db.database.ref('subTarefas').push().key;
-    this.db.database.ref('subTarefas/' + key).update({
-      id: key,
-      descricao: data.id_subTarefa,
-      id_tarefa: item.id,
-      id_projeto: item.id_projeto,
-      id_participante: item.id_participante
-    });
-  }
-
-  getSubTarefa(item) {
-
-    let i = 0;
-    this.db.database.ref('subTarefas').orderByChild('id_tarefa'). //Pega Sub - Tarefas
-      equalTo(item.val().id).on("value", snapshot => {
-        snapshot.forEach(data => {
-          this.subTarefas[i] = data.val();
-          i++;
-        });
-      })
-    console.log(this.subTarefas);
   }
 
   getData() {
@@ -159,7 +129,7 @@ export class TarefasProjetoPage {
         {
           text: 'Adicionar',
           handler: data => {
-            this.addSubTarefa(item, data);
+            // this.addSubTarefa(item, data);
           }
         }
       ]

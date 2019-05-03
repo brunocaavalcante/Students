@@ -2,25 +2,34 @@ page-tarefas-projeto {
   .item-tarefa {
     width: 300px;
   }
-  ion-card {
-    display: flex;
-    flex-direction: column;
-    width: 100% !important;
-    margin-top: 15px !important;
-    margin-left: 0 !important;
+  .progressBar {
+    position: relative;
+    width: 100%;
+    height: 2px;
+    background: #eeeeee;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px #222;
+    margin-top: 32px;
   }
+  .progress_value {
+    position: relative;
+    float: right;
+    padding-right: 40%;
+    line-height: 1.5;
 
-  .animate-if.ng-leave,
-  .animate-if.ng-enter.ng-enter-active {
-    opacity: 1;
+    color: #455a64;
+    z-index: 10000;
+    font-size: 23px;
   }
-  
-  .true{
-    text-decoration: line-through;
+  .progress {
+    height: 40px;
+    position: absolute;
+    border-radius: 5px;
+    box-shadow: 2px 0 2px #555;
   }
-  .card{
-    box-shadow: 1px 1px 3px 1px black;
-    padding: 20px;
-    margin-top: 20px;
+  .html {
+    background: rgb(54, 243, 33);
+    height: -webkit-fill-available;
   }
 }

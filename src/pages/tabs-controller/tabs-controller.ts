@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { CameraTabDefaultPagePage } from '../camera-tab-default-page/camera-tab-default-page';
 import { CartTabDefaultPagePage } from '../cart-tab-default-page/cart-tab-default-page';
-import { CloudTabDefaultPagePage } from '../cloud-tab-default-page/cloud-tab-default-page';
+import { CloudTabDefaultPagePage } from '../perfil/cloud-tab-default-page';
 
 
 @Component({

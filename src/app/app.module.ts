@@ -4,7 +4,7 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { CameraTabDefaultPagePage } from '../pages/camera-tab-default-page/camera-tab-default-page';
 import { CartTabDefaultPagePage } from '../pages/cart-tab-default-page/cart-tab-default-page';
-import { CloudTabDefaultPagePage } from '../pages/cloud-tab-default-page/cloud-tab-default-page';
+import { CloudTabDefaultPagePage } from '../pages/perfil/cloud-tab-default-page';
 import { TabsControllerPage } from '../pages/tabs-controller/tabs-controller';
 import { TestePage } from '../pages/teste/teste';
 import { StatusBar } from '@ionic-native/status-bar';

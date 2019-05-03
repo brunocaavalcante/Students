@@ -1,72 +1,49 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Tarefas</ion-title>
+    <ion-title>Cartões de Tarefas</ion-title>
   </ion-navbar>
+
 </ion-header>
 
 <ion-content padding>
   <ion-item>
-    <ion-label floating>Nome da Tarefa</ion-label>
+    <ion-label floating>Nome do Cartão</ion-label>
     <!--Aqui o ngModel esta criando uma variavel task que esta recebendo o conteudo do input-->
-    <ion-input type="text" value="{{tarefa}}" [(ngModel)]="tarefa"></ion-input>
+    <ion-input type="text" [(ngModel)]="tarefa"></ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label floating>Descricao da Tarefa</ion-label>
-    <ion-input type="text" value="{{descricao}}" [(ngModel)]="descricao"></ion-input>
+    <ion-input type="text" [(ngModel)]="descricao"></ion-input>
   </ion-item>
-  <button ion-button block class="add" (click)="addTarefa(descricao,tarefa,0)" [disabled]="!descricao">Adicionar
-    Tarefa</button>
+  <button ion-button block class="add" (click)="addTarefa(descricao,tarefa,0)"
+    [disabled]="!tarefa || tarefa.length < 3">Adicionar Tarefa</button>
   <!--Na linha acima estamos dizendo que o botão ficará desabilitado caso não exista a variavel
     tarefa ou se essa variavel tiver menos de 3 char assim o usuario não criara tarefas vazias -->
 
 
-  <!---- <ion-list *ngFor="let item of list">
+  <ion-list *ngFor="let item of list">
     <ion-card>
-      <ion-card-header>
-        <h5>Criador:{{ item.id_criador }}</h5>
-        <p>Data: {{ item.data }}</p>
-        <p *ngIf="item.descricao != null">Descricao: {{ item.descricao }}</p>
-        <p *ngIf="item.risco != null">Impedimentos: {{ item.risco }}</p>
-        <ion-item>Adicionar Subtarefa:<ion-icon name="add" item-end (click)="presentPrompt(item)"></ion-icon></ion-item>
+      <ion-card-header style="white-space: normal;">
+
+        <h5><b>Criador:</b> {{ item.id_criador }}</h5>
+        <p><b>Data:</b> {{ item.data }}</p>
+        <p><b>Descricao:</b> {{ item.descricao }}</p>
+
       </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <div class="progress_value">{{ item.status }}%</div>
+          <div class="progressBar">
+            <div class="progress html" [style.width.%]="item.status"></div>
+          </div>
 
-      <ion-item *ngFor="let tf of list.subTarefas">
-        <ion-label>{{ tf.id_subTarefa }}</ion-label>
-        <button ion-button clear color="danger" icon-only item-end (click)="presentShowConfirm(item)">
-          <ion-icon name="trash"></ion-icon>
-        </button>
-
-        <ion-checkbox disabled="false"  (ionChange)="updateCheck(item)">
-        </ion-checkbox>
-      </ion-item>
-
+        </ion-item>
+        <button ion-button outline clear small color="danger" (click)="presentShowConfirm(item)">EXCLUIR</button>
+        <button ion-button outline clear small (click)="presentPrompt(item)">TAREFAS</button>
+        <button ion-button outline clear small (click)="goToTarefas(item)">FINALIZAR</button>
+      </ion-card-content>
     </ion-card>
-    
-  
-  </ion-list>-->
-  <div class="card" *ngFor="let item of list">
 
-    <h5>Criador:{{ item.id_criador }}</h5>
-    <p>Data: {{ item.data }}</p>
-    <p *ngIf="item.descricao != null">Descricao: {{ item.descricao }}</p>
-    <p *ngIf="item.risco != null">Impedimentos: {{ item.risco }}</p>
-    <ion-item>Adicionar Subtarefa:<ion-icon name="add" item-end (click)="presentPrompt(item)"></ion-icon>
-    </ion-item>
-
-
-    <ion-item *ngFor="let tf of subTarefas">
-      <div *ngIf="tf.id_tarefa == item.id">
-        <ion-label>{{ tf.descricao }}</ion-label>
-
-        <button ion-button clear color="danger" icon-only item-end (click)="presentShowConfirm(item)">
-          <ion-icon name="trash"></ion-icon>
-        </button>
-
-        <ion-checkbox disabled="false" (ionChange)="updateCheck(item)">
-        </ion-checkbox>
-      </div>
-    </ion-item>
-
-  </div>
+  </ion-list>
 </ion-content>
