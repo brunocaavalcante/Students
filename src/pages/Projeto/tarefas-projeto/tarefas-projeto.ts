@@ -14,9 +14,11 @@ export class TarefasProjetoPage {
 
   uid: string;
   tarefa;
+  descricao;
   participante;
   id_dono;
   list = [];
+  subTarefas = [];
   projeto;
   check: boolean;
 
@@ -56,18 +58,21 @@ export class TarefasProjetoPage {
     })
       .then(() => {
         this.presentAlert("Tarefa Cadastrada", "");
+        this.tarefa = "";
+        this.descricao = "";
         this.ionViewDidLoad();
       })
   }
 
   getTarefa() {
 
-    this.db.database.ref('tarefas').orderByChild('id_projeto')
+    this.db.database.ref('tarefas').orderByChild('id_projeto') //Pega tarefas
       .equalTo(this.projeto.id).on("value", snapshot => {
         if (snapshot) {
           let i = 0;
+
           snapshot.forEach(data => {
-            if (data.val().id_participante == this.participante.id_participante) {
+            if (data.val().id_participante == this.participante.id_participante) { //verificando participante
               this.list[i] = data.val();
               i++;
             }
@@ -78,27 +83,12 @@ export class TarefasProjetoPage {
       });
   }
 
-  getSubTarefa(item) {
-    const listSub = [];
-    this.db.database.ref('subTarefas').orderByChild('id_tarefa')
-      .equalTo(item.id).on("value", snapshot => {
-        if (snapshot) {
-          let i = 0;
-          snapshot.forEach(data => {
-
-            listSub[i] = data.val();
-            i++;
-          });
-          return listSub;
-        }
-      });
-  }
-
   deleteTarefa(tarefa) {
 
-    var rm = this.db.database.ref('tarefas/' + tarefa.id);
-    rm.remove();
-    this.getTarefa();
+    this.db.database.ref('tarefas/' + tarefa.id).on("value", snapshot => {
+      var rm = this.db.database.ref('tarefas/' + tarefa.id);
+      rm.remove();
+    });
     this.presentAlert("Tarefa excluida com sucesso!", "");
 
   }
@@ -115,6 +105,36 @@ export class TarefasProjetoPage {
   updateCheck(item) {
     this.check = item.checked;
     this.db.database.ref('tarefas/' + item.id).update({ checked: this.check });
+  }
+
+  presentPrompt(item) {
+
+    let alert = this.alertCtrl.create({
+      title: 'SubTarefa',
+      inputs: [
+        {
+          name: 'id_subTarefa',
+          placeholder: 'Digite a descrição da sub-tarefa',
+          type: 'text'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: data => {
+
+          }
+        },
+        {
+          text: 'Adicionar',
+          handler: data => {
+            // this.addSubTarefa(item, data);
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
 
@@ -143,16 +163,6 @@ export class TarefasProjetoPage {
     alert.present();
   }
 
- /* <script>
-  $(document).ready(function () {
-    $('.html').animate({ width: '90%' }, 2000);
-
-  });
-</script>*/
-  status(item){
-
-  }
-
   //Função para apresenta alertas
   public presentAlert(title: string, subtitle: string) {
     let alert = this.alertCtrl.create({
@@ -162,4 +172,6 @@ export class TarefasProjetoPage {
     });
     alert.present();
   }
+
+
 }

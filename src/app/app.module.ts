@@ -22,6 +22,7 @@ import { ProjetosPage } from '../pages/Projeto/projetos/projetos';
 import { TarefasProjetoPage } from '../pages/Projeto/tarefas-projeto/tarefas-projeto';
 import { EditProjetoPage } from '../pages/Projeto/edit-projeto/edit-projeto';
 
+
 @NgModule({
   declarations: [
     MyApp,

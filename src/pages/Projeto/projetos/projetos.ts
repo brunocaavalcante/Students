@@ -23,12 +23,13 @@ export class ProjetosPage {
     id: "",
     email: ""
   }];
-  listProjetos = [];
+  listProjetos =[];
   id_projeto;
   newProjectForm: FormGroup;
   list;
   user;
   delete;
+  pj;
   uemail;
 
 
@@ -79,7 +80,8 @@ export class ProjetosPage {
       id: item.id,
       adm: item.adm,
       campus: item.campus,
-      dono: item.dono
+      dono: item.dono,
+      id_participante:item.id_participante
     }
 
     this.navCtrl.push(TarefasPage, { projeto });
@@ -113,7 +115,7 @@ export class ProjetosPage {
                 id: this.id_projeto,
                 id_participante: this.list[0].email,
                 dono: this.user.email,
-                adm: (this.list[0].email == this.user.email ? "sim" : "não")
+                adm:(this.list[0].email == this.user.email?"true":"false")
 
               })
 
@@ -131,7 +133,8 @@ export class ProjetosPage {
                 campus: this.newProjectForm.get('campus').value,
                 name: this.newProjectForm.get('name').value,
                 id: this.id_projeto,
-                id_participante: this.participante[i].email
+                id_participante: this.participante[i].email,
+                adm:"false"
               })
             }
           });
@@ -162,7 +165,11 @@ export class ProjetosPage {
       .equalTo(this.user.email).on("value", snapshot => {
         var items = snapshot.val();
         if (items) {
-          this.listProjetos = Object.keys(items).map(i => items[i]);
+          var list = Object.keys(items).map(i => items[i]);
+
+          for (let i = 0; i < list.length; i++) {
+            this.listProjetos[i] = list[i];
+          }
         }
       });
   }
@@ -243,7 +250,6 @@ export class ProjetosPage {
       this.delete = data;
     });
   }
-
 
 
 }

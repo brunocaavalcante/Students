@@ -1,13 +1,13 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Tarefas</ion-title>
+    <ion-title>Cartões de Tarefas</ion-title>
   </ion-navbar>
-  
+
 </ion-header>
 
 <ion-content padding>
   <ion-item>
-    <ion-label floating>Nome da Tarefa</ion-label>
+    <ion-label floating>Nome do Cartão</ion-label>
     <!--Aqui o ngModel esta criando uma variavel task que esta recebendo o conteudo do input-->
     <ion-input type="text" [(ngModel)]="tarefa"></ion-input>
   </ion-item>
@@ -33,16 +33,15 @@
       </ion-card-header>
       <ion-card-content>
         <ion-item>
+          <div class="progress_value">{{ item.status }}%</div>
           <div class="progressBar">
-            <div class="titulo htmlColor" style="width:100%">STATUS</div>
-            <div class="progress html"></div>
-            <div class="progress_value">30%</div>
+            <div class="progress html" [style.width.%]="item.status"></div>
           </div>
-          
+
         </ion-item>
         <button ion-button outline clear small color="danger" (click)="presentShowConfirm(item)">EXCLUIR</button>
         <button ion-button outline clear small (click)="presentPrompt(item)">TAREFAS</button>
-        <button ion-button outline clear small color="secondary" (click)="goToTarefas(item)">FINALIZAR</button>
+        <button ion-button outline clear small (click)="goToTarefas(item)">FINALIZAR</button>
       </ion-card-content>
     </ion-card>
 

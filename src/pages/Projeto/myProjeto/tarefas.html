@@ -15,7 +15,7 @@
       </ion-segment-button>
 
 
-      <ion-segment-button large value="">
+      <ion-segment-button large value="chats">
         <ion-icon name="chatbubbles"></ion-icon>
       </ion-segment-button>
     </ion-segment>
@@ -97,7 +97,7 @@
       </fieldset>
 
       <br>
-      <div *ngIf=" projeto.adm == 'sim'">
+      <div *ngIf="adm">
         <ion-item (click)="presentAddParticipante()" class="icon-btn">
           Adicionar Participantes
           <ion-icon name="person-add" item-end></ion-icon>
@@ -119,6 +119,33 @@
       </ion-item>
 
     </ion-list>
+
+    <ion-list *ngSwitchCase="'chats'">
+
+      <ion-item no-lines>
+        <div class="chat-status" text-center >
+          <span class="chat-date">26/07/2019</span>
+          <span class="chat-content-center">chat.message</span>
+        </div>
+        <ng-template #message>
+          <div class="chat-message" text-right>
+            <div class="right-bubble">
+              <span class="msg-name">Me</span>
+              <span class="msg-date">2019</span>
+              <p text-wrap>ola wello word</p>
+            </div>
+          </div>
+          <div class="chat-message" text-left >
+            <div class="left-bubble">
+              <span class="msg-name">bruno</span>
+              <span class="msg-date">2019</span>
+              <p text-wrap>ola tudo bem</p>
+            </div>
+          </div>
+        </ng-template>
+      </ion-item>
+    </ion-list>
+
 
   </div>
 
