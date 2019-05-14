@@ -6,6 +6,8 @@ import { MenuController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TarefasProjetoPage } from '../tarefas-projeto/tarefas-projeto';
 import { EditProjetoPage } from '../edit-projeto/edit-projeto';
+import { DespesasPage } from '../despesas/despesas';
+
 
 
 @IonicPage()
@@ -49,9 +51,7 @@ export class TarefasPage {
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.segment.value = 'sobre';
     this.getParticipantes();
-    this.getMenssagens();
     this.closeMenu();
-
   }
 
 
@@ -183,10 +183,6 @@ export class TarefasPage {
       });
     this.presentAlert("Participante adicionado", "");
 
-  }
-
-  getMenssagens() {
-   
   }
 
   //Função para apresenta alertas
@@ -331,4 +327,9 @@ export class TarefasPage {
     var participantes = this.list;
     this.navCtrl.push(EditProjetoPage, { p, participantes });
   }
+
+  goToDespesas(){
+    this.navCtrl.push(DespesasPage);
+  }
+  
 }

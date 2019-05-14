@@ -98,9 +98,15 @@
 
       <br>
       <div *ngIf="adm">
+
         <ion-item (click)="presentAddParticipante()" class="icon-btn">
           Adicionar Participantes
           <ion-icon name="person-add" item-end></ion-icon>
+        </ion-item>
+
+        <ion-item (click)="goToDespesas()" class="icon-btn">
+          Orçamento do Projeto
+          <ion-icon name="card" item-end></ion-icon>
         </ion-item>
 
         <ion-item (click)="goToEditProjeto()" class="icon-btn2">

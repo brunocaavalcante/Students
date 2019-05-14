@@ -21,6 +21,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { ProjetosPage } from '../pages/Projeto/projetos/projetos';
 import { TarefasProjetoPage } from '../pages/Projeto/tarefas-projeto/tarefas-projeto';
 import { EditProjetoPage } from '../pages/Projeto/edit-projeto/edit-projeto';
+import { DespesasPage } from '../pages/Projeto/despesas/despesas';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { EditProjetoPage } from '../pages/Projeto/edit-projeto/edit-projeto';
     TarefasPage,
     EditProjetoPage,
     ProjetosPage,
-    TarefasProjetoPage
+    TarefasProjetoPage,
+    DespesasPage
        
   ],
   imports: [
@@ -60,7 +62,8 @@ import { EditProjetoPage } from '../pages/Projeto/edit-projeto/edit-projeto';
     EditProjetoPage,
     TarefasPage,
     ProjetosPage,
-    TarefasProjetoPage
+    TarefasProjetoPage,
+    DespesasPage
   ],
   providers: [
     StatusBar,
