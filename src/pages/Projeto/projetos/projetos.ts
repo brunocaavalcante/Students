@@ -1,14 +1,11 @@
-import { Component, ɵConsole, Query } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { MenuController } from 'ionic-angular';
 import { TarefasPage } from '../myProjeto/tarefas';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operator/map';
-
 
 
 @IonicPage()
@@ -23,10 +20,9 @@ export class ProjetosPage {
     id: "",
     email: ""
   }];
-  listProjetos =[];
   id_projeto;
   newProjectForm: FormGroup;
-  list;
+  list = [];
   user;
   delete;
   pj;
@@ -50,10 +46,10 @@ export class ProjetosPage {
       descricao: [null, [Validators.required, Validators.minLength(10)]],
       data_ini: [null],
       data_fim: [null],
-      faculdade: [null],
-      campus: [null],
-      funcao: [null],
-      name: [null, [Validators.required, Validators.minLength(5)]],
+      faculdade: [null,[Validators.required]],
+      campus: [null,[Validators.required]],
+      funcao: [null,[Validators.required]],
+      nome: [null, [Validators.required, Validators.minLength(5)]],
     })
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.getProjetos();
@@ -71,6 +67,7 @@ export class ProjetosPage {
 
   goToProjetos(item) {
 
+    console.log(item);
     var projeto = {
       nome: item.nome,
       descricao: item.descricao,
@@ -81,7 +78,7 @@ export class ProjetosPage {
       adm: item.adm,
       campus: item.campus,
       dono: item.dono,
-      id_participante:item.id_participante
+      id_participante: item.id_participante
     }
 
     this.navCtrl.push(TarefasPage, { projeto });
@@ -111,11 +108,11 @@ export class ProjetosPage {
                 data_fim: this.newProjectForm.get('data_fim').value,
                 faculdade: this.newProjectForm.get('faculdade').value,
                 campus: this.newProjectForm.get('campus').value,
-                name: this.newProjectForm.get('name').value,
+                nome: this.newProjectForm.get('nome').value,
                 id: this.id_projeto,
                 id_participante: this.list[0].email,
                 dono: this.user.email,
-                adm:(this.list[0].email == this.user.email?"true":"false")
+                adm: (this.list[0].email == this.user.email ? "true" : "false")
 
               })
 
@@ -131,16 +128,16 @@ export class ProjetosPage {
                 data_fim: this.newProjectForm.get('data_fim').value,
                 faculdade: this.newProjectForm.get('faculdade').value,
                 campus: this.newProjectForm.get('campus').value,
-                name: this.newProjectForm.get('name').value,
+                nome: this.newProjectForm.get('nome').value,
                 id: this.id_projeto,
                 id_participante: this.participante[i].email,
-                adm:"false"
+                adm: "false"
               })
             }
           });
       }
     }
-    this.presentAlert("Projeto " + this.newProjectForm.get('name').value, "Projeto criado com sucesso");
+    this.presentAlert("Projeto " + this.newProjectForm.get('nome').value, "Projeto criado com sucesso");
     this.operacao = false;
     var rm = this.db.database.ref('projetos/' + this.id_projeto);
     rm.remove();
@@ -163,13 +160,12 @@ export class ProjetosPage {
   getProjetos() {
     this.db.database.ref('projetos').orderByChild("id_participante")
       .equalTo(this.user.email).on("value", snapshot => {
-        var items = snapshot.val();
-        if (items) {
-          var list = Object.keys(items).map(i => items[i]);
-
-          for (let i = 0; i < list.length; i++) {
-            this.listProjetos[i] = list[i];
-          }
+        let i = 0;
+        if (snapshot) {
+          snapshot.forEach(data => {
+            this.list[i] = data.val();
+            i++;
+          });
         }
       });
   }

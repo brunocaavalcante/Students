@@ -7,29 +7,49 @@ page-tarefas-projeto {
     width: 100%;
     height: 2px;
     background: #eeeeee;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     border-radius: 5px;
-    box-shadow: 0 1px 2px #222;
-    margin-top: 32px;
+    box-shadow: 0 0px 3px #222;
+    margin-top: 33px;
   }
   .progress_value {
     position: relative;
     float: right;
     padding-right: 40%;
-    line-height: 1.5;
-
-    color: #455a64;
+    margin-left: auto;
+    margin-right: auto;
+    text-shadow: 0px 1px 2px black;
     z-index: 10000;
     font-size: 23px;
+  }
+  .divisor_tracejado{
+    border-bottom: dotted;
+    border-bottom-width: 1px;
+    margin-top: 4px;
   }
   .progress {
     height: 40px;
     position: absolute;
-    border-radius: 5px;
-    box-shadow: 2px 0 2px #555;
   }
   .html {
-    background: rgb(54, 243, 33);
     height: -webkit-fill-available;
+  }
+  .baixo {
+    background-color: red;
+  }
+  .medio {
+    background-color: yellow;
+  }
+  .alto {
+    background-color: green;
+  }
+  .txt-baixo {
+    color: red;
+  }
+  .txt-alto {
+    color: green;
+  }
+  .txt-medio {
+    color: yellow;
   }
 }

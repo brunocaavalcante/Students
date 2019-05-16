@@ -42,6 +42,7 @@ export class TarefasPage {
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.projeto = this.navParams.get('projeto');
     this.getParticipantes();
+    console.log(this.projeto);
   }
 
   ionViewDidLoad() {
@@ -49,7 +50,6 @@ export class TarefasPage {
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.segment.value = 'sobre';
     this.getParticipantes();
-    this.getMenssagens();
     this.closeMenu();
 
   }
@@ -139,7 +139,7 @@ export class TarefasPage {
 
     //verifica se o participante esta cadastrado no sistema 
     this.db.database.ref('cadastro').orderByChild("email")
-      .equalTo(item.id_participante).once("value", snapshot => {
+      .equalTo(item.email).once("value", snapshot => {
         const items = snapshot.val();
 
         if (items != null) {
@@ -157,17 +157,19 @@ export class TarefasPage {
             nome: (this.projeto.nome != null ? this.projeto.nome : "Indefinido"),
             id: this.projeto.id,
             id_participante: this.list[0].email,
+            adm: "false",
             dono: this.projeto.dono,
 
           })
 
         } else {
+
           var id = this.db.database.ref('cadastro').push().key
           this.db.database.ref('cadastro/' + id).update({ // Cria pré cadastro
             email: item.email,
             id: id
           })
-          this.db.database.ref('projetos/' + this.id_projeto).push({  //Insere no projeto
+          this.db.database.ref('projetos').push({  //Insere no projeto
             descricao: (this.projeto.descricao != null ? this.projeto.descricao : "Indefinido"),
             data_ini: (this.projeto.data_ini != null ? this.projeto.data_ini : "Indefinido"),
             data_fim: (this.projeto.data_fim != null ? this.projeto.data_fim : "Indefinido"),
@@ -175,7 +177,7 @@ export class TarefasPage {
             campus: (this.projeto.campus != null ? this.projeto.campus : "Indefinido"),
             nome: (this.projeto.nome != null ? this.projeto.nome : "Indefinido"),
             id: this.projeto.id,
-            id_participante: this.list[0].email,
+            id_participante: item.email,
             dono: this.projeto.dono,
 
           })
@@ -183,10 +185,6 @@ export class TarefasPage {
       });
     this.presentAlert("Participante adicionado", "");
 
-  }
-
-  getMenssagens() {
-   
   }
 
   //Função para apresenta alertas
@@ -250,7 +248,7 @@ export class TarefasPage {
       title: 'Participante',
       inputs: [
         {
-          name: 'id_participante',
+          name: 'email',
           placeholder: 'Digite o Email do Participante',
           type: 'email',
           value: ""
@@ -281,6 +279,7 @@ export class TarefasPage {
         {
           text: 'Adicionar',
           handler: data => {
+            console.log(data);
             this.insertParticipante(data);
 
           }

@@ -26,22 +26,32 @@
     <ion-card>
       <ion-card-header style="white-space: normal;">
 
-        <h5><b>Criador:</b> {{ item.id_criador }}</h5>
-        <p><b>Data:</b> {{ item.data }}</p>
-        <p><b>Descricao:</b> {{ item.descricao }}</p>
+        <h5 class="divisor_tracejado"><b>Criador:</b> {{ item.id_criador }}</h5>
+        <p class="divisor_tracejado"><b>Data:</b> {{ item.data }}</p>
+        <p class="divisor_tracejado"><b>TÍTULO:</b> {{ item.tarefa }}</p>
+        <p class="divisor_tracejado"><b>Descricao:</b> {{ item.descricao }}</p>
 
       </ion-card-header>
       <ion-card-content>
         <ion-item>
-          <div class="progress_value">{{ item.status }}%</div>
+          <div class="progress_value" [ngClass]="{
+              'txt-baixo' : item.status < 30,
+              'txt-medio' : item.status > 30 && item.status < 60,
+              'txt-alto' :  item.status > 60
+           }"><span>{{ item.status.toFixed(0) }}%</span>
+          </div>
           <div class="progressBar">
-            <div class="progress html" [style.width.%]="item.status"></div>
+            <div class="progress html" [ngClass]="{
+              'baixo' : item.status < 30,
+              'medio' : item.status > 30 && item.status < 60,
+              'alto' :  item.status > 60
+           }" [style.width.%]="item.status"></div>
           </div>
 
         </ion-item>
         <button ion-button outline clear small color="danger" (click)="presentShowConfirm(item)">EXCLUIR</button>
-        <button ion-button outline clear small (click)="presentPrompt(item)">TAREFAS</button>
-        <button ion-button outline clear small (click)="goToTarefas(item)">FINALIZAR</button>
+        <button ion-button outline clear small (click)="goToSubTarefas(item)">TAREFAS</button>
+        <button ion-button outline clear small>FINALIZAR</button>
       </ion-card-content>
     </ion-card>
 

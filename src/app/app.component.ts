@@ -43,6 +43,7 @@ export class MyApp {
   openProjeto(){
     this.navCtrl.push(ProjetosPage);
   }
+  
  
   
 }

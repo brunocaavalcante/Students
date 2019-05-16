@@ -62,7 +62,7 @@ export class LoginPage {
           this.loginForm.controls['password'].setValue(null);//Lipando o campo de senha
         }
         if (error.code == 'auth/user-not-found') {
-          this.presentAlert('Erro', 'Email incorreto, digite novamente.');
+          this.presentAlert('Erro', 'Email incorreto ou Usuario não cadastrado, digite novamente.');
           this.loginForm.controls['password'].setValue(null);
         }
       })
