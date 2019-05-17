@@ -135,6 +135,11 @@ export class TarefasPage {
       });
   }
 
+  finalizarProjeto(){
+    console.log(this.projeto);
+    this.db.database.ref('projetos/'+this.projeto.id).update({status:"inativo"});
+  }
+
   insertParticipante(item) {
 
     //verifica se o participante esta cadastrado no sistema 

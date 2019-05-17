@@ -1,4 +1,4 @@
-import { Component, ɵConsole, Query } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { MenuController } from 'ionic-angular';
 import { TarefasPage } from '../myProjeto/tarefas';
@@ -6,8 +6,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operator/map';
 
 
 
@@ -23,7 +21,7 @@ export class ProjetosPage {
     id: "",
     email: ""
   }];
-  listProjetos =[];
+  listProjetos = [];
   id_projeto;
   newProjectForm: FormGroup;
   list;
@@ -81,7 +79,7 @@ export class ProjetosPage {
       adm: item.adm,
       campus: item.campus,
       dono: item.dono,
-      id_participante:item.id_participante
+      id_participante: item.id_participante
     }
 
     this.navCtrl.push(TarefasPage, { projeto });
@@ -115,7 +113,8 @@ export class ProjetosPage {
                 id: this.id_projeto,
                 id_participante: this.list[0].email,
                 dono: this.user.email,
-                adm:(this.list[0].email == this.user.email?"true":"false")
+                adm: (this.list[0].email == this.user.email ? "true" : "false"),
+                status: 'ativo'
 
               })
 
@@ -134,7 +133,8 @@ export class ProjetosPage {
                 name: this.newProjectForm.get('name').value,
                 id: this.id_projeto,
                 id_participante: this.participante[i].email,
-                adm:"false"
+                adm: "false",
+                status: "ativo"
               })
             }
           });

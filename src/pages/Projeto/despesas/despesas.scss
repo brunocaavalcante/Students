@@ -3,15 +3,16 @@ page-despesas {
         color: rgb(20, 190, 33);
         text-shadow: 1px 1px 1px;
         text-align: center;
-        size: 26px;
+        size: 20px;
     }
     .saldo_circle{
-        padding: 30px;
+        padding: 20px;
         background-color: rgba(143, 247, 125,100);
-        width: 250px;
+        width: 100%;
         margin-left: auto;
         margin-right: auto;
-        border-radius: 40%;
+        border-radius: 0%;
+        box-shadow: 0px 0px 8px black;
     }
 
 }
