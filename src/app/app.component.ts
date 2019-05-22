@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav, NavController, Tab} from 'ionic-angular';
+import { Platform, Nav, NavController, MenuController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
@@ -14,35 +14,43 @@ import { AngularFireAuth } from '@angular/fire/auth';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  
+
   @ViewChild(Nav) navCtrl: NavController;
-    rootPage:any = '';
+  rootPage: any = TestePage;
 
   constructor(
-    platform: Platform, 
-    statusBar: StatusBar, 
+    platform: Platform,
+    statusBar: StatusBar,
     splashScreen: SplashScreen,
     public storage: Storage,
+    public menuCtrl: MenuController,
     public afAuth: AngularFireAuth
-    ) {
+  ) {
+
     platform.ready().then(() => {
 
       const user = this.afAuth.auth.currentUser; //pega usuario logado
-      
-        if(user != null){
-          this.rootPage = TabsControllerPage;
-        }else{
-          this.rootPage = TestePage;
-        }
+
+      if (user != null) {
+        this.rootPage = TabsControllerPage;
+      } else {
+        this.rootPage = TestePage;
+      }
 
       statusBar.styleDefault();
       splashScreen.hide();
     });
   }
 
-  openProjeto(){
+  openProjeto() {
     this.navCtrl.push(ProjetosPage);
   }
- 
   
+  Logout() {
+    this.storage.set("user", null); // Salvando o id do usuario no sqlite
+    this.navCtrl.setRoot(TestePage);
+    this.menuCtrl.close(); 
+  }
+
+
 }

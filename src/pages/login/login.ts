@@ -42,7 +42,7 @@ export class LoginPage {
       this.loginForm.value.email, this.loginForm.value.password)//Verificando através do firebase se o usuario é valido
       .then((response) => {
 
-        this.storage.set("user", response.user.uid); // Salvando o id do usuario no sqlite 
+       this.storage.set("user", response.user.uid); // Salvando o id do usuario no sqlite 
         this.db.database.ref('cadastro').orderByChild('email')
           .equalTo(response.user.email).on("value", snapshot => {
 

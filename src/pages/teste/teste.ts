@@ -4,6 +4,7 @@ import { CadastroUserPage } from '../Usuario/cadastro-user/cadastro-user';
 import { LoginPage } from '../login/login';
 import { Storage } from '@ionic/storage';
 import { TabsControllerPage } from '../tabs-controller/tabs-controller';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 
 @IonicPage()
@@ -16,6 +17,7 @@ export class TestePage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public afAuth: AngularFireAuth,
     public storage: Storage
      ) {
   }

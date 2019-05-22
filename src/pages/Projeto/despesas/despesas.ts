@@ -12,6 +12,9 @@ import { AngularFireDatabase } from '@angular/fire/database';
 })
 export class DespesasPage {
 
+  projeto;
+  list;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -19,9 +22,46 @@ export class DespesasPage {
     public alertCtrl: AlertController,
     public db: AngularFireDatabase//Banco de dados Firebase
   ) {
+    this.projeto = this.navParams.get('projeto');
+    this.getDespesas();
   }
-  
-  presentAddParticipante() {
+  insertDespesa(item) {
+    var id = this.db.database.ref('despesas').push().key;
+    this.db.database.ref('despesas/' + id).update({
+      id_despesa: id,
+      titulo: item.titulo,
+      descricao: item.descricao,
+      valor: item.valor,
+      vencimento: item.vencimento,
+      // prioridade: item.prioridade,
+      id_projeto: this.projeto.id,
+      id_criador: this.afAuth.auth.currentUser.email,
+      checked: "false"
+    })
+      .then(() => {
+        this.presentAlert("Despesa Cadastrada", "");
+        this.ionViewDidLoad();
+      })
+  }
+
+  getDespesas() {
+
+    this.db.database.ref('despesas').orderByChild('id_projeto') //Pega tarefas
+      .equalTo(this.projeto.id).on("value", snapshot => {
+        if (snapshot) {
+          let i = 0;
+
+          snapshot.forEach(data => {
+            this.list[i] = data.val();
+            i++;
+          });
+        } else {
+          console.log("não tem despesas");
+        }
+      });
+  }
+
+  presentInsertDespesa() {
 
     let alert = this.alertCtrl.create({
       title: 'Nova Despesa',
@@ -39,14 +79,21 @@ export class DespesasPage {
           value: ""
         },
         {
-          name: 'Valor',
+          name: 'vencimento',
+          label: 'Data de Vencimento',
+          type: 'date',
+          value: ""
+        },
+        {
+          name: 'valor',
           label: 'Valor da despesa',
           placeholder: 'Digite o valor da despesa',
           type: 'number',
           value: ""
-        },
+        }
 
       ],
+
       buttons: [
         {
           text: 'Cancel',
@@ -58,11 +105,27 @@ export class DespesasPage {
         {
           text: 'Adicionar',
           handler: data => {
-           
 
+            this.insertDespesa(data);
           }
         }
       ]
+    });
+    alert.addInput({
+      name: 'ck1',
+      type: 'checkbox',
+      label: 'Bespin',
+      value: 'value2'
+    })
+
+    alert.present();
+  }
+
+  public presentAlert(title: string, subtitle: string) {
+    let alert = this.alertCtrl.create({
+      title: title,
+      subTitle: subtitle,
+      buttons: ['OK']
     });
     alert.present();
   }

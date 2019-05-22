@@ -82,7 +82,7 @@ export class TarefasProjetoPage {
         }
       });
   }
-
+ 
   deleteTarefa(tarefa) {
 
     this.db.database.ref('tarefas/' + tarefa.id).on("value", snapshot => {

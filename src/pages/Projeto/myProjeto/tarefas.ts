@@ -1,4 +1,4 @@
-import { Component, ViewChild,OnInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Segment } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { AngularFireDatabase } from '@angular/fire/database';
@@ -135,9 +135,9 @@ export class TarefasPage {
       });
   }
 
-  finalizarProjeto(){
+  finalizarProjeto() {
     console.log(this.projeto);
-    this.db.database.ref('projetos/'+this.projeto.id).update({status:"inativo"});
+    this.db.database.ref('projetos/' + this.projeto.id).update({ status: "inativo" });
   }
 
   insertParticipante(item) {
@@ -333,8 +333,9 @@ export class TarefasPage {
     this.navCtrl.push(EditProjetoPage, { p, participantes });
   }
 
-  goToDespesas(){
-    this.navCtrl.push(DespesasPage);
+  goToDespesas() {
+    var projeto = this.projeto
+    this.navCtrl.push(DespesasPage,{ projeto });
   }
-  
+
 }

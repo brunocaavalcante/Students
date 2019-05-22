@@ -1,50 +1,52 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>despesas</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>despesas</ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <button ion-button block color="primary">Adicionar despesa</button>
-    
-  <h4>Lista de Despesas:</h4><br>
-  <ion-list>
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Card Title</ion-card-title>
-      </ion-card-header>
+    <button ion-button block color="primary" (click)="presentInsertDespesa()">Adicionar despesa</button>
 
-      <ion-card-content>
-        Keep close to Nature's heart... and break clear away, once in awhile,
-        and climb a mountain or spend a week in the woods. Wash your spirit clean.
-      </ion-card-content>
-      <ion-item>
-        <ion-label> 500,00R$</ion-label>
-        <button ion-button clear color="danger" icon-only item-end (click)="presentShowConfirm(item)">
+    <h4>Lista de Despesas:</h4><br>
+    <ion-list *ngFor="let item of list">
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>item.titulo</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+                item.descricao
+                <br><br>
+                <p><b>Prioridade:</b> alta</p>
+            </ion-card-content>
+
+            <ion-item>
+                <ion-label>item.valorR$</ion-label>
+                <button ion-button clear color="danger" icon-only item-end (click)="presentShowConfirm(item)">
           <ion-icon name="trash"></ion-icon>
         </button>
-        <ion-checkbox disabled="false" (ionChange)="updateCheck(item)">
-        </ion-checkbox>
-      </ion-item>
-    </ion-card>
-  </ion-list>
+                <ion-checkbox disabled="false" (ionChange)="updateCheck(item)">
+                </ion-checkbox>
+            </ion-item>
+        </ion-card>
+    </ion-list>
 
-  <ion-item color="primary">
-    <ion-label>
-      SALDO INICIAL: 1.500,00 R$
-    </ion-label>
-  </ion-item>
+    <ion-item color="primary">
+        <ion-label>
+            SALDO INICIAL: 1.500,00 R$
+        </ion-label>
+    </ion-item>
 
-  <ion-item color="danger">
-    <ion-label>
-      SALDO DESPESAS: 500,00 R$
-    </ion-label>
-  </ion-item>
+    <ion-item color="danger">
+        <ion-label>
+            SALDO DESPESAS: 500,00 R$
+        </ion-label>
+    </ion-item>
 
-  <ion-item color="secondary">
-    <ion-label>
-      SALDO DISPONÍVEL: 1.000,00 R$
-    </ion-label>
-  </ion-item>
-  
+    <ion-item color="secondary">
+        <ion-label>
+            SALDO DISPONÍVEL: 1.000,00 R$
+        </ion-label>
+    </ion-item>
+
 </ion-content>
