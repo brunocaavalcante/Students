@@ -1,101 +1,96 @@
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Meus Projetos</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>Meus Projetos</ion-title>
+    </ion-navbar>
 
-  <ion-toolbar no-border-top>
-    <ion-segment [(ngModel)]="myProjeto">
-      <ion-segment-button large value="sobre">
-        Sobre
-      </ion-segment-button>
+    <ion-toolbar no-border-top>
+        <ion-segment [(ngModel)]="myProjeto">
+            <ion-segment-button large value="sobre">
+                Sobre
+            </ion-segment-button>
 
-      <ion-segment-button large value="integrantes">
-        <ion-icon name="people"></ion-icon>
-      </ion-segment-button>
+            <ion-segment-button large value="integrantes">
+                <ion-icon name="people"></ion-icon>
+            </ion-segment-button>
 
 
-      <ion-segment-button large value="chats">
-        <ion-icon name="chatbubbles"></ion-icon>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
+            <ion-segment-button large value="chats">
+                <ion-icon name="chatbubbles"></ion-icon>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
 
 </ion-header>
 
 <ion-content padding>
 
-  <div [ngSwitch]="myProjeto">
+    <div [ngSwitch]="myProjeto">
 
-    <ion-list *ngSwitchCase="'integrantes'">
+        <ion-list *ngSwitchCase="'integrantes'">
 
-      <ion-item *ngFor="let item of list">
+            <ion-item *ngFor="let item of list">
 
-        <ion-card class="card">
-          <ion-card-header>
-            <ion-item>
-              <ion-avatar item-start>
-                <img src="../../assets/imgs/p2.jpg">
-              </ion-avatar>
-              <h2> {{ item.nome }} </h2>
-              <p> {{ item.email }}</p>
-            </ion-item>
-          </ion-card-header>
+                <ion-card class="card">
+                    <ion-card-header>
+                        <ion-item>
+                            <ion-avatar item-start>
+                                <img src="../../assets/imgs/p2.jpg">
+                            </ion-avatar>
+                            <h2> {{ item.nome }} </h2>
+                            <p> {{ item.email }}</p>
+                        </ion-item>
+                    </ion-card-header>
 
-          <ion-card-content>
+                    <ion-card-content>
 
-            <fieldset *ngIf="item.funcao != null; else funcao">
-              <legend> {{ item.funcao }} </legend>
-              <p> {{ item.desc_f }} </p>
-            </fieldset>
-            <fieldset *ngIf="item.faculdade != null">
-              <legend> {{ item.faculdade }} </legend>
-              <p> {{ item.curso }} </p>
-            </fieldset>
+                        <fieldset *ngIf="item.funcao != null; else funcao">
+                            <legend> {{ item.funcao }} </legend>
+                            <p> {{ item.desc_f }} </p>
+                        </fieldset>
+                        <fieldset *ngIf="item.faculdade != null">
+                            <legend> {{ item.faculdade }} </legend>
+                            <p> {{ item.curso }} </p>
+                        </fieldset>
 
-            <ng-template #funcao>
-              <p>
-                Click em alterar para definir função
-              </p><br>
-            </ng-template>
+                        <ng-template #funcao>
+                            <p>
+                                Click em alterar para definir função
+                            </p><br>
+                        </ng-template>
 
-
+<<<<<<< HEAD
             <button ion-button outline clear small color="danger" (click)="presentShowConfirm(item)">EXCLUIR</button>
             <button ion-button outline clear small (click)="presentPrompt(item)">ALTERAR</button>
             <button ion-button outline clear small (click)="goToTarefas(item)">CARTÕES</button>
           </ion-card-content>
+=======
+>>>>>>> 136a0d3cb3592c92c9219584d31f4f741e5bfc48
 
-        </ion-card>
+                        <button ion-button outline clear small color="danger" (click)="presentShowConfirm(item)">EXCLUIR</button>
+                        <button ion-button outline clear small (click)="presentPrompt(item)">ALTERAR</button>
+                        <button ion-button outline clear small (click)="goToTarefas(item)">TAREFAS</button>
+                    </ion-card-content>
 
-      </ion-item>
+                </ion-card>
 
-
-    </ion-list>
-
-    <ion-list *ngSwitchCase="'sobre'">
-
-      <h3 class="titulo">{{ projeto.nome }}</h3>
-
-      <img src="../../assets/imgs/projeto_2.jpg" class="s_img">
-
-      <fieldset>
-        <legend>Descricao:</legend>
-        <p>{{ projeto.descricao }}</p>
-      </fieldset>
+            </ion-item>
 
 
-      <fieldset>
-        <legend>Prazo:</legend>
-        <p>Data de Inicio: {{ projeto.data_ini }}</p>
-        <p>Data de Termino: {{ projeto.data_fim }}</p>
-      </fieldset>
+        </ion-list>
 
-      <fieldset>
-        <p>Faculdade: {{ projeto.faculdade }}</p>
-        <p>Campus: {{ projeto.campus }}</p>
-        <p>Administrador: {{ projeto.dono }}</p>
-      </fieldset>
+        <ion-list *ngSwitchCase="'sobre'">
 
+            <h3 class="titulo">{{ projeto.nome }}</h3>
+
+            <img src="../../assets/imgs/projeto_2.jpg" class="s_img">
+
+            <fieldset>
+                <legend>Descricao:</legend>
+                <p>{{ projeto.descricao }}</p>
+            </fieldset>
+
+<<<<<<< HEAD
       <br>
 
       <div>
@@ -132,11 +127,40 @@
           <ion-icon name="sad" item-end></ion-icon>
         </ion-item>
       </div>
+=======
 
-    </ion-list>
+            <fieldset>
+                <legend>Prazo:</legend>
+                <p>Data de Inicio: {{ projeto.data_ini }}</p>
+                <p>Data de Termino: {{ projeto.data_fim }}</p>
+            </fieldset>
 
-    <ion-list *ngSwitchCase="'chats'">
+            <fieldset>
+                <p>Faculdade: {{ projeto.faculdade }}</p>
+                <p>Campus: {{ projeto.campus }}</p>
+                <p>Administrador: {{ projeto.dono }}</p>
+            </fieldset>
 
+            <br>
+            <div *ngIf="adm">
+
+                <ion-item (click)="presentAddParticipante()" class="icon-btn">
+                    Adicionar Participantes
+                    <ion-icon name="person-add" item-end></ion-icon>
+                </ion-item>
+>>>>>>> 136a0d3cb3592c92c9219584d31f4f741e5bfc48
+
+                <ion-item (click)="goToDespesas()" class="icon-btn">
+                    Orçamento do Projeto
+                    <ion-icon name="card" item-end></ion-icon>
+                </ion-item>
+
+                <ion-item (click)="goToEditProjeto()" class="icon-btn2">
+                    Editar Informações do Projeto
+                    <ion-icon name="settings" item-end></ion-icon>
+                </ion-item>
+
+<<<<<<< HEAD
       <ion-item no-lines>
         <div class="chat-status" text-center>
           <span class="chat-date">26/07/2019</span>
@@ -161,5 +185,47 @@
       </ion-item>
     </ion-list>
   </div>
+=======
+                <ion-item (click)="finalizarProjeto()" outline class="icon-btn">
+                    Finalizar Projeto
+                    <ion-icon name="information-circle" item-end></ion-icon>
+                </ion-item>
+            </div>
+            <ion-item color="danger">
+                Sair do Projeto
+                <ion-icon name="sad" item-end></ion-icon>
+            </ion-item>
+
+        </ion-list>
+
+        <ion-list *ngSwitchCase="'chats'">
+
+            <ion-item no-lines>
+                <div class="chat-status" text-center>
+                    <span class="chat-date">26/07/2019</span>
+                    <span class="chat-content-center">chat.message</span>
+                </div>
+                <ng-template #message>
+                    <div class="chat-message" text-right>
+                        <div class="right-bubble">
+                            <span class="msg-name">Me</span>
+                            <span class="msg-date">2019</span>
+                            <p text-wrap>ola wello word</p>
+                        </div>
+                    </div>
+                    <div class="chat-message" text-left>
+                        <div class="left-bubble">
+                            <span class="msg-name">bruno</span>
+                            <span class="msg-date">2019</span>
+                            <p text-wrap>ola tudo bem</p>
+                        </div>
+                    </div>
+                </ng-template>
+            </ion-item>
+        </ion-list>
+
+
+    </div>
+>>>>>>> 136a0d3cb3592c92c9219584d31f4f741e5bfc48
 
 </ion-content>

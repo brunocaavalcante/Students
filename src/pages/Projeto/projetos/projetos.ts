@@ -6,11 +6,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import { File } from '@ionic-native/file';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { Observable } from 'rxjs';
+import { CameraOptions, Camera } from '@ionic-native/camera';
 import { finalize } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { File } from '@ionic-native/file';
 
 
 @IonicPage()
@@ -25,6 +25,7 @@ export class ProjetosPage {
     id: "",
     email: ""
   }];
+  listProjetos = [];
   id_projeto;
   newProjectForm: FormGroup;
   list = [];
@@ -101,10 +102,10 @@ export class ProjetosPage {
                 nome: this.newProjectForm.get('nome').value,
                 id: this.id_projeto,
                 id_participante: this.list[0].email,
-                status: 0,
                 situacao: "ativo",
                 dono: this.user.email,
-                adm: (this.list[0].email == this.user.email ? "true" : "false")
+                adm: (this.list[0].email == this.user.email ? "true" : "false"),
+                status: 0
 
               })
 
