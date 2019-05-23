@@ -22,6 +22,10 @@ import { ProjetosPage } from '../pages/Projeto/projetos/projetos';
 import { TarefasProjetoPage } from '../pages/Projeto/tarefas-projeto/tarefas-projeto';
 import { EditProjetoPage } from '../pages/Projeto/edit-projeto/edit-projeto';
 import { SubTarefasPage } from '../pages/Projeto/sub-tarefas/sub-tarefas';
+import { DespesasPage } from '../pages/Projeto/despesas/despesas';
+import { Camera, CameraOptions } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 
 @NgModule({
@@ -39,8 +43,9 @@ import { SubTarefasPage } from '../pages/Projeto/sub-tarefas/sub-tarefas';
     EditProjetoPage,
     ProjetosPage,
     TarefasProjetoPage,
+    DespesasPage,
     SubTarefasPage
-       
+
   ],
   imports: [
     BrowserModule,
@@ -63,17 +68,21 @@ import { SubTarefasPage } from '../pages/Projeto/sub-tarefas/sub-tarefas';
     TarefasPage,
     ProjetosPage,
     TarefasProjetoPage,
+    DespesasPage,
     SubTarefasPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     AngularFireAuth,
+    AngularFireStorage,
     AngularFireDatabase,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
+    Camera,
+    File
   ]
 })
 export class AppModule {
-  
- 
+
+
 }

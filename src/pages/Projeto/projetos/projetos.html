@@ -10,13 +10,20 @@
     <ion-item *ngFor="let item of list">
       <ion-card>
         <img src="../../assets/imgs/projeto.png" />
-        <ion-card-content>
+        <ion-card-content style="white-space: normal;">
           <ion-card-title>
-            {{ item.nome }} 
+            {{ item.nome }}
           </ion-card-title>
           <p>
-             {{ item.descricao }}
+            {{ item.descricao }}
           </p>
+          <div class="progressBar">
+            <div class="progress html" [ngClass]="{
+              'baixo' : item.status < 30,
+              'medio' : item.status > 30 && item.status < 60,
+              'alto' :  item.status > 60
+           }" [style.width.%]="item.status"></div>
+          </div>
 
         </ion-card-content>
         <button ion-button clear color="danger" (click)="presentShowConfirm(item.id)" class="btn_p">Excluir</button>
@@ -24,6 +31,7 @@
       </ion-card>
 
     </ion-item>
+      <img src="downloadUrl | async" *ngIf="downloadUrl | async">
 
     <button ion-button block (click)="addProjeto()">Novo Projeto</button>
   </div>
@@ -90,8 +98,5 @@
     </form>
 
   </div>
-
-
-
 
 </ion-content>

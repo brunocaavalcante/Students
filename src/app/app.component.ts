@@ -16,7 +16,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class MyApp {
   
   @ViewChild(Nav) navCtrl: NavController;
-    rootPage:any = '';
+    rootPage:any = this.rootPage;
 
   constructor(
     platform: Platform, 

@@ -33,8 +33,8 @@
 
       <ion-item>
         <ion-label>Faculdade</ion-label>
-        <ion-select multiple="false" cancelText="Cancelar" okText="Ok!" formControlName="faculdade">
-          <ion-option value="Uninove" selected="false">Uninove</ion-option>
+        <ion-select multiple="false" cancelText="Cancelar" value="okText='Ok!'" formControlName="faculdade">
+          <ion-option value="Uninove" selected="true">{{ p.faculdade }}</ion-option>
           <ion-option value="Unip" selected="false">Unip</ion-option>
         </ion-select>
       </ion-item>
@@ -62,7 +62,7 @@
       </ion-item>
 
       <ion-item>
-        <ion-label>Tornar administrador?</ion-label>
+        <ion-label>É administrador?</ion-label>
         <ion-checkbox [(ngModel)]="item.adm"  (ionChange)="updateCheck(item)"></ion-checkbox>
       </ion-item>
 

@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>despesas</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div class="saldo_circle">
+    <h1 class="saldo">Saldo 10.000,00R$</h1>
+  </div><br><br>
+  <ion-list>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Card Title</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        Keep close to Nature's heart... and break clear away, once in awhile,
+        and climb a mountain or spend a week in the woods. Wash your spirit clean.
+      </ion-card-content>
+      <ion-item>
+        <ion-label> 1.500,00R$</ion-label>
+        <button ion-button clear color="danger" icon-only item-end (click)="presentShowConfirm(item)">
+          <ion-icon name="trash"></ion-icon>
+        </button>
+        <ion-checkbox disabled="false" (ionChange)="updateCheck(item)">
+        </ion-checkbox>
+      </ion-item>
+    </ion-card>
+  </ion-list>
+</ion-content>

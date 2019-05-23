@@ -1,11 +1,16 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Platform } from 'ionic-angular';
 import { MenuController } from 'ionic-angular';
 import { TarefasPage } from '../myProjeto/tarefas';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Camera, CameraOptions } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 
 @IonicPage()
@@ -27,7 +32,8 @@ export class ProjetosPage {
   delete;
   pj;
   uemail;
-
+  public uploadPercent: Observable<number>;
+  public downloadUrl: Observable<string>;
 
 
   constructor(
@@ -37,8 +43,12 @@ export class ProjetosPage {
     public formbuilder: FormBuilder,
     public storage: Storage,
     public afAuth: AngularFireAuth,
+    private afStorage: AngularFireStorage,
     public alertCtrl: AlertController,
-    public db: AngularFireDatabase) {
+    private platform: Platform,
+    public db: AngularFireDatabase,
+    private camera: Camera,
+    private file: File) {
 
     this.operacao = false;
     //Validação dos campos
@@ -46,13 +56,12 @@ export class ProjetosPage {
       descricao: [null, [Validators.required, Validators.minLength(10)]],
       data_ini: [null],
       data_fim: [null],
-      faculdade: [null,[Validators.required]],
-      campus: [null,[Validators.required]],
-      funcao: [null,[Validators.required]],
+      faculdade: [null, [Validators.required]],
+      campus: [null, [Validators.required]],
+      funcao: [null, [Validators.required]],
       nome: [null, [Validators.required, Validators.minLength(5)]],
     })
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
-    this.getProjetos();
   }
 
   ionViewDidLoad() {
@@ -63,25 +72,6 @@ export class ProjetosPage {
 
   closeMenu() {
     this.menuCtrl.close();
-  }
-
-  goToProjetos(item) {
-
-    console.log(item);
-    var projeto = {
-      nome: item.nome,
-      descricao: item.descricao,
-      data_ini: item.data_ini,
-      data_fim: item.data_fim,
-      faculdade: item.faculdade,
-      id: item.id,
-      adm: item.adm,
-      campus: item.campus,
-      dono: item.dono,
-      id_participante: item.id_participante
-    }
-
-    this.navCtrl.push(TarefasPage, { projeto });
   }
 
   createProjeto() {
@@ -111,6 +101,8 @@ export class ProjetosPage {
                 nome: this.newProjectForm.get('nome').value,
                 id: this.id_projeto,
                 id_participante: this.list[0].email,
+                status: 0,
+                situacao: "ativo",
                 dono: this.user.email,
                 adm: (this.list[0].email == this.user.email ? "true" : "false")
 
@@ -130,6 +122,8 @@ export class ProjetosPage {
                 campus: this.newProjectForm.get('campus').value,
                 nome: this.newProjectForm.get('nome').value,
                 id: this.id_projeto,
+                status: 0,
+                situacao: "ativo",
                 id_participante: this.participante[i].email,
                 adm: "false"
               })
@@ -141,6 +135,89 @@ export class ProjetosPage {
     this.operacao = false;
     var rm = this.db.database.ref('projetos/' + this.id_projeto);
     rm.remove();
+  }
+
+  getProjetos() {
+    this.db.database.ref('projetos').orderByChild("id_participante")
+      .equalTo(this.user.email).on("value", snapshot => {
+        let i = 0;
+        if (snapshot) {
+          snapshot.forEach(data => {
+            this.list[i] = data.val();
+            i++;
+          });
+        }
+      });
+  }
+
+  goToProjetos(item) {
+    
+    var projeto = {
+      nome: item.nome,
+      descricao: item.descricao,
+      data_ini: item.data_ini,
+      data_fim: item.data_fim,
+      faculdade: item.faculdade,
+      id: item.id,
+      adm: item.adm,
+      campus: item.campus,
+      dono: item.dono,
+      id_participante: item.id_participante
+    }
+
+    this.navCtrl.push(TarefasPage, { projeto });
+  }
+
+  addProjeto() {
+    this.operacao = true;
+  }
+
+  async openGalery() {
+    const options: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      correctOrientation: true
+    }
+    try {
+
+      const fileUri: String = await this.camera.getPicture(options);
+      let file: string;
+
+      if (this.platform.is('ios')) {
+        file = fileUri.split('/').pop();
+      }
+      else {
+        file = fileUri.substring(fileUri.lastIndexOf('/') + 1, fileUri.indexOf('?'));
+      }
+
+      const path: string = fileUri.substring(0, fileUri.lastIndexOf('/'));
+      //Ler como arquivo binario
+      const buffer: ArrayBuffer = await this.file.readAsArrayBuffer(path, file);
+      //Transforma o arquivo em imagem
+      const blob: Blob = new Blob([buffer], { type: 'image/jpeg' });
+
+      this.uploadPicture(blob);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  uploadPicture(blob: Blob) {
+    const ref = this.afStorage.ref('imagens/chatbot.jpg');
+    const task = ref.put(blob);
+
+    this.uploadPercent = task.percentageChanges();
+    task.snapshotChanges().pipe(
+      finalize(() => this.downloadUrl = ref.getDownloadURL())
+    ).subscribe();
+
+    console.log(this.downloadUrl);
+  }
+
+  removeParticipante() {
+    this.participante.pop();
   }
 
   removeProjeto(id: string) {
@@ -157,29 +234,8 @@ export class ProjetosPage {
 
   }
 
-  getProjetos() {
-    this.db.database.ref('projetos').orderByChild("id_participante")
-      .equalTo(this.user.email).on("value", snapshot => {
-        let i = 0;
-        if (snapshot) {
-          snapshot.forEach(data => {
-            this.list[i] = data.val();
-            i++;
-          });
-        }
-      });
-  }
-
-  addProjeto() {
-    this.operacao = true;
-  }
-
-  removeParticipante() {
-    this.participante.pop();
-  }
-
   //Função para apresenta alertas
-  public presentAlert(title: string, subtitle: string) {
+  presentAlert(title: string, subtitle: string) {
     let alert = this.alertCtrl.create({
       title: title,
       subTitle: subtitle,

@@ -1,4 +1,4 @@
-import { Component, ViewChild,OnInit } from '@angular/core';
+import { Component, ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Segment } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { AngularFireDatabase } from '@angular/fire/database';
@@ -6,6 +6,8 @@ import { MenuController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TarefasProjetoPage } from '../tarefas-projeto/tarefas-projeto';
 import { EditProjetoPage } from '../edit-projeto/edit-projeto';
+import { DespesasPage } from '../despesas/despesas';
+
 
 
 @IonicPage()
@@ -42,7 +44,6 @@ export class TarefasPage {
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.projeto = this.navParams.get('projeto');
     this.getParticipantes();
-    console.log(this.projeto);
   }
 
   ionViewDidLoad() {
@@ -51,7 +52,6 @@ export class TarefasPage {
     this.segment.value = 'sobre';
     this.getParticipantes();
     this.closeMenu();
-
   }
 
 
@@ -119,20 +119,24 @@ export class TarefasPage {
 
   deleteParticipante(item) {
 
-    this.db.database.ref('projetos').orderByChild("id").
-      equalTo(this.projeto.id).on("value", snapshot => {
+    if (item.adm) {
+      this.db.database.ref('projetos').orderByChild("id").
+        equalTo(this.projeto.id).on("value", snapshot => {
 
-        snapshot.forEach(childSnapshot => {
+          snapshot.forEach(childSnapshot => {
 
-          var email = childSnapshot.val().id_participante
+            var email = childSnapshot.val().id_participante
 
-          if (item.email == email) {
-            var id = childSnapshot.key; //pega a chave do filho
-            var rv = this.db.database.ref('projetos/' + id);//referencia 
-            rv.remove();
-          }
+            if (item.email == email) {
+              var id = childSnapshot.key; //pega a chave do filho
+              var rv = this.db.database.ref('projetos/' + id);//referencia 
+              rv.remove();
+            }
+          });
         });
-      });
+    } else {
+      this.presentAlert("Operação Negada", "Somente administradores podem excluir participantes");
+    }
   }
 
   insertParticipante(item) {
@@ -330,4 +334,9 @@ export class TarefasPage {
     var participantes = this.list;
     this.navCtrl.push(EditProjetoPage, { p, participantes });
   }
+
+  goToDespesas() {
+    this.navCtrl.push(DespesasPage);
+  }
+
 }
