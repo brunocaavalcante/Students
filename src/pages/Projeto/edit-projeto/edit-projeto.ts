@@ -36,6 +36,7 @@ export class EditProjetoPage {
       adm: [null]
     })
     this.p = this.navParams.get('p');
+    console.log(this.p);
     this.participantes = this.navParams.get('participantes');
   }
 
@@ -65,7 +66,6 @@ export class EditProjetoPage {
 
   updateCheck(item) {
 
-    console.log(item);
     this.check = item.adm;
     this.db.database.ref('projetos').orderByChild('id').equalTo(this.p.id)
       .on("value", snapshot => {

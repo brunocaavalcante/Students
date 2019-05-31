@@ -2,13 +2,17 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController, AlertController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { SubTarefasPage } from '../sub-tarefas/sub-tarefas';
+import { Injectable } from '@angular/core';
 
 
 
 @IonicPage()
+@Injectable()
 @Component({
   selector: 'page-tarefas-projeto',
   templateUrl: 'tarefas-projeto.html',
+
 })
 export class TarefasProjetoPage {
 
@@ -50,10 +54,11 @@ export class TarefasProjetoPage {
       id: id,
       data: this.getData(),
       observacao: "",
+      qtd_sub: 0,
+      qtd_sub_ok: 0,
       id_projeto: this.projeto.id,
       id_criador: this.projeto.dono,
-      id_participante: this.participante.id_participante,
-      checked: "false"
+      id_participante: this.participante.id_participante
 
     })
       .then(() => {
@@ -82,24 +87,44 @@ export class TarefasProjetoPage {
         }
       });
   }
- 
-  deleteTarefa(tarefa) {
 
-    this.db.database.ref('tarefas/' + tarefa.id).on("value", snapshot => {
-      var rm = this.db.database.ref('tarefas/' + tarefa.id);
-      rm.remove();
-    });
-    this.presentAlert("Tarefa excluida com sucesso!", "");
-
-  }
 
   getData() {
+
     var d = new Date;
     var dia = d.getDate();
     var mes = d.getUTCMonth();
     var ano = d.getFullYear();
     var data = "" + dia + "/" + mes + "/" + ano;
     return data;
+  }
+
+  deleteTarefa(tarefa) {
+
+    this.db.database.ref('tarefas/' + tarefa.id).once("value", snapshot => {
+     // this.subtarefas.deleteAll(tarefa.id);
+      var rm_tarefa = this.db.database.ref('tarefas/' + tarefa.id);
+      rm_tarefa.remove();
+      this.list.pop();
+    });
+    this.presentAlert("Tarefa excluida com sucesso!", "");
+
+  }
+
+  deleteAll(id) {
+
+    this.db.database.ref('tarefas').orderByChild('id_projeto')
+      .equalTo(id).on("value", snapshot => {
+        snapshot.forEach(data => {
+       //   this.subtarefas.deleteAll(data.val().key);
+          var rm_tarefa = this.db.database.ref('tarefas/' + data.val().key);
+          rm_tarefa.remove();
+        });
+      });
+  }
+
+  goToSubTarefas(item) {
+    this.navCtrl.push(SubTarefasPage, { item });
   }
 
   updateCheck(item) {

@@ -4,7 +4,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
 
 
-
 @IonicPage()
 @Component({
   selector: 'page-despesas',
@@ -13,7 +12,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 export class DespesasPage {
 
   projeto;
-  list;
+  list=[];
 
   constructor(
     public navCtrl: NavController,
@@ -48,6 +47,8 @@ export class DespesasPage {
 
     this.db.database.ref('despesas').orderByChild('id_projeto') //Pega tarefas
       .equalTo(this.projeto.id).on("value", snapshot => {
+        console.log(this.projeto.id);
+        console.log(snapshot.val());
         if (snapshot) {
           let i = 0;
 

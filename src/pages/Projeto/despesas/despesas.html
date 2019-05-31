@@ -11,17 +11,17 @@
     <ion-list *ngFor="let item of list">
         <ion-card>
             <ion-card-header>
-                <ion-card-title>item.titulo</ion-card-title>
+                <ion-card-title> {{ item.titulo }} </ion-card-title>
             </ion-card-header>
 
             <ion-card-content>
-                item.descricao
-                <br><br>
-                <p><b>Prioridade:</b> alta</p>
+                <b>Descrição:</b> {{ item.descricao }}<br>
+                <b>Prioridade:</b> alta<br>
+                <b>Data Vencimento:</b> {{ item.vencimento }}
             </ion-card-content>
 
             <ion-item>
-                <ion-label>item.valorR$</ion-label>
+                <ion-label>{{ item.valor }} R$</ion-label>
                 <button ion-button clear color="danger" icon-only item-end (click)="presentShowConfirm(item)">
           <ion-icon name="trash"></ion-icon>
         </button>

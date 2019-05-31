@@ -119,20 +119,24 @@ export class TarefasPage {
 
   deleteParticipante(item) {
 
-    this.db.database.ref('projetos').orderByChild("id").
-      equalTo(this.projeto.id).on("value", snapshot => {
+    if (item.adm) {
+      this.db.database.ref('projetos').orderByChild("id").
+        equalTo(this.projeto.id).on("value", snapshot => {
 
-        snapshot.forEach(childSnapshot => {
+          snapshot.forEach(childSnapshot => {
 
-          var email = childSnapshot.val().id_participante
+            var email = childSnapshot.val().id_participante
 
-          if (item.email == email) {
-            var id = childSnapshot.key; //pega a chave do filho
-            var rv = this.db.database.ref('projetos/' + id);//referencia 
-            rv.remove();
-          }
+            if (item.email == email) {
+              var id = childSnapshot.key; //pega a chave do filho
+              var rv = this.db.database.ref('projetos/' + id);//referencia 
+              rv.remove();
+            }
+          });
         });
-      });
+    } else {
+      this.presentAlert("Operação Negada", "Somente administradores podem excluir participantes");
+    }
   }
 
   finalizarProjeto() {
@@ -144,7 +148,7 @@ export class TarefasPage {
 
     //verifica se o participante esta cadastrado no sistema 
     this.db.database.ref('cadastro').orderByChild("email")
-      .equalTo(item.id_participante).once("value", snapshot => {
+      .equalTo(item.email).once("value", snapshot => {
         const items = snapshot.val();
 
         if (items != null) {
@@ -162,17 +166,19 @@ export class TarefasPage {
             nome: (this.projeto.nome != null ? this.projeto.nome : "Indefinido"),
             id: this.projeto.id,
             id_participante: this.list[0].email,
+            adm: "false",
             dono: this.projeto.dono,
 
           })
 
         } else {
+
           var id = this.db.database.ref('cadastro').push().key
           this.db.database.ref('cadastro/' + id).update({ // Cria pré cadastro
             email: item.email,
             id: id
           })
-          this.db.database.ref('projetos/' + this.id_projeto).push({  //Insere no projeto
+          this.db.database.ref('projetos').push({  //Insere no projeto
             descricao: (this.projeto.descricao != null ? this.projeto.descricao : "Indefinido"),
             data_ini: (this.projeto.data_ini != null ? this.projeto.data_ini : "Indefinido"),
             data_fim: (this.projeto.data_fim != null ? this.projeto.data_fim : "Indefinido"),
@@ -180,7 +186,7 @@ export class TarefasPage {
             campus: (this.projeto.campus != null ? this.projeto.campus : "Indefinido"),
             nome: (this.projeto.nome != null ? this.projeto.nome : "Indefinido"),
             id: this.projeto.id,
-            id_participante: this.list[0].email,
+            id_participante: item.email,
             dono: this.projeto.dono,
 
           })
@@ -251,7 +257,7 @@ export class TarefasPage {
       title: 'Participante',
       inputs: [
         {
-          name: 'id_participante',
+          name: 'email',
           placeholder: 'Digite o Email do Participante',
           type: 'email',
           value: ""
@@ -282,6 +288,7 @@ export class TarefasPage {
         {
           text: 'Adicionar',
           handler: data => {
+            console.log(data);
             this.insertParticipante(data);
 
           }
