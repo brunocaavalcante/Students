@@ -7,7 +7,7 @@
 <ion-content padding>
 
   <div [hidden]="operacao">
-    <ion-item *ngFor="let item of list">
+    <ion-item *ngFor="let item of items | async">
       <ion-card>
         <img src="../../assets/imgs/projeto.png" />
         <ion-card-content style="white-space: normal;">

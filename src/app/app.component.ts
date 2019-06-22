@@ -4,7 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
 import { TabsControllerPage } from '../pages/tabs-controller/tabs-controller';
-import { TestePage } from '../pages/teste/teste';
+import { HomePage } from '../pages/home/home';
 import { ProjetosPage } from '../pages/Projeto/projetos/projetos';
 import { AngularFireAuth } from '@angular/fire/auth';
 
@@ -34,7 +34,7 @@ export class MyApp {
       if (user != null) {
         this.rootPage = TabsControllerPage;
       } else {
-        this.rootPage = TestePage;
+        this.rootPage = HomePage;
       }
 
       statusBar.styleDefault();
@@ -48,8 +48,7 @@ export class MyApp {
   
   Logout() {
     this.storage.set("user", null); // Salvando o id do usuario no sqlite
-    this.navCtrl.setRoot(TestePage);
-    this.menuCtrl.close(); 
+    this.navCtrl.setRoot(HomePage);
   }
 
 

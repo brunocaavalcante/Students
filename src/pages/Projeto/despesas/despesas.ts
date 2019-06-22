@@ -12,7 +12,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 export class DespesasPage {
 
   projeto;
-  list=[];
+  list = [];
 
   constructor(
     public navCtrl: NavController,
@@ -129,6 +129,10 @@ export class DespesasPage {
       buttons: ['OK']
     });
     alert.present();
+  }
+
+  public test() {
+    //this.alerta.presentAlert("Teste", "Testando");
   }
 
   ionViewDidLoad() {

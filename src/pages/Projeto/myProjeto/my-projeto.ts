@@ -12,10 +12,10 @@ import { DespesasPage } from '../despesas/despesas';
 
 @IonicPage()
 @Component({
-  selector: 'page-tarefas',
-  templateUrl: 'tarefas.html',
+  selector: 'page-my-projeto',
+  templateUrl: 'my-projeto.html',
 })
-export class TarefasPage {
+export class MyProjetoPage {
 
   tarefa;
   descricao;

@@ -6,10 +6,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidateConfirmPassword } from '../../validators/confirmPassword';
 
 @Component({
-  selector: 'page-cloud-tab-default-page',
-  templateUrl: 'cloud-tab-default-page.html'
+  selector: 'page-perfil',
+  templateUrl: 'perfil-page.html'
 })
-export class CloudTabDefaultPagePage {
+export class PerfilPage {
 
 
   user;

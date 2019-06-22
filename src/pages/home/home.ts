@@ -9,10 +9,10 @@ import { AngularFireAuth } from '@angular/fire/auth';
 
 @IonicPage()
 @Component({
-  selector: 'page-teste',
-  templateUrl: 'teste.html',
+  selector: 'page-home',
+  templateUrl: 'home.html',
 })
-export class TestePage {
+export class HomePage {
 
   constructor(
     public navCtrl: NavController,
