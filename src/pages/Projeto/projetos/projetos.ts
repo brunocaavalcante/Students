@@ -3,12 +3,11 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 import { MyProjetoPage } from '../myProjeto/my-projeto';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { UserProvider } from '../../../providers/user/user';
 import { ProjetoProvider } from '../../../providers/projeto/projeto-provider';
-import { TarefaProvider } from '../../../providers/tarefa/tarefa';
 
 @IonicPage()
 @Component({
@@ -29,7 +28,6 @@ export class ProjetosPage {
   public uploadPercent: Observable<number>;
   public downloadUrl: Observable<string>;
   items: Observable<any>;
-  itemsRef: AngularFireList<any>;
 
   constructor(
     public navCtrl: NavController,
@@ -58,6 +56,9 @@ export class ProjetosPage {
     })
   }
 
+  ionViewDidLoad() {
+    this.items = this.projeto.get(this.user.email);
+  }
 
   createProjeto() {
 
@@ -68,9 +69,7 @@ export class ProjetosPage {
 
       for (let i = 1; i < this.participante.length; i++) {
 
-        const items = this.usuario.find(this.participante[i].email);
-
-        var pj = [{
+        var pj = {
           descricao: this.newProjectForm.get('descricao').value,
           data_ini: this.newProjectForm.get('data_ini').value,
           data_fim: this.newProjectForm.get('data_fim').value,
@@ -81,17 +80,10 @@ export class ProjetosPage {
           id_participante: this.participante[i].email,
           situacao: "ativo",
           dono: this.user.email,
-          adm: (this.participante[i].email == this.user.email ? "true" : "false"),
+          adm: (this.participante[i].email == this.user.email ? true : false),
           status: 0
-        }];
-
-        if (items != null) {
-          this.projeto.insert(pj);
-
-        } else {
-          this.usuario.insert(this.participante[i]);
-          this.projeto.insert(pj);
-        }
+        };
+        this.projeto.insert(pj);
       }
     }
     this.presentAlert("Projeto " + this.newProjectForm.get('nome').value, "Projeto criado com sucesso");
@@ -156,7 +148,7 @@ export class ProjetosPage {
     alert.present();
   }
 
-  presentShowConfirm(id) {
+  presentShowConfirm(pj) {
 
     const alert = this.alertCtrl.create({
       title: "Atenção deseja excluir o projeto?",
@@ -174,7 +166,7 @@ export class ProjetosPage {
           text: 'Excluir',
           role: 'excluir',
           handler: () => {
-            this.projeto.delete(id);
+            this.projeto.delete(pj);
           }
         }
       ]

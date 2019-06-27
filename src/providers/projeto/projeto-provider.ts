@@ -20,26 +20,34 @@ export class ProjetoProvider {
     public tarefa: TarefaProvider) {
   }
 
-  insert(projeto){
+  insert(projeto) {
     this.db.database.ref('projetos').push(projeto);
   }
 
-  delete(id: string) {
+  update(id, projeto) {
+    this.db.database.ref('projetos/' + id).update(projeto);
+  }
 
-    this.db.database.ref('projetos').orderByChild("id")
-      .equalTo(id).on("value", snapshot => {
-        snapshot.forEach(item => {
-          this.tarefa.deleteAll(id);
-          var rv = this.db.database.ref('projetos/' + item.key);
-          rv.remove();
+  delete(projeto) {
+    if (projeto.adm) {
+      this.db.database.ref('projetos').orderByChild("id")
+        .equalTo(projeto.id).on("value", snapshot => {
+          snapshot.forEach(item => {
+            this.tarefa.deleteAll(projeto.id);
+            var rv = this.db.database.ref('projetos/' + item.key);
+            rv.remove();
+          });
+
         });
-
-      });
-    this.presentAlert("Projeto Excluido", "Projeto excluido com sucesso!");
+      this.presentAlert("Projeto Excluido", "Projeto excluido com sucesso!");
+    } else {
+      this.presentAlert("Permissão Negada!", "Somente administradores podem excluir o projeto");
+    }
 
   }
 
   get(email) {
+
     this.itemsRef = this.db.list('projetos', ref => ref.orderByChild('id_participante').equalTo(email));
     this.items = this.itemsRef.snapshotChanges().pipe(
       map(changes =>

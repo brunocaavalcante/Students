@@ -7,6 +7,7 @@ import { AlertController } from 'ionic-angular';
 import { TabsControllerPage } from '../../tabs-controller/tabs-controller';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
+import { UserProvider } from '../../../providers/user/user';
 
 
 
@@ -27,6 +28,7 @@ export class CadastroUserPage {
     public formbuilder: FormBuilder,
     public afAuth: AngularFireAuth,
     public storage: Storage,
+    public usuario: UserProvider,
     public alertCtrl: AlertController,
     public db: AngularFireDatabase, //Banco de dados Firebase
   ) {
@@ -48,56 +50,22 @@ export class CadastroUserPage {
   }
   //Botão submit enviando dados e criando um novo usuario no fire base
   submitForm() {
-    this.verificaUser();
+    this.addCadastroUser();
   }
 
   //Cadastra usuario no fire base
-  addCadastroUser(user) {
-
-    if (user) {
-      this.db.database.ref('cadastro/' + user.key).update(this.registerForm.value);
-      this.afAuth.auth.createUserWithEmailAndPassword(this.registerForm.value.email, this.registerForm.value.password)
-        .then((response) => {
-
-          this.presentAlert("Úsuario cadastrado", 'Usuário cadastrado com sucesso.'); //Alerta de usuario criado com sucesso
-          this.presentAlert("Bem vindo", "" + this.registerForm.get('nome').value);
-          this.navCtrl.setRoot(TabsControllerPage);// Redirecionamento para page principal do app
-
-        })
-        .catch((error) => {
-          if (error.code == 'auth/email-already-in-use') { //Erro gerado pelo fire base quando criamos contas com email ja existentes
-            this.presentAlert('Erro', 'E-mail já cadastrado');
-          }
-        })
-
-    } else {
-
-      var key = this.db.database.ref('cadastro').push(this.registerForm.value).key;
-      this.db.database.ref('cadastro/' + key).update({ id: key });
-      this.afAuth.auth.createUserWithEmailAndPassword(this.registerForm.value.email, this.registerForm.value.password)
-        .then((response) => {
-
-          this.presentAlert("Úsuario cadastrado", 'Usuário cadastrado com sucesso.'); //Alerta de usuario criado com sucesso
-          this.navCtrl.setRoot(TabsControllerPage);// Redirecionamento para page principal do app
-
-        })
-        .catch((error) => {
-          if (error.code == 'auth/email-already-in-use') { //Erro gerado pelo fire base quando criamos contas com email ja existentes
-            this.presentAlert('Erro', 'E-mail já cadastrado');
-          }
-        })
-    }
-  }
-
-  verificaUser() {//verifica se o usuario já tem um pré cadastrado no banco
-    this.db.database.ref('cadastro').orderByChild('email').
-      equalTo(this.registerForm.get('email').value).once("value", snapshot => {
-        if (snapshot.val()) {
-          snapshot.forEach(data => {
-            this.addCadastroUser(data);
-          });
-        } else {
-          this.addCadastroUser(false);
+  addCadastroUser() {
+    this.afAuth.auth.createUserWithEmailAndPassword(this.registerForm.value.email, this.registerForm.value.password)
+      .then((response) => {
+        this.afAuth.auth.signInWithEmailAndPassword(this.registerForm.value.email, this.registerForm.value.password)//Verificando através do firebase se o usuario é valido            
+        this.storage.set("user", response.user.uid);
+        this.usuario.insert(response.user.uid, this.registerForm.value);
+        this.presentAlert("Úsuario cadastrado", 'Usuário cadastrado com sucesso.'); //Alerta de usuario criado com sucesso
+        this.navCtrl.setRoot(TabsControllerPage);// Redirecionamento para page principal do app
+      })
+      .catch((error) => {
+        if (error.code == 'auth/email-already-in-use') { //Erro gerado pelo fire base quando criamos contas com email ja existentes
+          this.presentAlert('Erro', 'E-mail já cadastrado');
         }
       })
 

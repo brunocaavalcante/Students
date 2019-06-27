@@ -8,7 +8,7 @@
 <ion-content padding id="page4">
 
   <form novalidate [formGroup]="updateForm">
-    <ion-list *ngFor="let user of list">
+    <ion-list *ngFor="let user of list | async">
 
       <ion-item>
         <ion-label stacked>Nome:</ion-label>
@@ -17,7 +17,7 @@
 
       <ion-item>
         <ion-label stacked>Sobre Nome:</ion-label>
-        <ion-input type="text" [disabled]="disable == 1" value="{{ user.sobrenome }}" formControlName="sobrenome">
+        <ion-input type="text" [disabled]="disable == 1" value="{{ user.sobrenome }}"  formControlName="sobrenome">
         </ion-input>
       </ion-item>
 
@@ -54,7 +54,7 @@
         <ion-input type="text" [disabled]="disable == 1" formControlName="campus" value="{{ user.campus }}"></ion-input>
       </ion-item>
 
-      <ion-item>
+      <ion-item> 
         <ion-label stacked>Semestre:</ion-label>
         <ion-input type="text" [disabled]="disable == 1" formControlName="semestre" value="{{ user.semestre }}">
         </ion-input>

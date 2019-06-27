@@ -4,6 +4,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { HttpClient } from '@angular/common/http';
 import { SubtarefaProvider } from '../../../providers/subtarefa/subtarefa';
+import { TarefaProvider } from '../../../providers/tarefa/tarefa';
 
 @IonicPage()
 @Component({
@@ -12,6 +13,7 @@ import { SubtarefaProvider } from '../../../providers/subtarefa/subtarefa';
 })
 export class SubTarefasPage {
   tarefa;
+  t=[];
   titulo;
   descricao;
   user;
@@ -25,6 +27,7 @@ export class SubTarefasPage {
     public db: AngularFireDatabase, //Banco de dados Firebase
     public alertCtrl: AlertController,
     public subtafera: SubtarefaProvider,
+    public tf:TarefaProvider,
     public afAuth: AngularFireAuth) {
 
     this.tarefa = this.navParams.get('item');
@@ -32,23 +35,26 @@ export class SubTarefasPage {
   }
 
   ionViewDidLoad() {
+    this.tarefa = this.navParams.get('item');
     this.list = this.subtafera.get(this.tarefa);
   }
 
   insertSub(descricao, titulo) {
 
     var id = this.db.database.ref('subTarefas').push().key;
-    var sub = ({
+    var sub = {
       titulo: titulo,
       descricao: descricao,
-      id_subTarefa: id,
+      id: id,
       id_tarefa: this.tarefa.id,
       data: this.getData(),
       id_criador: this.user.email,
-      checked: "false"
-
+      checked: false
+    }
+    this.db.database.ref('tarefas/'+sub.id_tarefa).once("value",snapshot=>{
+      var tarefa = snapshot.val();
+      this.subtafera.insert(tarefa,sub);
     })
-    this.subtafera.insert(sub);
     this.titulo = "";
     this.descricao = "";
 
@@ -56,11 +62,18 @@ export class SubTarefasPage {
   }
 
   deleteSub(item) {
-    this.subtafera.delete(item);
+    this.db.database.ref('tarefas/'+item.id_tarefa).once("value",snapshot=>{
+      var tarefa = snapshot.val();
+      this.subtafera.delete(tarefa,item);
+      this.list.pop();
+    })    
   }
 
   updateCheck(item) {
-    this.subtafera.updateCheck(item);
+    this.db.database.ref('tarefas/'+item.id_tarefa).once("value",snapshot=>{
+      var tarefa = snapshot.val();
+      this.subtafera.updateCheck(tarefa,item);
+    }) 
   }
 
   presentShowConfirm(item) {
@@ -80,7 +93,7 @@ export class SubTarefasPage {
           text: 'Excluir',
           role: 'excluir',
           handler: () => {
-            this.subtafera.delete(item);
+            this.deleteSub(item);
           }
         }
       ]

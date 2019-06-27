@@ -24,15 +24,14 @@ export class UserProvider {
     this.ref = db.object('cadastro');
   }
 
-  find(key) {
-    this.db.database.ref('cadastro').orderByChild('email').
-      equalTo(key).once("value", snapshot => {
-        if (snapshot.val()) {
-          snapshot.forEach(data => {this.items = data});
-          return this.items;
-        } 
-      })
-      return null;
+  find(email) {
+    this.lista = this.db.list('cadastro', ref => ref.orderByChild('email').equalTo(email).limitToFirst(1));
+    this.users = this.lista.snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c => ({ key: c.payload.key, ...c.payload.val() }))
+      )
+    );
+    return this.users;
   }
 
   list() {
@@ -46,8 +45,8 @@ export class UserProvider {
     return this.users;
   }
 
-  insert(user) {
-    var id = this.db.database.ref('cadastro').push().key
+  insert(id,user) {
+    
     const ref = this.db.database.ref('cadastro/' + id)
     ref.set({
       campus: user.campus == null ? "" : user.campus,
@@ -65,8 +64,9 @@ export class UserProvider {
     });
   }
 
-  update(user) {
-    this.ref.update(user);
+  update(id,user) {
+    console.log(id);
+    this.db.database.ref('cadastro/'+id).update(user);
   }
 
   delete(user) {

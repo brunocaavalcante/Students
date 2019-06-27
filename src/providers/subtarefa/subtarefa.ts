@@ -5,58 +5,51 @@ import { AngularFireDatabase } from '@angular/fire/database';
 
 @Injectable()
 export class SubtarefaProvider {
-  list = [];
+
   check;
   tarefa;
   constructor(
     public http: HttpClient,
     public db: AngularFireDatabase, //Banco de dados Firebase
     public alertCtrl: AlertController) {
-    console.log('Hello SubtarefaProvider Provider');
   }
 
-  insert(sub) {
-
-    this.updateQtd(this.qtdSub(), 1);
-    this.updatePercentual(this.qtdSub(), this.qtdSubOk());
+  insert(tarefa, sub) {
     this.db.database.ref('subTarefas/' + sub.id).update(sub)
       .then(() => {
+        this.updateQtd(tarefa, sub, 1);
         this.presentAlert("SubTarefa Cadastrada", "");
       })
   }
 
   get(tarefa) {
-
+    var list = [];
+    console.log(tarefa.id);
     this.db.database.ref('subTarefas').orderByChild('id_tarefa') //Pega tarefas
       .equalTo(tarefa.id).on("value", snapshot => {
         if (snapshot) {
           let i = 0;
-
           snapshot.forEach(data => {
-            this.list[i] = data.val();
+            list[i] = data.val();
             i++;
           });
         } else {
           console.log("sub-tarefa não encontrada");
         }
+
       });
-    this.tarefa = tarefa;
-    return this.list;
+    return list;
+
   }
 
-  delete(item) {
-
+  delete(tarefa, sub) {
     //Atualiza a quantidade de subTarefas no nó de Tarefa
-    this.updateQtd(this.qtdSub(), -1);
+    this.updateQtd(tarefa, sub, -1);
     //Exclui do nó de subTarefa
-    this.db.database.ref('subTarefas/' + item.id_subTarefa).on("value", snapshot => {
-      var rm = this.db.database.ref('subTarefas/' + item.id_subTarefa);
-      rm.remove().then(() => {
-        this.list.pop();
-      })
+    var rm = this.db.database.ref('subTarefas/' + sub.id);
+    rm.remove().then(() => {
     })
     //Atualiza barra de status
-    this.updatePercentual(this.qtdSub(), this.qtdSubOk());
     this.presentAlert("Tarefa excluida com sucesso!", "");
   }
 
@@ -64,61 +57,59 @@ export class SubtarefaProvider {
     this.db.database.ref('subTarefas').orderByChild('id_tarefa')
       .equalTo(id).on("value", snapshot => {
         snapshot.forEach(data => {
-          var rm = this.db.database.ref('subTarefas/' + data.val().id_subTarefa);
+          var rm = this.db.database.ref('subTarefas/' + data.val().id);
           rm.remove();
         });
       });
     console.log("subtarefas removidas");
   }
 
-  qtdSub() {
-    var qtd;
+  updateQtd(tarefa, sub, n) {
 
-    this.db.database.ref('tarefas/' + this.tarefa.id).once("value", snapshot => {
-      qtd = snapshot.val().qtd_sub;
-    });
-    return qtd;
-  }
+    var qtd = tarefa.qtd_sub;
+    var qtd_ok = tarefa.qtd_sub_ok;
 
-  qtdSubOk() {
-    var qtd;
-    this.db.database.ref('tarefas/' + this.tarefa.id).once("value", snapshot => {
-      qtd = snapshot.val().qtd_sub_ok;
-    });
-    return qtd;
-  }
-
-  updateQtd(qtd, n) {
-
-    if (qtd > 0 && n < 0) {
-      this.db.database.ref('tarefas/' + this.tarefa.id).update({ qtd_sub: qtd + n });
+    if (tarefa.qtd_sub > 0 && n < 0 && sub.checked == true) {//exclusão de sub já marcadas
+      this.db.database.ref('tarefas/' + tarefa.id).update({
+        qtd_sub: qtd - 1,
+        qtd_sub_ok: qtd_ok - 1
+      });
+      qtd = qtd - 1;
+      qtd_ok = qtd_ok - 1;
     }
-    if (n > 0) {
-      this.db.database.ref('tarefas/' + this.tarefa.id).update({ qtd_sub: qtd + n });
+    else if (tarefa.qtd_sub > 0 && n < 0 && sub.checked == false) {
+      this.db.database.ref('tarefas/' + tarefa.id).update({ qtd_sub: qtd - 1 })
+      qtd = qtd - 1;
     }
+    else if (n > 0) {
+      this.db.database.ref('tarefas/' + tarefa.id).update({ qtd_sub: qtd + 1 });
+      qtd = qtd + 1;
+    }
+    this.updatePercentual(tarefa, qtd, qtd_ok);
 
   }
 
-  updatePercentual(total, ok) {
+  updatePercentual(tarefa, total, ok) {
     var percent = (ok / total) * 100;
-    this.db.database.ref('tarefas/' + this.tarefa.id).update({ status: percent });
+    this.db.database.ref('tarefas/' + tarefa.id).update({ status: percent });
   }
 
-  updateCheck(item) {
+  updateCheck(tarefa, item) {
 
     this.check = item.checked;
-    var ok;
+    var ok = tarefa.qtd_sub_ok;
+    var qtd = tarefa.qtd_sub;
 
-    this.db.database.ref('subTarefas/' + item.id_subTarefa).update({ checked: this.check });
-
-    ok = this.qtdSubOk();
+    this.db.database.ref('subTarefas/' + item.id).update({ checked: this.check });
 
     if (this.check == true) {
-      this.db.database.ref('tarefas/' + this.tarefa.id).update({ qtd_sub_ok: ok + 1 });
+      this.db.database.ref('tarefas/' + tarefa.id).update({ qtd_sub_ok: ok + 1 });
+      ok = ok + 1;
     } else if (this.check == false && ok > 0) {
-      this.db.database.ref('tarefas/' + this.tarefa.id).update({ qtd_sub_ok: ok - 1 });
+      this.db.database.ref('tarefas/' + tarefa.id).update({ qtd_sub_ok: ok - 1 });
+      ok = ok - 1;
     }
-    this.updatePercentual(this.qtdSub(), this.qtdSubOk());
+    this.updatePercentual(tarefa, qtd, ok);
 
   }
 

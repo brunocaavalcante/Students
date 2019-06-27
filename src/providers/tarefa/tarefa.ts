@@ -3,17 +3,19 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AlertController } from 'ionic-angular';
 import { SubtarefaProvider } from '../subtarefa/subtarefa';
+import { ProjetoProvider } from '../projeto/projeto-provider';
 
 @Injectable()
 export class TarefaProvider {
   list = [];
   projeto;
   participante;
+  item = [];
   constructor(
     public http: HttpClient,
     public db: AngularFireDatabase, //Banco de dados Firebase
     public alertCtrl: AlertController,
-    public subtarefa: SubtarefaProvider ) {
+    public subtarefa: SubtarefaProvider) {
   }
 
   get(projeto, participante) {
@@ -35,7 +37,14 @@ export class TarefaProvider {
   }
 
   insert(tarefa) {
-    this.db.database.ref('tarefas').push(tarefa);
+    this.db.database.ref('tarefas/' + tarefa.id).update(tarefa);
+  }
+
+  find(id) {
+    this.db.database.ref('tarefas/' + id).once("value", snapshot => {
+      var tarefa = snapshot.val();
+      return tarefa;
+    });
   }
 
   delete(tarefa) {
@@ -55,7 +64,7 @@ export class TarefaProvider {
       .equalTo(id).on("value", snapshot => {
         snapshot.forEach(data => {
           this.subtarefa.deleteAll(data.val().id);
-          var rm_tarefa = this.db.database.ref('tarefas/' + data.val().key);
+          var rm_tarefa = this.db.database.ref('tarefas/' + data.val().id);
           rm_tarefa.remove();
           console.log("Tarefas removidas");
         });

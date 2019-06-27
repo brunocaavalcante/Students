@@ -41,7 +41,6 @@ export class TarefasProjetoPage {
     this.participante = this.navParams.get('participante');
     const user = this.afAuth.auth.currentUser;//pega usuario logado
     this.uid = user.uid;
-    console.log(this.participante);
     this.list = this.tarefa.get(this.projeto, this.participante);
   }
 
