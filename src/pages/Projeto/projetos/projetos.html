@@ -1,102 +1,102 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>Meus Projetos</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>Meus Projetos</ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding>
 
-  <div [hidden]="operacao">
-    <ion-item *ngFor="let item of list">
-      <ion-card>
-        <img src="../../assets/imgs/projeto.png" />
-        <ion-card-content style="white-space: normal;">
-          <ion-card-title>
-            {{ item.nome }}
-          </ion-card-title>
-          <p>
-            {{ item.descricao }}
-          </p>
-          <div class="progressBar">
-            <div class="progress html" [ngClass]="{
+    <div [hidden]="operacao">
+        <ion-item *ngFor="let item of listTest | async">
+            <ion-card>
+                <img src="">
+                <ion-card-content style="white-space: normal;">
+                    <ion-card-title>
+                        {{ item | json }}
+                    </ion-card-title>
+                    <p>
+                        {{ item | json}}
+                    </p>
+                    <div class="progressBar">
+                        <div class="progress html" [ngClass]="{
               'baixo' : item.status < 30,
               'medio' : item.status > 30 && item.status < 60,
               'alto' :  item.status > 60
            }" [style.width.%]="item.status"></div>
-          </div>
+                    </div>
 
-        </ion-card-content>
-        <button ion-button clear color="danger" (click)="presentShowConfirm(item.id)" class="btn_p">Excluir</button>
-        <button ion-button clear (click)="goToProjetos(item)" class="btn_p">Detalhes</button>
-      </ion-card>
+                </ion-card-content>
+                <button ion-button clear color="danger" (click)="presentShowConfirm(item.id)" class="btn_p">Excluir</button>
+                <button ion-button clear (click)="goToProjetos(item)" class="btn_p">Detalhes</button>
+            </ion-card>
 
-    </ion-item>
-      <img src="downloadUrl | async" *ngIf="downloadUrl | async">
-
-    <button ion-button block (click)="addProjeto()">Novo Projeto</button>
-  </div>
-
-
-  <div [hidden]="!operacao">
-
-    <form novalidate [formGroup]="newProjectForm">
-
-      <ion-list>
-
-        <ion-item>
-          <ion-label floating> Nome do Projeto</ion-label>
-          <ion-input type="text" formControlName="nome"></ion-input>
         </ion-item>
+        <img src="downloadUrl | async" *ngIf="downloadUrl | async">
 
-        <ion-item>
-          <ion-label floating>Descrição do Projeto</ion-label>
-          <ion-textarea formControlName="descricao" rows="4"></ion-textarea>
-        </ion-item>
-
-        <ion-item>
-          <ion-label stacked>Data de Inicio</ion-label>
-          <ion-input type="date" formControlName="data_ini"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label stacked>Data de Termino</ion-label>
-          <ion-input type="date" formControlName="data_fim"></ion-input>
-        </ion-item>
+        <button ion-button block (click)="addProjeto()">Novo Projeto</button>
+    </div>
 
 
-        <ion-item>
-          <ion-label>Faculdade</ion-label>
-          <ion-select multiple="false" cancelText="Cancelar" okText="Ok!" formControlName="faculdade">
-            <ion-option value="Uninove" selected="false">Uninove</ion-option>
-            <ion-option value="Unip" selected="false">Unip</ion-option>
-          </ion-select>
-        </ion-item>
+    <div [hidden]="!operacao">
 
-        <ion-item>
-          <ion-label>Campus</ion-label>
-          <ion-select multiple="false" cancelText="Cancelar" formControlName="campus" okText="Ok!">
-            <ion-option value="Santo Amaro" selected="false">Santo Amaro</ion-option>
-            <ion-option value="Vergueiro" selected="false">Vergueiro</ion-option>
-          </ion-select>
-        </ion-item>
+        <form novalidate [formGroup]="newProjectForm">
 
-        <ion-item>
-          Adicionar Paticipantes:
-          <ion-icon name="remove-circle" item-end color="danger" (click)="removeParticipante()"></ion-icon>
-          <ion-icon name="add-circle" item-end color="primary" (click)="presentPrompt()"></ion-icon>
-        </ion-item>
+            <ion-list>
 
-        <div *ngFor="let i of participante" class="add">
-          <h6>{{ i.email }}</h6>
-        </div>
+                <ion-item>
+                    <ion-label floating> Nome do Projeto</ion-label>
+                    <ion-input type="text" formControlName="nome"></ion-input>
+                </ion-item>
 
-      </ion-list>
+                <ion-item>
+                    <ion-label floating>Descrição do Projeto</ion-label>
+                    <ion-textarea formControlName="descricao" rows="4"></ion-textarea>
+                </ion-item>
 
-      <div padding>
-        <button block ion-button (click)="createProjeto()">Criar Projeto</button>
-      </div>
-    </form>
+                <ion-item>
+                    <ion-label stacked>Data de Inicio</ion-label>
+                    <ion-input type="date" formControlName="data_ini"></ion-input>
+                </ion-item>
 
-  </div>
+                <ion-item>
+                    <ion-label stacked>Data de Termino</ion-label>
+                    <ion-input type="date" formControlName="data_fim"></ion-input>
+                </ion-item>
+
+
+                <ion-item>
+                    <ion-label>Faculdade</ion-label>
+                    <ion-select multiple="false" cancelText="Cancelar" okText="Ok!" formControlName="faculdade">
+                        <ion-option value="Uninove" selected="false">Uninove</ion-option>
+                        <ion-option value="Unip" selected="false">Unip</ion-option>
+                    </ion-select>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label>Campus</ion-label>
+                    <ion-select multiple="false" cancelText="Cancelar" formControlName="campus" okText="Ok!">
+                        <ion-option value="Santo Amaro" selected="false">Santo Amaro</ion-option>
+                        <ion-option value="Vergueiro" selected="false">Vergueiro</ion-option>
+                    </ion-select>
+                </ion-item>
+
+                <ion-item>
+                    Adicionar Paticipantes:
+                    <ion-icon name="remove-circle" item-end color="danger" (click)="removeParticipante()"></ion-icon>
+                    <ion-icon name="add-circle" item-end color="primary" (click)="presentPrompt()"></ion-icon>
+                </ion-item>
+
+                <div *ngFor="let i of participante" class="add">
+                    <h6>{{ i.email }}</h6>
+                </div>
+
+            </ion-list>
+
+            <div padding>
+                <button block ion-button (click)="createProjeto()">Criar Projeto</button>
+            </div>
+        </form>
+
+    </div>
 
 </ion-content>

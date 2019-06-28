@@ -17,7 +17,7 @@ import { environment } from '../environments/environment';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TarefasPage } from '../pages/Projeto/myProjeto/tarefas';
 import { IonicStorageModule } from '@ionic/storage';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase,AngularFireDatabaseModule } from '@angular/fire/database';
 import { ProjetosPage } from '../pages/Projeto/projetos/projetos';
 import { TarefasProjetoPage } from '../pages/Projeto/tarefas-projeto/tarefas-projeto';
 import { EditProjetoPage } from '../pages/Projeto/edit-projeto/edit-projeto';
@@ -26,6 +26,8 @@ import { DespesasPage } from '../pages/Projeto/despesas/despesas';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AlertsProvider } from '../providers/alerts/alerts';
 
 
@@ -52,7 +54,9 @@ import { AlertsProvider } from '../providers/alerts/alerts';
     BrowserModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(environment.firebase),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -77,6 +81,7 @@ import { AlertsProvider } from '../providers/alerts/alerts';
     SplashScreen,
     AngularFireAuth,
     AngularFireStorage,
+    AngularFireStorageModule,
     AngularFireDatabase,
     TarefasProjetoPage,
     { provide: ErrorHandler, useClass: IonicErrorHandler },

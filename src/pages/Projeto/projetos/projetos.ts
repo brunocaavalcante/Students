@@ -8,7 +8,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { CameraOptions, Camera } from '@ionic-native/camera';
 import { finalize } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { File } from '@ionic-native/file';
 
@@ -29,12 +29,14 @@ export class ProjetosPage {
   id_projeto;
   newProjectForm: FormGroup;
   list = [];
+  listTest : Observable<any[]>;
   user;
   delete;
   pj;
   uemail;
   public uploadPercent: Observable<number>;
   public downloadUrl: Observable<string>;
+  profileUrl: Observable<string | null>;
 
 
   constructor(
@@ -52,6 +54,7 @@ export class ProjetosPage {
     private file: File) {
 
     this.operacao = false;
+    this.getTest();
     //Validação dos campos
     this.newProjectForm = this.formbuilder.group({
       descricao: [null, [Validators.required, Validators.minLength(10)]],
@@ -149,6 +152,13 @@ export class ProjetosPage {
           });
         }
       });
+  }
+
+  getImage() {
+
+    const ref = this.afStorage.ref('imagens/chatbot.jpg');
+    this.profileUrl = ref.getDownloadURL();
+    console.log(this.profileUrl);
   }
 
   goToProjetos(item) {
@@ -304,6 +314,10 @@ export class ProjetosPage {
     });
   }
 
+  getTest() {
+    this.listTest = this.db.list('projetos').valueChanges();
+    console.log(this.listTest);
+  }
 
 
 }
