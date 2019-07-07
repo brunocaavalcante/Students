@@ -1,60 +1,58 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AngularFireList, AngularFireDatabase } from '@angular/fire/database';
-import { map } from 'rxjs/operators';
+import { AngularFireList } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController } from 'ionic-angular';
 import { TarefaProvider } from '../tarefa/tarefa';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 
 
 @Injectable()
 export class ProjetoProvider {
   items: Observable<any>;
   itemsRef: AngularFireList<any>;
+  private projetoCollection: AngularFirestoreCollection<any>;
+
   constructor(
     public http: HttpClient,
     public afAuth: AngularFireAuth,
     public alertCtrl: AlertController,
-    public db: AngularFireDatabase,
+    private afs: AngularFirestore,
     public tarefa: TarefaProvider) {
+    this.projetoCollection = this.afs.collection<any>('projetos');
   }
 
   insert(projeto) {
-    this.db.database.ref('projetos').push(projeto);
+    const id_participante = this.afs.createId();
+    this.projetoCollection.doc(id_participante).set(projeto);
+    this.projetoCollection.doc(id_participante).update({ id_participante: id_participante });
+    return id_participante;
   }
 
   update(id, projeto) {
-    this.db.database.ref('projetos/' + id).update(projeto);
+    console.log(id);
+    this.projetoCollection.doc(id).update(projeto);
   }
 
   delete(projeto) {
-    if (projeto.adm) {
-      this.db.database.ref('projetos').orderByChild("id")
-        .equalTo(projeto.id).on("value", snapshot => {
-          snapshot.forEach(item => {
-            this.tarefa.deleteAll(projeto.id);
-            var rv = this.db.database.ref('projetos/' + item.key);
-            rv.remove();
-          });
-
-        });
-      this.presentAlert("Projeto Excluido", "Projeto excluido com sucesso!");
-    } else {
-      this.presentAlert("Permissão Negada!", "Somente administradores podem excluir o projeto");
-    }
+    this.projetoCollection.doc(projeto.id_participante).delete();
+    this.tarefa.deleteAll(projeto.id);
 
   }
 
   get(email) {
-
-    this.itemsRef = this.db.list('projetos', ref => ref.orderByChild('id_participante').equalTo(email));
-    this.items = this.itemsRef.snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c => ({ key: c.payload.key, ...c.payload.val() }))
-      )
-    );
+    this.items = this.afs.collection('projetos', ref => ref.where('email', '==', email)).valueChanges();
     return this.items;
+  }
+
+  find(projeto) {
+    this.items = this.afs.collection('projetos', ref => ref.where('id', '==', projeto.id)).valueChanges();
+    return this.items;
+  }
+
+  deleteParticipante(id) {
+    this.projetoCollection.doc(id).delete();
   }
 
   //Função para apresenta alertas
@@ -66,6 +64,5 @@ export class ProjetoProvider {
     });
     alert.present();
   }
-
 
 }

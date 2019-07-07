@@ -5,7 +5,6 @@ import { ValidateConfirmPassword } from '../../../validators/confirmPassword';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController } from 'ionic-angular';
 import { TabsControllerPage } from '../../tabs-controller/tabs-controller';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
 import { UserProvider } from '../../../providers/user/user';
 
@@ -30,7 +29,6 @@ export class CadastroUserPage {
     public storage: Storage,
     public usuario: UserProvider,
     public alertCtrl: AlertController,
-    public db: AngularFireDatabase, //Banco de dados Firebase
   ) {
 
     //Validação dos campos

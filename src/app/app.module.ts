@@ -11,7 +11,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
 import { CadastroUserPage } from '../pages/Usuario/cadastro-user/cadastro-user';
-import { ChatPage } from '../pages/Menssagens/chat/chat';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -23,15 +22,15 @@ import { TarefasProjetoPage } from '../pages/Projeto/tarefas-projeto/tarefas-pro
 import { EditProjetoPage } from '../pages/Projeto/edit-projeto/edit-projeto';
 import { SubTarefasPage } from '../pages/Projeto/sub-tarefas/sub-tarefas';
 import { DespesasPage } from '../pages/Projeto/despesas/despesas';
-import { Camera } from '@ionic-native/camera';
-import { File } from '@ionic-native/file';
-import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireStorage, AngularFireStorageModule } from '@angular/fire/storage';
 import { UserProvider } from '../providers/user/user';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { ProjetoProvider } from '../providers/projeto/projeto-provider';
 import { TarefaProvider } from '../providers/tarefa/tarefa';
 import { SubtarefaProvider } from '../providers/subtarefa/subtarefa';
+import { FindChatsPage } from '../pages/Menssagens/find-chats/find-chats';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 
 @NgModule({
@@ -44,13 +43,13 @@ import { SubtarefaProvider } from '../providers/subtarefa/subtarefa';
     HomePage,
     LoginPage,
     CadastroUserPage,
-    ChatPage,
     MyProjetoPage,
     EditProjetoPage,
     ProjetosPage,
     TarefasProjetoPage,
     DespesasPage,
-    SubTarefasPage
+    SubTarefasPage,
+    FindChatsPage
 
   ],
   imports: [
@@ -59,6 +58,7 @@ import { SubtarefaProvider } from '../providers/subtarefa/subtarefa';
     AngularFireModule.initializeApp(environment.firebase),
     IonicStorageModule.forRoot(),
     HttpModule,
+    AngularFireStorageModule,
     HttpClientModule
   ],
   bootstrap: [IonicApp],
@@ -71,13 +71,13 @@ import { SubtarefaProvider } from '../providers/subtarefa/subtarefa';
     HomePage,
     LoginPage,
     CadastroUserPage,
-    ChatPage,
     EditProjetoPage,
     MyProjetoPage,
     ProjetosPage,
     TarefasProjetoPage,
     DespesasPage,
-    SubTarefasPage
+    SubTarefasPage,
+    FindChatsPage
   ],
   providers: [
     StatusBar,
@@ -85,10 +85,8 @@ import { SubtarefaProvider } from '../providers/subtarefa/subtarefa';
     AngularFireAuth,
     AngularFireStorage,
     AngularFireDatabase,
-    TarefasProjetoPage,
+    AngularFirestore,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    Camera,
-    File,
     UserProvider,
     ProjetoProvider,
     TarefaProvider,

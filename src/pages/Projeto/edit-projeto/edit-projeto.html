@@ -33,7 +33,7 @@
 
       <ion-item>
         <ion-label>Faculdade</ion-label>
-        <ion-select multiple="false" cancelText="Cancelar" value="okText='Ok!'" formControlName="faculdade">
+        <ion-select multiple="false" cancelText="Cancelar" value="okText='Ok!'" formControlName="faculdade" interface="action-sheet">
           <ion-option value="Uninove" selected="true">{{ p.faculdade }}</ion-option>
           <ion-option value="Unip" selected="false">Unip</ion-option>
         </ion-select>
@@ -42,7 +42,7 @@
       <ion-item>
         <ion-label>Campus</ion-label>
         <ion-select multiple="false" cancelText="Cancelar" formControlName="campus" okText="Ok!">
-          <ion-option value="Santo Amaro" selected="false">Santo Amaro</ion-option>
+          <ion-option value="Santo Amaro" selected="true">Santo Amaro</ion-option>
           <ion-option value="Vergueiro" selected="false">Vergueiro</ion-option>
         </ion-select>
       </ion-item>
@@ -70,7 +70,7 @@
 
   </ion-list>
   <div padding>
-    <button block ion-button (click)="alterProjeto()">Alterar Projeto</button>
+    <button block ion-button [disabled]="newProjectForm.invalid" (click)="alterProjeto()">Alterar Projeto</button>
   </div>
 
 

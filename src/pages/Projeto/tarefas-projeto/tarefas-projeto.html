@@ -22,7 +22,7 @@
     tarefa ou se essa variavel tiver menos de 3 char assim o usuario não criara tarefas vazias -->
 
 
-  <ion-list *ngFor="let item of list">
+  <ion-list *ngFor="let item of list | async">
     <ion-card>
       <ion-card-header style="white-space: normal;">
 

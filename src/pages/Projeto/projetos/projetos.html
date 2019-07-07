@@ -7,9 +7,10 @@
 <ion-content padding>
 
   <div [hidden]="operacao">
-    <ion-item *ngFor="let item of items | async">
+    <ion-item *ngFor="let item of items">
       <ion-card>
-        <img src="../../assets/imgs/projeto.png" />
+        <img [src]="item.imagem | async" *ngIf="item.url">
+        <img src="../../assets/imgs/projeto.png" *ngIf="!item.url"/>
         <ion-card-content style="white-space: normal;">
           <ion-card-title>
             {{ item.nome }}
@@ -26,12 +27,13 @@
           </div>
 
         </ion-card-content>
-        <button ion-button clear color="danger" (click)="presentShowConfirm(item)" class="btn_p">Excluir</button>
+        <button ion-button clear color="danger" (click)="presentShowConfirm(item)" *ngIf="item.adm"
+          class="btn_p">Excluir</button>
         <button ion-button clear (click)="goToProjetos(item)" class="btn_p">Detalhes</button>
       </ion-card>
 
     </ion-item>
-      <img src="downloadUrl | async" *ngIf="downloadUrl | async">
+
 
     <button ion-button block (click)="addProjeto()">Novo Projeto</button>
   </div>

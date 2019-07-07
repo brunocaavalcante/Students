@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { ProjetosPage } from '../projetos/projetos';
+import { ProjetoProvider } from '../../../providers/projeto/projeto-provider';
 
 
 @IonicPage()
@@ -21,22 +22,19 @@ export class EditProjetoPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public formbuilder: FormBuilder,
+    public pj:ProjetoProvider,
     public db: AngularFireDatabase,
     public alertCtrl: AlertController,) {
 
     this.newProjectForm = this.formbuilder.group({
       descricao: [null, [Validators.required, Validators.minLength(10)]],
-      data_ini: [null],
-      data_fim: [null],
-      faculdade: [null],
-      campus: [null],
-      funcao: [null],
-      email: [null],
+      data_ini: [[null],[Validators.required]],
+      data_fim: [[null],[Validators.required]],
+      faculdade: [[null],[Validators.required]],
+      campus: [[null],[Validators.required]],
       nome: [null, [Validators.required, Validators.minLength(5)]],
-      adm: [null]
     })
     this.p = this.navParams.get('p');
-    console.log(this.p);
     this.participantes = this.navParams.get('participantes');
   }
 
@@ -45,23 +43,12 @@ export class EditProjetoPage {
 
   alterProjeto() {
     
-    this.db.database.ref('projetos').orderByChild('id').
-      equalTo(this.p.id).on("value", snapshot => {
-        snapshot.forEach(data => {
-          this.db.database.ref('projetos/' + data.key).update({
-            descricao: this.newProjectForm.get('descricao').value,
-            id: this.p.id,
-            nome: this.newProjectForm.get('nome').value,
-            faculdade: this.newProjectForm.get('faculdade').value,
-            data_ini: this.newProjectForm.get('data_ini').value,
-            data_fim: this.newProjectForm.get('data_fim').value,
-            campus: this.newProjectForm.get('campus').value
-          });
-        });
-      });
-      this.presentAlert("Projeto alterado!","");
-      this.navCtrl.push(ProjetosPage);
-    
+   this.pj.find(this.p).subscribe(itens=>{
+    var data = Object.keys(itens).map(i => itens[i]);
+    data.forEach(dt => {
+      this.pj.update(dt.id_participante,this.newProjectForm.value);
+    });
+   })
   }
 
   updateCheck(item) {

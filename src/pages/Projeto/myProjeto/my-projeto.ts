@@ -7,6 +7,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { TarefasProjetoPage } from '../tarefas-projeto/tarefas-projeto';
 import { EditProjetoPage } from '../edit-projeto/edit-projeto';
 import { DespesasPage } from '../despesas/despesas';
+import { ProjetoProvider } from '../../../providers/projeto/projeto-provider';
+import { UserProvider } from '../../../providers/user/user';
 
 
 
@@ -19,13 +21,11 @@ export class MyProjetoPage {
 
   tarefa;
   descricao;
-  participantes = [];
-  menssagens = [];
-  id_projeto;
+  participantes;
+  item = { email: "", funcao: "", desc_f: "" };
   p;
   adm: boolean;
   user;
-  porcent;
   list = [];
   projeto;
   id;
@@ -38,165 +38,81 @@ export class MyProjetoPage {
     public db: AngularFireDatabase, //Banco de dados Firebase
     public alertCtrl: AlertController,
     public menuCtrl: MenuController,
-    public afAuth: AngularFireAuth
+    public pj: ProjetoProvider,
+    private usuario: UserProvider,
+    public afAuth: AngularFireAuth,
 
   ) {
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.projeto = this.navParams.get('projeto');
-    this.getParticipantes();
   }
 
   ionViewDidLoad() {
-
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.segment.value = 'sobre';
     this.getParticipantes();
-    this.closeMenu();
   }
-
 
   getParticipantes() {
-
-    //Pegando email de participantes do projeto
-    this.db.database.ref('projetos').orderByChild('id')
-      .equalTo(this.projeto.id).on("value", snapshot => {
-        var item = snapshot.val();
-        if (item) {
-          this.participantes = Object.keys(item).map(i => item[i]);
-
-          //Pegando os dados dos participantes
-          for (let i = 0; i < this.participantes.length; i++) {
-
-            this.db.database.ref('cadastro').orderByChild('email')
-              .equalTo(this.participantes[i].id_participante).once("value", snapshot => {
-                const items = snapshot.val();
-
-                if (items) { //atibuido participante ao vertor list
-                  this.p = Object.keys(items).map(i => items[i]);
-                  this.list[i] = ({
-                    id_participante: this.p[0].id,
-                    nome: this.p[0].nome,
-                    sobrenome: this.p[0].sobrenome,
-                    funcao: this.participantes[i].funcao,
-                    desc_f: this.participantes[i].descricao_f,
-                    email: this.participantes[i].id_participante,
-                    faculdade: this.p[0].faculdade,
-                    curso: this.p[0].curso,
-                    adm: this.participantes[i].adm
-
-                  });
-                  if (this.user.email == this.list[i].email) { //descobrindo usuario local
-                    this.adm = this.list[i].adm;
-                  }
-                }
+    this.pj.find(this.projeto).subscribe(itens => {
+      var participantes = Object.keys(itens).map(i => itens[i]);
+      if (participantes.length > 0) {
+        for (let i = 0; i < participantes.length; i++) {
+          this.usuario.find(participantes[i].email).subscribe(data => {
+            this.p = Object.keys(data).map(i => data[i]);
+            if (this.p.length > 0) {
+              this.list[i] = ({
+                nome: this.p[0].nome,
+                sobrenome: this.p[0].sobrenome,
+                faculdade: this.p[0].faculdade,
+                curso: this.p[0].curso,
+                id_participante: participantes[i].id_participante,
+                id: participantes[i].id,
+                funcao: participantes[i].funcao,
+                desc_f: participantes[i].descricao_f,
+                email: participantes[i].email,
+                adm: participantes[i].adm
               });
-          }
-        } else {
-          console.log("Sem participantes");
+            } else {
+              this.list[i] = ({
+                id_participante: participantes[i].id_participante,
+                id: participantes[i].id,
+                funcao: participantes[i].funcao,
+                desc_f: participantes[i].descricao_f,
+                email: participantes[i].email,
+                adm: participantes[i].adm
+              });
+            }
+          });
         }
-      })
+      }
+    })
   }
 
-  updateParticipante(item) {
-
-    this.db.database.ref('projetos').orderByChild("id").
-      equalTo(this.projeto.id).once("value", snapshot => {
-        snapshot.forEach(childSnapshot => {
-
-          var email = childSnapshot.val().id_participante
-
-          if (item.id_participante == email) {
-            var id = childSnapshot.key;
-            this.db.database.ref('projetos/' + id).update({
-              id_participante: item.id_participante,
-              descricao_f: item.descricao_f,
-              funcao: item.funcao
-            });
-          }
-        });
-      });
+  updateParticipante(data, item) {
+    this.pj.update(item.id_participante, data);
   }
 
   deleteParticipante(item) {
-
-    if (item.adm) {
-      this.db.database.ref('projetos').orderByChild("id").
-        equalTo(this.projeto.id).on("value", snapshot => {
-
-          snapshot.forEach(childSnapshot => {
-
-            var email = childSnapshot.val().id_participante
-
-            if (item.email == email) {
-              var id = childSnapshot.key; //pega a chave do filho
-              var rv = this.db.database.ref('projetos/' + id);//referencia 
-              rv.remove();
-            }
-          });
-        });
-    } else {
-      this.presentAlert("Operação Negada", "Somente administradores podem excluir participantes");
-    }
+    this.pj.deleteParticipante(item.id_participante);
+    this.presentAlert("Participante Excluido", "");
+    this.list.pop();
   }
 
   finalizarProjeto() {
-    console.log(this.projeto);
-    this.db.database.ref('projetos/' + this.projeto.id).update({ status: "inativo" });
+    for (let i = 0; i < this.list.length; i++) {
+      this.pj.update(this.list[i].id_participante, { situacao: "concluido" });
+    }
   }
 
   insertParticipante(item) {
-
-    //verifica se o participante esta cadastrado no sistema 
-    this.db.database.ref('cadastro').orderByChild("email")
-      .equalTo(item.email).once("value", snapshot => {
-        const items = snapshot.val();
-
-        if (items != null) {
-
-          //Inseri participante no projeto
-          this.list = Object.keys(items).map(i => items[i]);
-          console.log(this.list);
-          console.log(this.projeto);
-          this.db.database.ref('projetos/').push({
-            descricao: (this.projeto.descricao != null ? this.projeto.descricao : "Indefinido"),
-            data_ini: (this.projeto.data_ini != null ? this.projeto.data_ini : "Indefinido"),
-            data_fim: (this.projeto.data_fim != null ? this.projeto.data_fim : "Indefinido"),
-            faculdade: (this.projeto.faculdade != null ? this.projeto.faculdade : "Indefinido"),
-            campus: (this.projeto.campus != null ? this.projeto.campus : "Indefinido"),
-            nome: (this.projeto.nome != null ? this.projeto.nome : "Indefinido"),
-            id: this.projeto.id,
-            id_participante: this.list[0].email,
-            adm: "false",
-            dono: this.projeto.dono,
-
-          })
-
-        } else {
-
-          var id = this.db.database.ref('cadastro').push().key
-          this.db.database.ref('cadastro/' + id).update({ // Cria pré cadastro
-            email: item.email,
-            id: id
-          })
-          this.db.database.ref('projetos').push({  //Insere no projeto
-            descricao: (this.projeto.descricao != null ? this.projeto.descricao : "Indefinido"),
-            data_ini: (this.projeto.data_ini != null ? this.projeto.data_ini : "Indefinido"),
-            data_fim: (this.projeto.data_fim != null ? this.projeto.data_fim : "Indefinido"),
-            faculdade: (this.projeto.faculdade != null ? this.projeto.faculdade : "Indefinido"),
-            campus: (this.projeto.campus != null ? this.projeto.campus : "Indefinido"),
-            nome: (this.projeto.nome != null ? this.projeto.nome : "Indefinido"),
-            id: this.projeto.id,
-            id_participante: item.email,
-            dono: this.projeto.dono,
-
-          })
-        }
-      });
+    console.log(item);
+    var id = this.pj.insert(this.projeto);
+    this.pj.update(id, { id_participante: id, adm: false, id: this.projeto.id, email: item.email });
     this.presentAlert("Participante adicionado", "");
 
   }
 
-  //Função para apresenta alertas
   public presentAlert(title: string, subtitle: string) {
     let alert = this.alertCtrl.create({
       title: title,
@@ -206,13 +122,13 @@ export class MyProjetoPage {
     alert.present();
   }
 
-  presentPrompt(item) {
+  presentPrompt(item, op) {
 
     let alert = this.alertCtrl.create({
       title: 'Participante',
       inputs: [
         {
-          name: 'id_participante',
+          name: 'email',
           placeholder: 'Digite o Email do Participante',
           type: 'email',
           value: item.email
@@ -229,8 +145,6 @@ export class MyProjetoPage {
           type: 'text',
           value: item.desc_f
         },
-
-
       ],
       buttons: [
         {
@@ -241,56 +155,14 @@ export class MyProjetoPage {
           }
         },
         {
-          text: 'Alterar',
-          handler: data => {
-            this.updateParticipante(data);
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
-
-  presentAddParticipante() {
-
-    let alert = this.alertCtrl.create({
-      title: 'Participante',
-      inputs: [
-        {
-          name: 'email',
-          placeholder: 'Digite o Email do Participante',
-          type: 'email',
-          value: ""
-        },
-        {
-          name: 'funcao',
-          placeholder: 'Função',
-          type: 'text',
-          value: ""
-        },
-        {
-          name: 'descricao_f',
-          label: 'Descreva a Função',
-          placeholder: 'Descreva a Função',
-          type: 'text',
-          value: ""
-        },
-
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
+          text: 'ok!',
           handler: data => {
 
-          }
-        },
-        {
-          text: 'Adicionar',
-          handler: data => {
-            console.log(data);
-            this.insertParticipante(data);
-
+            if (op == "update") {
+              this.updateParticipante(data, item);
+            } else {
+              this.insertParticipante(data);
+            }
           }
         }
       ]
@@ -323,14 +195,8 @@ export class MyProjetoPage {
     alert.present();
   }
 
-  //Fução fecha menu lateral do app
-  closeMenu() {
-    this.menuCtrl.close();
-  }
-
   goToTarefas(participante) {
     var p = this.projeto;
-
     this.navCtrl.push(TarefasProjetoPage, { p, participante });
   }
 
@@ -342,7 +208,7 @@ export class MyProjetoPage {
 
   goToDespesas() {
     var projeto = this.projeto
-    this.navCtrl.push(DespesasPage,{ projeto });
+    this.navCtrl.push(DespesasPage, { projeto });
   }
 
 }

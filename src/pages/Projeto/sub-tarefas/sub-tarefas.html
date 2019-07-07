@@ -18,7 +18,7 @@
   <button ion-button block class="add" (click)="insertSub(descricao,titulo)"
       [disabled]="!titulo || titulo.length < 3">Adicionar Tarefa</button>
 
-  <ion-list *ngFor="let item of list">
+  <ion-list *ngFor="let item of list | async">
     <ion-item class="item">
       <ion-label style="white-space: normal;"> {{ item.titulo }}</ion-label>
       <button ion-button clear color="danger" icon-only item-end (click)="presentShowConfirm(item)">

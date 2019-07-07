@@ -4,7 +4,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController } from 'ionic-angular';
 import { TabsControllerPage } from '../tabs-controller/tabs-controller';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { Storage } from '@ionic/storage';
 
 
@@ -25,7 +24,6 @@ export class LoginPage {
     public formbuilder: FormBuilder,
     public afAuth: AngularFireAuth,
     public alertCtrl: AlertController,
-    public db: AngularFireDatabase,
     public storage: Storage
   ) {
 

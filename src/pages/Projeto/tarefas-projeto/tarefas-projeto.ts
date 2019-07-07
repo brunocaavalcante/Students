@@ -6,6 +6,7 @@ import { SubTarefasPage } from '../sub-tarefas/sub-tarefas';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TarefaProvider } from '../../../providers/tarefa/tarefa';
+import { Observable } from 'rxjs';
 
 
 
@@ -23,7 +24,7 @@ export class TarefasProjetoPage {
   descricao;
   participante;
   id_dono;
-  list = [];
+  list : Observable<any>;
   subTarefas = [];
   projeto;
   check: boolean;
@@ -41,7 +42,8 @@ export class TarefasProjetoPage {
     this.participante = this.navParams.get('participante');
     const user = this.afAuth.auth.currentUser;//pega usuario logado
     this.uid = user.uid;
-    this.list = this.tarefa.get(this.projeto, this.participante);
+    this.list= this.tarefa.get(this.projeto, this.participante);
+    console.log(this.list);
   }
 
   ionViewDidLoad() {
@@ -49,12 +51,10 @@ export class TarefasProjetoPage {
   }
 
   addTarefa(descricao, nome, status) {
-    var id = this.db.database.ref('tarefas').push().key;
     var tf = ({
       tarefa: nome,
       descricao: descricao,
       status: status,
-      id: id,
       data: this.getData(),
       observacao: "",
       qtd_sub: 0,

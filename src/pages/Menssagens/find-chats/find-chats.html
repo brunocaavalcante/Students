@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Buscar Amigos</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-card *ngFor="let item of items | async">
+
+    <ion-item>
+      <ion-avatar item-start>
+        <img src="../../assets/imgs/p1.jpg">
+      </ion-avatar>
+      <h2>{{ item.nome }}</h2>
+      <p>{{ item.sobrenome }}</p>
+    </ion-item>
+
+    <ion-card-content>
+      <p><b>Faculdade:</b> {{ item.faculdade }}<br>
+        <b>Campus:</b> {{ item.campus }}<br>
+        <b>Curso:</b> {{ item.curso }}<br>
+        <b>Semestre:</b> {{ item.semestre }}<br>
+      </p>
+    </ion-card-content>
+
+    <ion-row>
+      <ion-col>
+        <button ion-button icon-start clear small>
+          <ion-icon name="thumbs-up"></ion-icon>
+          <div>12 Likes</div>
+        </button>
+      </ion-col>
+      <ion-col>
+        <button ion-button icon-start clear small>
+          <ion-icon name="text"></ion-icon>
+          <div>conversar</div>
+        </button>
+      </ion-col>
+      <ion-col align-self-center text-center>
+        <ion-note>
+          11h ago
+        </ion-note>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
+</ion-content>
