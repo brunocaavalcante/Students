@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Segment } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { MenuController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TarefasProjetoPage } from '../tarefas-projeto/tarefas-projeto';
@@ -35,7 +34,6 @@ export class MyProjetoPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public storage: Storage,//Variavel banco de dados local do app sqlite
-    public db: AngularFireDatabase, //Banco de dados Firebase
     public alertCtrl: AlertController,
     public menuCtrl: MenuController,
     public pj: ProjetoProvider,
@@ -46,7 +44,7 @@ export class MyProjetoPage {
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.projeto = this.navParams.get('projeto');
   }
-
+  
   ionViewDidLoad() {
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.segment.value = 'sobre';

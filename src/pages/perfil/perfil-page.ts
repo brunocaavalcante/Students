@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidateConfirmPassword } from '../../validators/confirmPassword';
 import { UserProvider } from '../../providers/user/user';
 import { Observable } from 'rxjs';
+import { FileChooser } from '@ionic-native/file-chooser';
+import { FilePath } from '@ionic-native/file-path';
+import { FileOpener } from '@ionic-native/file-opener';
 
 @Component({
   selector: 'page-perfil',
@@ -22,10 +24,12 @@ export class PerfilPage {
   constructor(
     public navCtrl: NavController,
     public afAuth: AngularFireAuth,
-    public db: AngularFireDatabase,
     public formbuilder: FormBuilder,
     public alertCtrl: AlertController,
-    public usuario: UserProvider
+    public usuario: UserProvider,
+    private fileChooser: FileChooser,
+    private filePath: FilePath,
+    private fileOpener: FileOpener
   ) {
     this.updateForm = this.formbuilder.group({
       sobrenome: [null, [Validators.required, Validators.minLength(3)]],
@@ -60,6 +64,21 @@ export class PerfilPage {
     this.usuario.update(this.user.uid, this.updateForm.value);
     this.presentAlert("Cadastro Atalizado", "Cadastro atualizado com sucesso!");
     this.disable = "1";
+  }
+
+  openGalery() {
+    this.fileChooser.open()
+      .then(file => {
+        this.filePath.resolveNativePath(file)
+          .then(filePath => {
+            this.fileOpener.open(filePath, 'application/pdf')
+              .then(() => console.log('File is opened'))
+              .catch(e => console.log('Error opening file', e));
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(e => console.log(e));
+      console.log("Abriu a Galeria");
   }
 
   public presentAlert(title: string, subtitle: string) {

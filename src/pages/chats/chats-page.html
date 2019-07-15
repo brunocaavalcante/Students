@@ -36,22 +36,22 @@
 <ion-content padding id="page3">
 
   <div [ngSwitch]="chats">
+    
     <ion-list *ngSwitchCase="'conversas'">
 
-      <ion-item (click)="goToChat()">
-        <ion-thumbnail item-start>
+      <ion-item *ngFor="let item of contacts | async " (click)="goToMessage(item)">
+        <ion-avatar item-start>
           <img src="../../assets/imgs/p1.jpg">
-        </ion-thumbnail>
-        <h2>Camila</h2>
-        <p>Ciencias Humanas</p>
+        </ion-avatar>
+        <h2>{{ item.title }}</h2>
+        <p>{{ item.lastMessage }}</p>
       </ion-item>
 
     </ion-list>
 
     <ion-list *ngSwitchCase="'projetos'">
 
-
-      <ion-item>
+      <ion-item (click)="goToMessage()">
         <ion-card>
           <img src="../../assets/imgs/projeto_1.jpg" />
           <div class="card-title">São Paulo</div>
@@ -104,38 +104,38 @@
         <ion-label>Gêreno:</ion-label>
         <ion-select [(ngModel)]="sexo">
           <ion-option value="todos">Todos</ion-option>
-          <ion-option value="homem">Homem</ion-option>
-          <ion-option value="mulher">Mulher</ion-option>
+          <ion-option value="masculino">Masculino</ion-option>
+          <ion-option value="feminino">Femenino</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item>
         <ion-label>Faculdade:</ion-label>
         <ion-select [(ngModel)]="faculdade">
-          <ion-option value="uninove">Uninove</ion-option>
-          <ion-option value="unip">Unip</ion-option>
-          <ion-option value="usp">USP</ion-option>
+          <ion-option value="Uninove">Uninove</ion-option>
+          <ion-option value="Unip">Unip</ion-option>
+          <ion-option value="USP">USP</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item>
         <ion-label>Cursos:</ion-label>
-        <ion-select [(ngModel)]="cursos">
-          <ion-option value="cc">Ciencias da Computação</ion-option>
-          <ion-option value="si">Sistema da Informação</ion-option>
+        <ion-select [(ngModel)]="curso">
+          <ion-option value="Ciencias da Computação">Ciencias da Computação</ion-option>
+          <ion-option value="Sistema da Informação">Sistema da Informação</ion-option>
           <ion-option value="ps">Analise e Desenvolvimento de Sistemas</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item>
-        <ion-label>Campos:</ion-label>
+        <ion-label>Campus:</ion-label>
         <ion-select [(ngModel)]="campus">
           <ion-option value="Santo Amaro">Santo Amaro</ion-option>
           <ion-option value="Vergueiro">Vergueiro</ion-option>
           <ion-option value="Barra Funda">Barra Funda</ion-option>
         </ion-select>
       </ion-item>
-      <button ion-button outline id="Entrar">REESTABELECER</button>
+      <button ion-button outline id="Entrar" (click)="limpar()">REESTABELECER</button>
       <button ion-button outline id="Entrar" (click)="goToFindChats()">OK</button>
     </ion-list>
 

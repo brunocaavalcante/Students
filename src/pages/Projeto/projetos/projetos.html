@@ -1,6 +1,11 @@
 <ion-header>
   <ion-navbar>
     <ion-title>Meus Projetos</ion-title>
+    <ion-buttons end>
+      <button ion-button  icon-only (click)="addProjeto()">
+        <ion-icon  style="margin-right: 15px;font-size: 34px" name="ios-add-circle"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -34,8 +39,6 @@
 
     </ion-item>
 
-
-    <button ion-button block (click)="addProjeto()">Novo Projeto</button>
   </div>
 
 

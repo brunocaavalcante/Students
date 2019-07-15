@@ -9,6 +9,9 @@
 
   <form novalidate [formGroup]="updateForm">
     <ion-list *ngFor="let user of list | async">
+      
+      <img src="../../assets/imgs/projeto.png" />
+      <button ion-button outline (click)="openGalery()">Subir Foto</button>
 
       <ion-item>
         <ion-label stacked>Nome:</ion-label>
@@ -17,7 +20,7 @@
 
       <ion-item>
         <ion-label stacked>Sobre Nome:</ion-label>
-        <ion-input type="text" [disabled]="disable == 1" value="{{ user.sobrenome }}"  formControlName="sobrenome">
+        <ion-input type="text" [disabled]="disable == 1" value="{{ user.sobrenome }}" formControlName="sobrenome">
         </ion-input>
       </ion-item>
 
@@ -54,7 +57,7 @@
         <ion-input type="text" [disabled]="disable == 1" formControlName="campus" value="{{ user.campus }}"></ion-input>
       </ion-item>
 
-      <ion-item> 
+      <ion-item>
         <ion-label stacked>Semestre:</ion-label>
         <ion-input type="text" [disabled]="disable == 1" formControlName="semestre" value="{{ user.semestre }}">
         </ion-input>

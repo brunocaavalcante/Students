@@ -48,6 +48,7 @@ export class MyApp {
   
   Logout() {
     this.storage.set("user", null); // Salvando o id do usuario no sqlite
+    this.afAuth.auth.signOut();
     this.navCtrl.setRoot(HomePage);
   }
 

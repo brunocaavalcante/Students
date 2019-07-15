@@ -21,7 +21,7 @@ export class UserProvider {
   constructor(
     public http: HttpClient,
     public alertCtrl: AlertController,
-    private afs: AngularFirestore ) {
+    private afs: AngularFirestore) {
     this.userCollection = this.afs.collection<any>('cadastro');
   }
 
@@ -37,7 +37,7 @@ export class UserProvider {
 
   insert(id, user) {
     this.userCollection.doc(id).set(user);
-    this.userCollection.doc(id).update({id:id});
+    this.userCollection.doc(id).update({ id: id });
   }
 
   update(id, user) {
@@ -46,7 +46,17 @@ export class UserProvider {
 
   delete(user) {
     this.userCollection.doc(user.id).delete();
-    //this.ref = this.db.object('cadastro/' + user.id);
-    //this.ref.remove();
+  }
+  listCondicion(condicion) {
+
+    this.items = this.afs.collection('cadastro', ref => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      if (condicion.sexo) query = query.where('sexo', '==', condicion.sexo != undefined ? condicion.sexo : "");
+      if (condicion.faculdade) query = query.where('faculdade', '==', condicion.faculdade != undefined ? condicion.faculdade : "");
+      if (condicion.curso) query = query.where('curso', '==', condicion.curso != undefined ? condicion.curso : "");
+      if (condicion.campus) query = query.where('campus', '==', condicion.campus != undefined ? condicion.campus : "");
+      return query;
+    }).valueChanges();
+    return this.items;
   }
 }

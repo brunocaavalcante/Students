@@ -13,32 +13,29 @@ import { Observable } from 'rxjs';
   templateUrl: 'find-chats.html',
 })
 export class FindChatsPage {
-condicao;
-users: Observable<any>;
-private itemsCollection: AngularFirestoreCollection<any>;
-items: Observable<any[]>;
+  condicao;
+  users: Observable<any>;
+  private itemsCollection: AngularFirestoreCollection<any>;
+  itens: Observable<any[]>;
 
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
     public alertCtrl: AlertController,
     public db: AngularFireDatabase,
-    private usuario:UserProvider,
+    private usuario: UserProvider,
     private afs: AngularFirestore
-    ) {
-      this.items = this.afs.collection('cadastro').valueChanges();
-      //this.items = this.itemsCollection.snapshotChanges();
+  ) {
+    // this.items = this.afs.collection('cadastro').valueChanges();
   }
 
   ionViewDidLoad() {
     this.condicao = this.navParams.get('p');
     this.get();
-    console.log(this.users);
   }
 
-  public get(){
-    this.users = this.usuario.list();
+  public get() {
+    this.itens = this.usuario.listCondicion(this.condicao)
   }
-  //citiesRef.where("state", "==", "CA").where("population", ">", 1000000)
 
 }

@@ -40,7 +40,7 @@ export class ProjetosPage {
     public usuario: UserProvider,
     public projeto: ProjetoProvider,
     private afs: AngularFirestore,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
   ) {
 
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
@@ -163,6 +163,7 @@ export class ProjetosPage {
     loading.present();
     return loading;
   }
+
   presentPrompt() {
     let alert = this.alertCtrl.create({
       title: 'Participante',

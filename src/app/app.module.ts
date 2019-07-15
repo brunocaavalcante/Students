@@ -31,7 +31,12 @@ import { TarefaProvider } from '../providers/tarefa/tarefa';
 import { SubtarefaProvider } from '../providers/subtarefa/subtarefa';
 import { FindChatsPage } from '../pages/Menssagens/find-chats/find-chats';
 import { AngularFirestore } from '@angular/fire/firestore';
-
+import { Camera } from '@ionic-native/camera';
+import { FileChooser } from '@ionic-native/file-chooser';
+import { FilePath } from '@ionic-native/file-path';
+import { FileOpener } from '@ionic-native/file-opener';
+import { MessagePage } from '../pages/Menssagens/message/message';
+import { ChatsProvider } from '../providers/chats/chats';
 
 @NgModule({
   declarations: [
@@ -49,17 +54,19 @@ import { AngularFirestore } from '@angular/fire/firestore';
     TarefasProjetoPage,
     DespesasPage,
     SubTarefasPage,
-    FindChatsPage
+    FindChatsPage,
+    MessagePage
 
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp,{tabsHideOnSubPages: true}),
     AngularFireModule.initializeApp(environment.firebase),
     IonicStorageModule.forRoot(),
     HttpModule,
     AngularFireStorageModule,
-    HttpClientModule
+    HttpClientModule,
+  
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -77,7 +84,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
     TarefasProjetoPage,
     DespesasPage,
     SubTarefasPage,
-    FindChatsPage
+    FindChatsPage,
+    MessagePage
   ],
   providers: [
     StatusBar,
@@ -91,6 +99,11 @@ import { AngularFirestore } from '@angular/fire/firestore';
     ProjetoProvider,
     TarefaProvider,
     SubtarefaProvider,
+    Camera,
+    FileChooser,
+    FilePath,
+    FileOpener,
+    ChatsProvider
 
   ]
 })

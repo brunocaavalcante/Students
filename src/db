@@ -1,0 +1,18 @@
+user-messages{
+    uid{
+        grupos{
+            id:
+        }
+        contatos{
+            id:
+        }
+    }
+}
+grupos{
+    id:
+    menssagens:
+}
+contatos{
+    id:
+    menssagens:
+}
