@@ -37,6 +37,7 @@ import { FilePath } from '@ionic-native/file-path';
 import { FileOpener } from '@ionic-native/file-opener';
 import { MessagePage } from '../pages/Menssagens/message/message';
 import { ChatsProvider } from '../providers/chats/chats';
+import { MessageBoxComponent } from '../components/message-box/message-box';
 
 @NgModule({
   declarations: [
@@ -55,8 +56,8 @@ import { ChatsProvider } from '../providers/chats/chats';
     DespesasPage,
     SubTarefasPage,
     FindChatsPage,
-    MessagePage
-
+    MessagePage,
+    MessageBoxComponent
   ],
   imports: [
     BrowserModule,
