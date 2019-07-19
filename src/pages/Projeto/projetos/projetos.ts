@@ -82,6 +82,7 @@ export class ProjetosPage {
       });
       this.items = itens;
     });
+    console.log(this.items);
   }
 
   createProjeto() {

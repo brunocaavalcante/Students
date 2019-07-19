@@ -19,6 +19,7 @@ export class ChatsPage {
   sexo;
   user;
   contacts: Observable<any>;
+  messages: Observable<any>;
   @ViewChild(Segment) segment: Segment;
 
   constructor(
@@ -27,6 +28,7 @@ export class ChatsPage {
     public chats: ChatsProvider,
     public afth: AngularFireAuth) {
     this.user = this.afth.auth.currentUser;
+    this.getMessages();
     this.getContatos();
   }
   ionViewDidLoad() {
@@ -42,13 +44,18 @@ export class ChatsPage {
       campus: this.campus,
       faculdade: this.faculdade,
       curso: this.curso,
-      sexo: this.sexo
+      sexo: this.sexo=="todos"?"":this.sexo
     }
     this.navCtrl.push(FindChatsPage, { p });
   }
 
-  getContatos() {
-    this.contacts = this.chats.chatsUser(this.user.uid);
+  getMessages() {
+    this.messages = this.chats.chatsUser(this.user.uid);  
+  }
+
+
+  getContatos(){
+    this.contacts = this.chats.getContatos(this.user.uid);
   }
 
   limpar() {

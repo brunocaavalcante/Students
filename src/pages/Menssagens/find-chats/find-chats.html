@@ -6,7 +6,7 @@
 
 <ion-content padding>
 
-  <ion-card *ngFor="let item of itens | async">
+  <ion-card *ngFor="let item of itens">
 
     <ion-item>
       <ion-avatar item-start>
@@ -26,15 +26,15 @@
 
     <ion-row>
       <ion-col>
-        <button ion-button icon-start clear small>
-          <ion-icon name="thumbs-up"></ion-icon>
-          <div>12 Likes</div>
+        <button ion-button (click)="presentShowConfirm(item)" icon-start clear small>
+          <ion-icon name="ios-person-add"></ion-icon>
+          <div>Add Contato</div>
         </button>
       </ion-col>
       <ion-col>
-        <button ion-button icon-start clear small>
+        <button ion-button (click)="goToMessage(item)" icon-start clear small>
           <ion-icon name="text"></ion-icon>
-          <div>conversar</div>
+          <div>Conversar</div>
         </button>
       </ion-col>
       <ion-col align-self-center text-center>

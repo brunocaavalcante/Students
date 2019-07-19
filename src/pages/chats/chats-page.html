@@ -11,7 +11,7 @@
       <ion-segment-button large value="projetos">
         Grupos
       </ion-segment-button>
-      <ion-segment-button large value="ducklings">
+      <ion-segment-button large value="contatos">
         Contatos
       </ion-segment-button>
       <ion-segment-button large value="novaConversa">
@@ -36,15 +36,15 @@
 <ion-content padding id="page3">
 
   <div [ngSwitch]="chats">
-    
+
     <ion-list *ngSwitchCase="'conversas'">
 
-      <ion-item *ngFor="let item of contacts | async " (click)="goToMessage(item)">
+      <ion-item *ngFor="let item of messages | async " (click)="goToMessage(item)">
         <ion-avatar item-start>
           <img src="../../assets/imgs/p1.jpg">
         </ion-avatar>
-        <h2>{{ item.title }}</h2>
-        <p>{{ item.lastMessage }}</p>
+        <h2>{{ item.nome }}</h2>
+        <p *ngIf="item.lastMessage">{{ item.lastMessage }} - {{ item.timestamp | date:'dd/MM/y' }}</p>
       </ion-item>
 
     </ion-list>
@@ -71,37 +71,24 @@
 
     </ion-list>
 
-    <ion-list *ngSwitchCase="'ducklings'">
-      <ion-item>
+    <ion-list *ngSwitchCase="'contatos'">
+      <ion-item (click)="goToMessage(item)" *ngFor="let item of contacts | async ">
         <ion-thumbnail item-start>
           <img src="../../assets/imgs/p2.jpg">
         </ion-thumbnail>
-        <h2>Daffy</h2>
-      </ion-item>
-      <ion-item>
-        <ion-thumbnail item-start>
-          <img src="../../assets/imgs/p3.jpg">
-        </ion-thumbnail>
-        <h2>Huey</h2>
-      </ion-item>
-      <ion-item>
-        <ion-thumbnail item-start>
-          <img src="../../assets/imgs/p1.jpg">
-        </ion-thumbnail>
-        <h2>Dewey</h2>
-      </ion-item>
-      <ion-item>
-        <ion-thumbnail item-start>
-          <img src="../../assets/imgs/p2.jpg">
-        </ion-thumbnail>
-        <h2>Louie</h2>
+        <h2>{{ item.nome }}</h2>
+        <p>Faculdade: {{ item.faculdade }}</p>
+        <p>Campus: {{ item.campus }}</p>
+        <p>Curso: {{ item.curso }}</p>
       </ion-item>
     </ion-list>
 
     <ion-list *ngSwitchCase="'novaConversa'">
 
       <ion-item>
-        <ion-label>Gêreno:</ion-label>
+        <ion-label>
+          <ion-icon style="margin-right: 10px" name="ios-people"></ion-icon>Sexo:
+        </ion-label>
         <ion-select [(ngModel)]="sexo">
           <ion-option value="todos">Todos</ion-option>
           <ion-option value="masculino">Masculino</ion-option>
@@ -110,7 +97,9 @@
       </ion-item>
 
       <ion-item>
-        <ion-label>Faculdade:</ion-label>
+        <ion-label>
+          <ion-icon style="margin-right: 10px" name="ios-heart-outline"></ion-icon>Faculdade:
+        </ion-label>
         <ion-select [(ngModel)]="faculdade">
           <ion-option value="Uninove">Uninove</ion-option>
           <ion-option value="Unip">Unip</ion-option>
@@ -119,7 +108,9 @@
       </ion-item>
 
       <ion-item>
-        <ion-label>Cursos:</ion-label>
+        <ion-label>
+          <ion-icon style="margin-right: 10px" name="list-box"></ion-icon>Cursos:
+        </ion-label>
         <ion-select [(ngModel)]="curso">
           <ion-option value="Ciencias da Computação">Ciencias da Computação</ion-option>
           <ion-option value="Sistema da Informação">Sistema da Informação</ion-option>
@@ -128,15 +119,17 @@
       </ion-item>
 
       <ion-item>
-        <ion-label>Campus:</ion-label>
+        <ion-label>
+          <ion-icon style="margin-right: 10px" name="pie"></ion-icon>Campus:
+        </ion-label>
         <ion-select [(ngModel)]="campus">
           <ion-option value="Santo Amaro">Santo Amaro</ion-option>
           <ion-option value="Vergueiro">Vergueiro</ion-option>
           <ion-option value="Barra Funda">Barra Funda</ion-option>
         </ion-select>
       </ion-item>
-      <button ion-button outline id="Entrar" (click)="limpar()">REESTABELECER</button>
-      <button ion-button outline id="Entrar" (click)="goToFindChats()">OK</button>
+      <button ion-button outline id="Entrar" style="width: 140px" (click)="limpar()">REESTABELECER</button>
+      <button ion-button outline id="Entrar" style="width: 140px" (click)="goToFindChats()">OK</button>
     </ion-list>
 
 

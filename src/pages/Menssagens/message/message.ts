@@ -4,6 +4,7 @@ import { UserProvider } from '../../../providers/user/user';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ChatsProvider } from '../../../providers/chats/chats';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 
 @IonicPage()
@@ -13,8 +14,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 })
 export class MessagePage {
 
-  messages: string[] = [];
+  messages: Observable<any>;
   destino;
+  ref;
   u;
   user;
 
@@ -30,24 +32,34 @@ export class MessagePage {
     this.u = this.afth.auth.currentUser;
     this.usuario.find(this.u.email).subscribe(item => {
       this.user = item[0];
-    })
+      this.messages = this.chats.getMessages(this.user.id, this.destino.id);
+      this.messages.subscribe(itens => {
+        if (itens.length === 0) {
+          this.messages = this.chats.getMessages(this.destino.id, this.user.id);
+          this.ref = this.destino.id + " - " + this.user.id;
+        } else {
+          this.ref = this.user.id + " - " + this.destino.id;
+        }
+      });
+    });
   }
 
   sendMessage(newMessage: string): void {
-    this.messages.push(newMessage);
-    this.createChat(newMessage);
+    if (newMessage) {
+      this.createChat(newMessage);
+      var date = new Date();
+      var time = date.getTime();
+      let msg = { id_user: this.user.id, timestamp: time, msg: newMessage };
+      this.chats.insertMessages(this.ref, msg);
+    }
   }
 
   createChat(lastMessage) {
-    this.chats.find(this.user.id, this.destino.id).subscribe(itens => {
-      if (itens.length == 0) {
-        var date = new Date();
-        var time = date.getTime();
-        let chat1 = { lastMessage: lastMessage, timestamp: time, title: this.destino.nome, photo: '' }
-        this.chats.insert(chat1, this.user.id, this.destino.id);
-        let chat2 = { lastMessage: lastMessage, timestamp: time, title: this.user.nome, photo: '' }
-        this.chats.insert(chat2, this.destino.id, this.user.id);
-      }
-    });
+    var date = new Date();
+    var time = date.getTime();
+    let chat1 = { lastMessage: lastMessage, timestamp: time, nome: this.destino.nome, photo: '', id: this.destino.id }
+    this.chats.insertChat(chat1, this.user.id, this.destino.id);
+    let chat2 = { lastMessage: lastMessage, timestamp: time, nome: this.user.nome, photo: '', id: this.user.id }
+    this.chats.insertChat(chat2, this.destino.id, this.user.id);
   }
 }
