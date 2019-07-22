@@ -50,8 +50,9 @@
     "ionic-angular": "3.9.3",
     "ionicons": "3.0.0",
     "jquery": "^3.4.1",
+    "ngx-order-pipe": "^2.0.3",
     "rxjs": "^6.0.0",
-    "rxjs-compat": "^6.5.2",
+    "rxjs-compat": "6.2.2",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.29"
   },

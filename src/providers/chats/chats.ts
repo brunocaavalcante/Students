@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class ChatsProvider {
 
   items: Observable<any>;
-  tem:boolean;
+  tem: boolean;
 
   constructor(
     public http: HttpClient,
@@ -20,9 +20,7 @@ export class ChatsProvider {
   }
 
   insertMessages(ref, item) {
-    console.log(ref);
-    console.log(item);
-    this.afs.doc('messages/'+ref).collection('msg').add(item);
+    this.afs.doc('messages/' + ref).collection('msg').add(item);
   }
 
   addContato(id, item) {
@@ -35,8 +33,17 @@ export class ChatsProvider {
   }
 
   getMessages(id_1, id_2) {
-    this.items = this.afs.collection('messages/' + id_1 + " - " + id_2 + "/msg", ref => ref.orderBy('timestamp', 'desc')).valueChanges();
+    this.items = this.afs.collection('messages/' + id_1 + " - " + id_2 + "/msg", ref => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      query = query.orderBy('timestamp', 'desc').limit(25);
+      return query;
+    }).valueChanges();
     return this.items;
+  }
+
+  filter(colecao:string,ordem:string,start,end){
+    return this.afs.collection(colecao, ref=>
+      ref.orderBy(ordem).startAt(start).endAt(end)).valueChanges();
   }
 
   findChat(id_1, id_2) {

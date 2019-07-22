@@ -2,8 +2,8 @@
   <ion-navbar>
     <ion-title>Meus Projetos</ion-title>
     <ion-buttons end>
-      <button ion-button  icon-only (click)="addProjeto()">
-        <ion-icon  style="margin-right: 15px;font-size: 34px" name="ios-add-circle"></ion-icon>
+      <button ion-button icon-only (click)="addProjeto()">
+        <ion-icon style="margin-right: 15px;font-size: 34px" name="ios-add-circle"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -14,8 +14,7 @@
   <div [hidden]="operacao">
     <ion-item *ngFor="let item of items">
       <ion-card>
-        <img [src]="item.imagem | async" *ngIf="item.url">
-        <img src="../../assets/imgs/projeto.png" *ngIf="!item.url"/>
+        <img [src]="(item.imagem | async) || '../../assets/imgs/projeto.png'" *ngIf="item.url">
         <ion-card-content style="white-space: normal;">
           <ion-card-title>
             {{ item.nome }}

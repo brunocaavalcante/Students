@@ -2,12 +2,9 @@ import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ValidateConfirmPassword } from '../../validators/confirmPassword';
 import { UserProvider } from '../../providers/user/user';
 import { Observable } from 'rxjs';
-import { FileChooser } from '@ionic-native/file-chooser';
-import { FilePath } from '@ionic-native/file-path';
-import { FileOpener } from '@ionic-native/file-opener';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Component({
   selector: 'page-perfil',
@@ -15,7 +12,7 @@ import { FileOpener } from '@ionic-native/file-opener';
 })
 export class PerfilPage {
 
-
+  filePhoto: File;
   user;
   list: Observable<any>;
   disable: string;
@@ -27,9 +24,7 @@ export class PerfilPage {
     public formbuilder: FormBuilder,
     public alertCtrl: AlertController,
     public usuario: UserProvider,
-    private fileChooser: FileChooser,
-    private filePath: FilePath,
-    private fileOpener: FileOpener
+    public storage: AngularFireStorage
   ) {
     this.updateForm = this.formbuilder.group({
       sobrenome: [null, [Validators.required, Validators.minLength(3)]],
@@ -42,8 +37,6 @@ export class PerfilPage {
       sexo: [null],
       nome: [null, [Validators.required, Validators.minLength(3)]],
       email: [null, [Validators.required, Validators.email]],
-      password: [null, [Validators.required, Validators.minLength(5)]],
-      confirmPassword: [null, [Validators.required, Validators.minLength(5), ValidateConfirmPassword]],
     })
 
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
@@ -55,10 +48,6 @@ export class PerfilPage {
     this.disable = "1";
   }
 
-  ativeCad() {
-    this.disable = "2";
-  }
-
   //Botão submit enviando dados e criando um novo usuario no fire base
   submitForm() {
     this.usuario.update(this.user.uid, this.updateForm.value);
@@ -66,19 +55,12 @@ export class PerfilPage {
     this.disable = "1";
   }
 
-  openGalery() {
-    this.fileChooser.open()
-      .then(file => {
-        this.filePath.resolveNativePath(file)
-          .then(filePath => {
-            this.fileOpener.open(filePath, 'application/pdf')
-              .then(() => console.log('File is opened'))
-              .catch(e => console.log('Error opening file', e));
-          })
-          .catch(err => console.log(err));
-      })
-      .catch(e => console.log(e));
-      console.log("Abriu a Galeria");
+  onPhoto(event):void{
+    this.filePhoto = event.target.files[0];
+  }
+
+  openGalery(file:File):any {
+    this.storage.ref('/users/'+this.user.uid).put(file);
   }
 
   public presentAlert(title: string, subtitle: string) {

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, Content } from 'ionic-angular';
 import { UserProvider } from '../../../providers/user/user';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ChatsProvider } from '../../../providers/chats/chats';
@@ -14,8 +14,10 @@ import { Observable } from 'rxjs';
 })
 export class MessagePage {
 
+  @ViewChild(Content) content: Content;
   messages: Observable<any>;
   destino;
+  items = [];
   ref;
   u;
   user;
@@ -32,14 +34,22 @@ export class MessagePage {
     this.u = this.afth.auth.currentUser;
     this.usuario.find(this.u.email).subscribe(item => {
       this.user = item[0];
-      this.messages = this.chats.getMessages(this.user.id, this.destino.id);
-      this.messages.subscribe(itens => {
+      let doSubscription = () => {
+        this.messages.subscribe(() => {
+          this.scrollToBottom();
+        });
+      }
+      this.chats.getMessages(this.user.id, this.destino.id).subscribe(itens => {
         if (itens.length === 0) {
           this.messages = this.chats.getMessages(this.destino.id, this.user.id);
           this.ref = this.destino.id + " - " + this.user.id;
+          doSubscription();
         } else {
+          this.messages = this.chats.getMessages(this.user.id, this.destino.id);
           this.ref = this.user.id + " - " + this.destino.id;
+          doSubscription();
         }
+        this.OrdenarMessages(this.messages);
       });
     });
   }
@@ -61,5 +71,22 @@ export class MessagePage {
     this.chats.insertChat(chat1, this.user.id, this.destino.id);
     let chat2 = { lastMessage: lastMessage, timestamp: time, nome: this.user.nome, photo: '', id: this.user.id }
     this.chats.insertChat(chat2, this.destino.id, this.user.id);
+  }
+
+  scrollToBottom(duration?: number): void { // A ? significa que o parametro é opcional
+    setTimeout(() => {
+      if (this.content != null) {
+        this.content.scrollToBottom(300);
+      }
+    }, 50);
+  }
+
+  OrdenarMessages(messages: Observable<any>) {
+    messages.subscribe(itens => {
+      itens.sort(function (x, y) {
+        return x.timestamp - y.timestamp;
+      }); 
+      this.items = itens;
+    });
   }
 }

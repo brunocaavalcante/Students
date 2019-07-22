@@ -9,9 +9,12 @@
 
   <form novalidate [formGroup]="updateForm">
     <ion-list *ngFor="let user of list | async">
-      
-      <img src="../../assets/imgs/projeto.png" />
-      <button ion-button outline (click)="openGalery()">Subir Foto</button>
+
+      <img class="round" src="../../assets/imgs/user.png" />
+      <ion-item>
+        <ion-icon name="image"></ion-icon>
+        <input type="file" (change)="onPhoto($event)"/>
+      </ion-item>
 
       <ion-item>
         <ion-label stacked>Nome:</ion-label>
@@ -68,21 +71,9 @@
         <ion-input type="email" [disabled]="disable == 1" value="{{ user.email }}" formControlName="email"></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label stacked>Senha:</ion-label>
-        <ion-input type="password" [disabled]="disable == 1" value="{{ user.email }}" formControlName="password">
-        </ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label stacked>Redigite a Senha:</ion-label>
-        <ion-input type="password" [disabled]="disable == 1" value="{{ user.email }}" formControlName="confirmPassword">
-        </ion-input>
-      </ion-item>
-
       <button ion-button [disabled]="disable == 1 || updateForm.invalid" block class="add" (click)="submitForm()">Salvar
         Alterações</button>
-      <button ion-button color="danger" [disabled]="disable == 2" block class="add" (click)="ativeCad()">Alterar
+      <button ion-button color="danger" [disabled]="disable == 2" block class="add" (click)="disable = 2">Alterar
         Cadastro</button>
     </ion-list>
   </form>

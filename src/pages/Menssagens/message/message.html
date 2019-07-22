@@ -8,7 +8,7 @@
 
 <ion-content padding>
 
-  <message-box *ngFor="let item of messages | async" [message]="item" [isTrue]="(item.id === user.id)"></message-box>
+  <message-box *ngFor="let item of items" [message]="item" [isTrue]="(item.id_user === user.id)"></message-box>
 
 </ion-content>
 

@@ -1,41 +1,33 @@
 <ion-header>
-  <!--<ion-navbar>
-   
-  </ion-navbar>-->
+
+  <ion-toolbar *ngIf="mostrar">
+    <ion-searchbar (ionInput)="fliterItems($event)"></ion-searchbar>
+  </ion-toolbar>
 
   <ion-toolbar no-border-top>
-    <ion-segment [(ngModel)]="chats">
-      <ion-segment-button large value="conversas">
+    <ion-segment [(ngModel)]="segment">
+      <ion-segment-button (click)="searchbar(true);" large value="conversas">
         Conversas
       </ion-segment-button>
-      <ion-segment-button large value="projetos">
+      <ion-segment-button (click)="searchbar(false);" large value="projetos">
         Grupos
       </ion-segment-button>
-      <ion-segment-button large value="contatos">
+      <ion-segment-button (click)="searchbar(true);" large value="contatos">
         Contatos
       </ion-segment-button>
-      <ion-segment-button large value="novaConversa">
+      <ion-segment-button (click)="searchbar(false);" large value="novaConversa">
         <button ion-button clear icon-only>
           <ion-icon name="add"></ion-icon>
         </button>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
-
-  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-  <ion-list>
-    <ion-item *ngFor="let item of items">
-      {{ item }}
-    </ion-item>
-  </ion-list>
-
-
-
+  
 </ion-header>
 
 <ion-content padding id="page3">
 
-  <div [ngSwitch]="chats">
+  <div [ngSwitch]="segment">
 
     <ion-list *ngSwitchCase="'conversas'">
 

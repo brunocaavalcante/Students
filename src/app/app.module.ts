@@ -66,7 +66,7 @@ import { MessageBoxComponent } from '../components/message-box/message-box';
     IonicStorageModule.forRoot(),
     HttpModule,
     AngularFireStorageModule,
-    HttpClientModule,
+    HttpClientModule
   
   ],
   bootstrap: [IonicApp],

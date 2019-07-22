@@ -50,8 +50,6 @@ export class ProjetosPage {
       itens.forEach(item => {
         if (item.url) {
           item.imagem = this.downloadImg(item);
-        } else {
-          item.imagem = false;
         }
       });
       this.items = itens;
@@ -82,7 +80,6 @@ export class ProjetosPage {
       });
       this.items = itens;
     });
-    console.log(this.items);
   }
 
   createProjeto() {
