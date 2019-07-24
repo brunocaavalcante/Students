@@ -6,7 +6,6 @@ import { ChatsProvider } from '../../../providers/chats/chats';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
-
 @IonicPage()
 @Component({
   selector: 'page-message',
@@ -67,9 +66,10 @@ export class MessagePage {
   createChat(lastMessage) {
     var date = new Date();
     var time = date.getTime();
-    let chat1 = { lastMessage: lastMessage, timestamp: time, nome: this.destino.nome, photo: '', id: this.destino.id }
+    console.log(this.destino);
+    let chat1 = { lastMessage: lastMessage, timestamp: time, nome: this.destino.nome, photo: (this.destino.photo) || '', id: this.destino.id }
     this.chats.insertChat(chat1, this.user.id, this.destino.id);
-    let chat2 = { lastMessage: lastMessage, timestamp: time, nome: this.user.nome, photo: '', id: this.user.id }
+    let chat2 = { lastMessage: lastMessage, timestamp: time, nome: this.user.nome, photo: (this.user.photo) || '', id: this.user.id }
     this.chats.insertChat(chat2, this.destino.id, this.user.id);
   }
 

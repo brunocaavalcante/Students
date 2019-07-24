@@ -10,7 +10,7 @@
 
     <ion-item>
       <ion-avatar item-start>
-        <img src="../../assets/imgs/p1.jpg">
+        <img [src]="(item.photo) || '../../assets/imgs/user-icon-msg.png'">
       </ion-avatar>
       <h2>{{ item.nome }}</h2>
       <p>{{ item.sobrenome }}</p>

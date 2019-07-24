@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserProvider } from '../../providers/user/user';
 import { Observable } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'page-perfil',
@@ -15,8 +16,11 @@ export class PerfilPage {
   filePhoto: File;
   user;
   list: Observable<any>;
+  uploadPercent: Observable<number>;
+  downloadURL: Observable<string>;
   disable: string;
   updateForm: FormGroup;
+  percent: number;
 
   constructor(
     public navCtrl: NavController,
@@ -48,19 +52,10 @@ export class PerfilPage {
     this.disable = "1";
   }
 
-  //Botão submit enviando dados e criando um novo usuario no fire base
   submitForm() {
     this.usuario.update(this.user.uid, this.updateForm.value);
     this.presentAlert("Cadastro Atalizado", "Cadastro atualizado com sucesso!");
     this.disable = "1";
-  }
-
-  onPhoto(event):void{
-    this.filePhoto = event.target.files[0];
-  }
-
-  openGalery(file:File):any {
-    this.storage.ref('/users/'+this.user.uid).put(file);
   }
 
   public presentAlert(title: string, subtitle: string) {
@@ -71,6 +66,27 @@ export class PerfilPage {
     });
     alert.present();
   }
+
+  uploadFile(event) {
+    const file = event.target.files[0];
+    const filePath = 'users/' + this.user.uid + "/" + file.name;
+    const fileRef = this.storage.ref("users").child(this.user.uid + '/' + file.name);
+    const task = this.storage.upload(filePath, file);
+    this.uploadPercent = task.percentageChanges();
+    this.uploadPercent.subscribe(itens => {
+      this.percent = Math.round(itens);
+    })
+    task.snapshotChanges().pipe(
+      finalize(() => {
+        fileRef.getDownloadURL().subscribe(itens => {
+          this.usuario.update(this.user.uid, { photo: itens });
+        });
+      })
+    )
+      .subscribe()
+    this.percent = null;
+  }
+
 }
 
 

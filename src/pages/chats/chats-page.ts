@@ -55,6 +55,7 @@ export class ChatsPage {
       curso: this.curso,
       sexo: this.sexo == "todos" ? "" : this.sexo
     }
+    console.log(p);
     this.navCtrl.push(FindChatsPage, { p });
   }
 

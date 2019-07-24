@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { MessageBoxComponent } from './message-box/message-box';
+import { ProgressBarComponent } from './progress-bar/progress-bar';
 @NgModule({
-	declarations: [MessageBoxComponent],
+	declarations: [MessageBoxComponent,
+    ProgressBarComponent],
 	imports: [],
-	exports: [MessageBoxComponent]
+	exports: [MessageBoxComponent,
+    ProgressBarComponent]
 })
 export class ComponentsModule {}

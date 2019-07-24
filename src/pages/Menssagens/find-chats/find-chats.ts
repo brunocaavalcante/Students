@@ -40,13 +40,15 @@ export class FindChatsPage {
       itens.forEach(item => {
         if (item.id != this.user.uid) {
           this.itens.push(item);
+          console.log(itens);
         }
       });
     })
   }
 
   addContact(item) {
-    this.chats.addContato(this.user.uid, item);
+    console.log(item);
+   this.chats.addContato(this.user.uid, item);
     this.presentAlert("Usuario adicionado!", "Usuario adicionado a sua lista de contatos");
 
   }

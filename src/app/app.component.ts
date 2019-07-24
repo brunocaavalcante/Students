@@ -16,7 +16,9 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class MyApp {
 
   @ViewChild(Nav) navCtrl: NavController;
-    rootPage:any = this.rootPage;
+  rootPage: any = this.rootPage;
+  user;
+  foto;
 
   constructor(
     platform: Platform,
@@ -24,14 +26,13 @@ export class MyApp {
     splashScreen: SplashScreen,
     public storage: Storage,
     public menuCtrl: MenuController,
-    public afAuth: AngularFireAuth
+    public afAuth: AngularFireAuth,
   ) {
 
+
     platform.ready().then(() => {
-
-      const user = this.afAuth.auth.currentUser; //pega usuario logado
-
-      if (user != null) {
+      this.user = this.afAuth.auth.currentUser; //pega usuario logado
+      if (this.user != null) {
         this.rootPage = TabsControllerPage;
       } else {
         this.rootPage = HomePage;
@@ -45,7 +46,8 @@ export class MyApp {
   openProjeto() {
     this.navCtrl.push(ProjetosPage);
   }
-  
+
+
   Logout() {
     this.storage.set("user", null); // Salvando o id do usuario no sqlite
     this.afAuth.auth.signOut();

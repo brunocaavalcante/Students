@@ -9,11 +9,18 @@
 
   <form novalidate [formGroup]="updateForm">
     <ion-list *ngFor="let user of list | async">
+      <div class="background-perfil">
+      </div>
+      <div class="photo">
+        <img class="round" [src]="( user.photo ) || '../assets/imgs/user.png'" />
+      </div>
+      <h3 style="text-align: center;margin-top: 141px">{{user.nome}} {{ user.sobrenome}}</h3>
 
-      <img class="round" src="../../assets/imgs/user.png" />
       <ion-item>
-        <ion-icon name="image"></ion-icon>
-        <input type="file" (change)="onPhoto($event)"/>
+        <ion-icon name="ios-image-outline"></ion-icon>
+        <label for="file">Escolher foto</label>
+        <input name="file" id="file" class="inputfile" type="file" (change)="uploadFile($event)" />
+        <progress-bar *ngIf="(percent < 99 )" [progress]="percent"></progress-bar>
       </ion-item>
 
       <ion-item>

@@ -38,6 +38,7 @@ import { FileOpener } from '@ionic-native/file-opener';
 import { MessagePage } from '../pages/Menssagens/message/message';
 import { ChatsProvider } from '../providers/chats/chats';
 import { MessageBoxComponent } from '../components/message-box/message-box';
+import { ProgressBarComponent } from '../components/progress-bar/progress-bar';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { MessageBoxComponent } from '../components/message-box/message-box';
     SubTarefasPage,
     FindChatsPage,
     MessagePage,
-    MessageBoxComponent
+    MessageBoxComponent,
+    ProgressBarComponent
   ],
   imports: [
     BrowserModule,
