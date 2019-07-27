@@ -48,7 +48,7 @@ export class PerfilPage {
   }
 
   ionViewDidLoad() {
-    this.list = this.usuario.find(this.user.email);
+    this.list = this.usuario.find('email',this.user.email);
     this.disable = "1";
   }
 

@@ -28,7 +28,7 @@ export class ChatsProvider {
   }
 
   getContatos(id) {
-    this.items = this.afs.collection('chats').doc(id).collection('contatos').valueChanges();
+    this.items = this.afs.collection('chats').doc(id).collection('contatos',ref=>ref.limit(30)).valueChanges();
     return this.items;
   }
 
@@ -52,7 +52,7 @@ export class ChatsProvider {
   }
 
   chatsUser(id_1) {
-    this.items = this.afs.collection('chats/' + id_1 + "/messages", ref => ref.orderBy('timestamp', 'desc')).valueChanges();
+    this.items = this.afs.collection('chats/' + id_1 + "/messages", ref => ref.orderBy('timestamp', 'desc').limit(30)).valueChanges();
     return this.items;
   }
 

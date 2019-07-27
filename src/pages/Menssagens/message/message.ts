@@ -31,7 +31,7 @@ export class MessagePage {
 
     this.destino = this.navParams.get('item');
     this.u = this.afth.auth.currentUser;
-    this.usuario.find(this.u.email).subscribe(item => {
+    this.usuario.find('email',this.u.email).subscribe(item => {
       this.user = item[0];
       let doSubscription = () => {
         this.messages.subscribe(() => {
@@ -60,6 +60,8 @@ export class MessagePage {
       var time = date.getTime();
       let msg = { id_user: this.user.id, timestamp: time, msg: newMessage };
       this.chats.insertMessages(this.ref, msg);
+      this.scrollToBottom();
+
     }
   }
 
@@ -75,7 +77,7 @@ export class MessagePage {
 
   scrollToBottom(duration?: number): void { // A ? significa que o parametro é opcional
     setTimeout(() => {
-      if (this.content != null) {
+      if (this.content) {
         this.content.scrollToBottom(300);
       }
     }, 50);

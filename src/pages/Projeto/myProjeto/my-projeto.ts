@@ -56,7 +56,7 @@ export class MyProjetoPage {
       var participantes = Object.keys(itens).map(i => itens[i]);
       if (participantes.length > 0) {
         for (let i = 0; i < participantes.length; i++) {
-          this.usuario.find(participantes[i].email).subscribe(data => {
+          this.usuario.find('email',participantes[i].email).subscribe(data => {
             this.p = Object.keys(data).map(i => data[i]);
             if (this.p.length > 0) {
               this.list[i] = ({

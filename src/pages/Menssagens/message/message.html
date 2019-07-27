@@ -1,7 +1,12 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{ destino.nome }}</ion-title>
+    <ion-item color="transp">
+      <ion-avatar item-start>
+        <img  [src]="(destino.photo) || '../../assets/imgs/user-icon-msg.png'">
+      </ion-avatar>
+      <ion-title>{{ destino.nome }}</ion-title>
+    </ion-item>
   </ion-navbar>
 
 </ion-header>

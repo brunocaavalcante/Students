@@ -61,10 +61,34 @@ export class ChatsPage {
 
   getMessages() {
     this.messages = this.chats.chatsUser(this.user.uid);
+    this.chats.chatsUser(this.user.uid).subscribe(item => {
+      if (item.length > 0) {
+        item.forEach(data => {
+          this.usuario.find('id', data.id).subscribe(itens => {
+            if (data.photo != itens[0].photo) {
+              data.photo = itens[0].photo;
+              this.chats.insertChat(data, this.user.uid, data.id);
+            }
+          })
+        });
+      }
+    })
   }
 
   getContato() {
     this.contacts = this.chats.getContatos(this.user.uid);
+    this.chats.getContatos(this.user.uid).subscribe(itens => {
+      if (itens) {
+        itens.forEach(contato => {
+          this.usuario.find('id', contato.id).subscribe(user => {
+            if (user.photo != contato.photo) {
+              contato.photo = user[0].photo;
+              this.chats.addContato(this.user.uid, contato);
+            }
+          })
+        });
+      }
+    })
   }
 
   limpar() {

@@ -1,6 +1,6 @@
 <ion-header>
 
-  <ion-toolbar >
+  <ion-toolbar>
     <ion-searchbar (ionInput)="fliterItems($event)"></ion-searchbar>
   </ion-toolbar>
 
@@ -9,7 +9,7 @@
       <ion-segment-button (click)="searchbar(true);" large value="conversas">
         Conversas
       </ion-segment-button>
-      <ion-segment-button (click)="searchbar(false);" large value="projetos">
+      <ion-segment-button (click)="searchbar(false);" large value="grupos">
         Grupos
       </ion-segment-button>
       <ion-segment-button (click)="searchbar(true);" large value="contatos">
@@ -22,7 +22,7 @@
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
-  
+
 </ion-header>
 
 <ion-content padding id="page3">
@@ -41,8 +41,11 @@
 
     </ion-list>
 
-    <ion-list *ngSwitchCase="'projetos'">
-
+    <ion-list *ngSwitchCase="'grupos'">
+      <button small full ion-button>
+        <ion-icon style="margin-right: 10px;font-size: 1.8em" name="ios-people"></ion-icon>
+        Novo Grupo
+      </button>
       <ion-item (click)="goToMessage()">
         <ion-card>
           <img src="../../assets/imgs/projeto_1.jpg" />

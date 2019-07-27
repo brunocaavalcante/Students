@@ -25,8 +25,8 @@ export class UserProvider {
     this.userCollection = this.afs.collection<any>('cadastro');
   }
 
-  find(email) {
-    this.users = this.afs.collection('cadastro', ref => ref.where('email', '==', email)).valueChanges();
+  find(campo:string,value) {
+    this.users = this.afs.collection('cadastro' , ref => ref.where(campo, '==', value)).valueChanges();
     return this.users;
   }
 
@@ -47,6 +47,7 @@ export class UserProvider {
   delete(user) {
     this.userCollection.doc(user.id).delete();
   }
+
   listCondicion(condicion) {
 
     this.items = this.afs.collection('cadastro', ref => {
