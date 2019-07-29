@@ -5,7 +5,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController } from 'ionic-angular';
 import { TabsControllerPage } from '../tabs-controller/tabs-controller';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { CadastroUserPage } from '../Usuario/cadastro-user/cadastro-user';
 import { Storage } from '@ionic/storage';
 
 
@@ -41,20 +40,9 @@ export class LoginPage {
     this.afAuth.auth.signInWithEmailAndPassword(
       this.loginForm.value.email, this.loginForm.value.password)//Verificando através do firebase se o usuario é valido
       .then((response) => {
+        this.storage.set("user", response.user.uid); // Salvando o id do usuario no sqlite 
+        this.navCtrl.setRoot(TabsControllerPage);//redirecionamos para page principal
 
-       this.storage.set("user", response.user.uid); // Salvando o id do usuario no sqlite 
-        this.db.database.ref('cadastro').orderByChild('email')
-          .equalTo(response.user.email).on("value", snapshot => {
-
-            snapshot.forEach(data => {
-              if (data.val().nome == null) {
-                this.navCtrl.setRoot(CadastroUserPage);
-                this.presentAlert("Por favor conclua seu cadastro", "");
-              } else {
-                this.navCtrl.setRoot(TabsControllerPage);//redirecionamos para page principal
-              }
-            });
-          })
       })
       .catch((error) => {
         if (error.code == 'auth/wrong-password') {//Erro de senha invalida

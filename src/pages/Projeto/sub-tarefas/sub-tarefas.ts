@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
-import { AngularFireDatabase} from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { HttpClient } from '@angular/common/http';
+import { SubtarefaProvider } from '../../../providers/subtarefa/subtarefa';
+import { TarefaProvider } from '../../../providers/tarefa/tarefa';
 
 @IonicPage()
 @Component({
@@ -10,6 +13,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 })
 export class SubTarefasPage {
   tarefa;
+  t=[];
   titulo;
   descricao;
   user;
@@ -18,9 +22,12 @@ export class SubTarefasPage {
 
   constructor(
     public navCtrl: NavController,
+    public http: HttpClient,
     public navParams: NavParams,
     public db: AngularFireDatabase, //Banco de dados Firebase
     public alertCtrl: AlertController,
+    public subtafera: SubtarefaProvider,
+    public tf:TarefaProvider,
     public afAuth: AngularFireAuth) {
 
     this.tarefa = this.navParams.get('item');
@@ -28,130 +35,46 @@ export class SubTarefasPage {
   }
 
   ionViewDidLoad() {
-    this.getSub();
+    this.tarefa = this.navParams.get('item');
+    this.list = this.subtafera.get(this.tarefa);
   }
 
   insertSub(descricao, titulo) {
 
-    this.updateQtd(this.qtdSub(), 1);
-    this.updatePercentual(this.qtdSub(), this.qtdSubOk());
-
     var id = this.db.database.ref('subTarefas').push().key;
-    this.db.database.ref('subTarefas/' + id).update({
-
+    var sub = {
       titulo: titulo,
       descricao: descricao,
-      id_subTarefa: id,
+      id: id,
       id_tarefa: this.tarefa.id,
       data: this.getData(),
       id_criador: this.user.email,
-      checked: "false"
-
+      checked: false
+    }
+    this.db.database.ref('tarefas/'+sub.id_tarefa).once("value",snapshot=>{
+      var tarefa = snapshot.val();
+      this.subtafera.insert(tarefa,sub);
     })
-      .then(() => {
-        this.presentAlert("SubTarefa Cadastrada", "");
-        this.titulo = "";
-        this.descricao = "";
-        this.ionViewDidLoad();
-      })
-  }
+    this.titulo = "";
+    this.descricao = "";
 
-  getSub() {
 
-    this.db.database.ref('subTarefas').orderByChild('id_tarefa') //Pega tarefas
-      .equalTo(this.tarefa.id).on("value", snapshot => {
-        if (snapshot) {
-          let i = 0;
-
-          snapshot.forEach(data => {
-            this.list[i] = data.val();
-            i++;
-          });
-        } else {
-          console.log("sub-tarefa não encontrada");
-        }
-      });
   }
 
   deleteSub(item) {
-
-    //Atualiza a quantidade de subTarefas no nó de Tarefa
-    this.updateQtd(this.qtdSub(), -1);
-    //Exclui do nó de subTarefa
-    this.db.database.ref('subTarefas/' + item.id_subTarefa).on("value", snapshot => {
-      var rm = this.db.database.ref('subTarefas/' + item.id_subTarefa);
-      rm.remove().then(() => {
-        this.list.pop();
-        this.ionViewDidLoad();
-      })
-    })
-    //Atualiza barra de status
-    this.updatePercentual(this.qtdSub(), this.qtdSubOk());
-
-    this.presentAlert("Tarefa excluida com sucesso!", "");
-  }
-
-  deleteAll(id){
-    this.db.database.ref('subTarefas').orderByChild('id_tarefa')
-    .equalTo(id).on("value",snapshot=>{
-      snapshot.forEach(data => {
-        var rm = this.db.database.ref('subTarefas/' + data.val().id_subTarefa);
-        rm.remove();
-      });
-    });
-  }
-
-  qtdSub() {
-    var qtd;
-
-    this.db.database.ref('tarefas/' + this.tarefa.id).once("value", snapshot => {
-      qtd = snapshot.val().qtd_sub;
-    });
-    return qtd;
-  }
-
-  qtdSubOk() {
-    var qtd;
-    this.db.database.ref('tarefas/' + this.tarefa.id).once("value", snapshot => {
-      qtd = snapshot.val().qtd_sub_ok;
-    });
-    return qtd;
-  }
-
-  updateQtd(qtd, n) {
-
-    if (qtd > 0 && n < 0) {
-      this.db.database.ref('tarefas/' + this.tarefa.id).update({ qtd_sub: qtd + n });
-    }
-    if (n > 0) {
-      this.db.database.ref('tarefas/' + this.tarefa.id).update({ qtd_sub: qtd + n });
-    }
-
+    this.db.database.ref('tarefas/'+item.id_tarefa).once("value",snapshot=>{
+      var tarefa = snapshot.val();
+      this.subtafera.delete(tarefa,item);
+      this.list.pop();
+    })    
   }
 
   updateCheck(item) {
-
-    this.check = item.checked;
-    var ok;
-
-    this.db.database.ref('subTarefas/' + item.id_subTarefa).update({ checked: this.check });
-
-    ok = this.qtdSubOk();
-
-    if (this.check == true) {
-      this.db.database.ref('tarefas/' + this.tarefa.id).update({ qtd_sub_ok: ok + 1 });
-    } else if (this.check == false && ok > 0) {
-      this.db.database.ref('tarefas/' + this.tarefa.id).update({ qtd_sub_ok: ok - 1 });
-    }
-    this.updatePercentual(this.qtdSub(), this.qtdSubOk());
-
+    this.db.database.ref('tarefas/'+item.id_tarefa).once("value",snapshot=>{
+      var tarefa = snapshot.val();
+      this.subtafera.updateCheck(tarefa,item);
+    }) 
   }
-
-  updatePercentual(total, ok) {
-    var percent = (ok / total) * 100;
-    this.db.database.ref('tarefas/' + this.tarefa.id).update({ status: percent });
-  }
-
 
   presentShowConfirm(item) {
 
@@ -186,16 +109,6 @@ export class SubTarefasPage {
     var ano = d.getFullYear();
     var data = "" + dia + "/" + mes + "/" + ano;
     return data;
-  }
-
-  //Função para apresenta alertas
-  public presentAlert(title: string, subtitle: string) {
-    let alert = this.alertCtrl.create({
-      title: title,
-      subTitle: subtitle,
-      buttons: ['OK']
-    });
-    alert.present();
   }
 
 }

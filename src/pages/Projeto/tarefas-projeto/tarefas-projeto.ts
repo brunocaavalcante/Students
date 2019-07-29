@@ -4,6 +4,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { SubTarefasPage } from '../sub-tarefas/sub-tarefas';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { TarefaProvider } from '../../../providers/tarefa/tarefa';
 
 
 
@@ -17,7 +19,7 @@ import { Injectable } from '@angular/core';
 export class TarefasProjetoPage {
 
   uid: string;
-  tarefa;
+  nome;
   descricao;
   participante;
   id_dono;
@@ -32,23 +34,24 @@ export class TarefasProjetoPage {
     public db: AngularFireDatabase, //Banco de dados Firebase
     public alertCtrl: AlertController,
     public menuCtrl: MenuController,
+    public tarefa: TarefaProvider,
     public afAuth: AngularFireAuth) {
 
     this.projeto = this.navParams.get('p');
     this.participante = this.navParams.get('participante');
+    const user = this.afAuth.auth.currentUser;//pega usuario logado
+    this.uid = user.uid;
+    this.list = this.tarefa.get(this.projeto, this.participante);
   }
 
   ionViewDidLoad() {
-    const user = this.afAuth.auth.currentUser;//pega usuario logado
-    this.uid = user.uid;
-    this.getTarefa();
+
   }
 
-  addTarefa(descricao, tarefa, status) {
+  addTarefa(descricao, nome, status) {
     var id = this.db.database.ref('tarefas').push().key;
-    this.db.database.ref('tarefas/' + id).update({
-
-      tarefa: tarefa,
+    var tf = ({
+      tarefa: nome,
       descricao: descricao,
       status: status,
       id: id,
@@ -57,58 +60,13 @@ export class TarefasProjetoPage {
       qtd_sub: 0,
       qtd_sub_ok: 0,
       id_projeto: this.projeto.id,
-      id_criador: this.projeto.dono,
+      id_criador: this.projeto.dono!=null?this.projeto.dono:"",
       id_participante: this.participante.id_participante
-
     })
-      .then(() => {
-        this.presentAlert("Tarefa Cadastrada", "");
-        this.tarefa = "";
-        this.descricao = "";
-        this.ionViewDidLoad();
-      })
-  }
-
-  getTarefa() {
-
-    this.db.database.ref('tarefas').orderByChild('id_projeto') //Pega tarefas
-      .equalTo(this.projeto.id).on("value", snapshot => {
-        if (snapshot) {
-          let i = 0;
-
-          snapshot.forEach(data => {
-            if (data.val().id_participante == this.participante.id_participante) { //verificando participante
-              this.list[i] = data.val();
-              i++;
-            }
-          });
-        } else {
-          console.log("não tem tarefas");
-        }
-      });
-  }
-
-
-  getData() {
-
-    var d = new Date;
-    var dia = d.getDate();
-    var mes = d.getUTCMonth();
-    var ano = d.getFullYear();
-    var data = "" + dia + "/" + mes + "/" + ano;
-    return data;
-  }
-
-  deleteTarefa(tarefa) {
-
-    this.db.database.ref('tarefas/' + tarefa.id).once("value", snapshot => {
-     // this.subtarefas.deleteAll(tarefa.id);
-      var rm_tarefa = this.db.database.ref('tarefas/' + tarefa.id);
-      rm_tarefa.remove();
-      this.list.pop();
-    });
-    this.presentAlert("Tarefa excluida com sucesso!", "");
-
+    this.tarefa.insert(tf);
+    this.nome = "";
+    this.descricao = "";
+    this.ionViewDidLoad();
   }
 
   deleteAll(id) {
@@ -116,9 +74,9 @@ export class TarefasProjetoPage {
     this.db.database.ref('tarefas').orderByChild('id_projeto')
       .equalTo(id).on("value", snapshot => {
         snapshot.forEach(data => {
-       //   this.subtarefas.deleteAll(data.val().key);
           var rm_tarefa = this.db.database.ref('tarefas/' + data.val().key);
           rm_tarefa.remove();
+          console.log("Tarefas removidas");
         });
       });
   }
@@ -131,37 +89,6 @@ export class TarefasProjetoPage {
     this.check = item.checked;
     this.db.database.ref('tarefas/' + item.id).update({ checked: this.check });
   }
-
-  presentPrompt(item) {
-
-    let alert = this.alertCtrl.create({
-      title: 'SubTarefa',
-      inputs: [
-        {
-          name: 'id_subTarefa',
-          placeholder: 'Digite a descrição da sub-tarefa',
-          type: 'text'
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: data => {
-
-          }
-        },
-        {
-          text: 'Adicionar',
-          handler: data => {
-            // this.addSubTarefa(item, data);
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
-
 
   presentShowConfirm(item) {
 
@@ -180,7 +107,7 @@ export class TarefasProjetoPage {
           text: 'Excluir',
           role: 'excluir',
           handler: () => {
-            this.deleteTarefa(item);
+            this.tarefa.delete(item);
           }
         }
       ]
@@ -196,6 +123,16 @@ export class TarefasProjetoPage {
       buttons: ['OK']
     });
     alert.present();
+  }
+
+  getData() {
+
+    var d = new Date;
+    var dia = d.getDate();
+    var mes = d.getUTCMonth();
+    var ano = d.getFullYear();
+    var data = "" + dia + "/" + mes + "/" + ano;
+    return data;
   }
 
 

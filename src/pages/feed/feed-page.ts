@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 @Component({
-  selector: 'page-camera-tab-default-page',
-  templateUrl: 'camera-tab-default-page.html'
+  selector: 'page-feed',
+  templateUrl: 'feed-page.html'
 })
-export class CameraTabDefaultPagePage {
+export class FeedPage {
 
   constructor(public navCtrl: NavController) {
   }

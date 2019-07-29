@@ -9,15 +9,15 @@
   <ion-item>
     <ion-label floating>Nome do Cartão</ion-label>
     <!--Aqui o ngModel esta criando uma variavel task que esta recebendo o conteudo do input-->
-    <ion-input type="text" [(ngModel)]="tarefa"></ion-input>
+    <ion-input type="text" [(ngModel)]="nome"></ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label floating>Descricao da Tarefa</ion-label>
     <ion-input type="text" [(ngModel)]="descricao"></ion-input>
   </ion-item>
-  <button ion-button block class="add" (click)="addTarefa(descricao,tarefa,0)"
-    [disabled]="!tarefa || tarefa.length < 3">Adicionar Tarefa</button>
+  <button ion-button block class="add" (click)="addTarefa(descricao,nome,0)"
+    [disabled]="!nome || nome.length < 3">Adicionar Tarefa</button>
   <!--Na linha acima estamos dizendo que o botão ficará desabilitado caso não exista a variavel
     tarefa ou se essa variavel tiver menos de 3 char assim o usuario não criara tarefas vazias -->
 
@@ -49,9 +49,9 @@
           </div>
 
         </ion-item>
-        <button ion-button outline clear small color="danger" (click)="presentShowConfirm(item)">EXCLUIR</button>
-        <button ion-button outline clear small (click)="goToSubTarefas(item)">TAREFAS</button>
-        <button ion-button outline clear small>FINALIZAR</button>
+        <button ion-button class="button-p" outline clear small color="danger" (click)="presentShowConfirm(item)">EXCLUIR</button>
+        <button ion-button class="button-p" outline clear small (click)="goToSubTarefas(item)">TAREFAS</button>
+        <button ion-button class="button-p" outline clear small>FINALIZAR</button>
       </ion-card-content>
     </ion-card>
 

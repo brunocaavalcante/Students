@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { CameraTabDefaultPagePage } from '../camera-tab-default-page/camera-tab-default-page';
-import { CartTabDefaultPagePage } from '../cart-tab-default-page/cart-tab-default-page';
-import { CloudTabDefaultPagePage } from '../perfil/cloud-tab-default-page';
-
+import { FeedPage } from '../feed/feed-page';
+import { ChatsPage } from '../chats/chats-page';
+import { PerfilPage } from '../perfil/perfil-page';
 
 @Component({
   selector: 'page-tabs-controller',
@@ -12,23 +11,23 @@ import { CloudTabDefaultPagePage } from '../perfil/cloud-tab-default-page';
 export class TabsControllerPage {
 
 
- 
-  tab1Root: any = CameraTabDefaultPagePage;
-  tab2Root: any = CartTabDefaultPagePage;
-  tab3Root: any = CloudTabDefaultPagePage;
+
+  tab1Root: any = FeedPage;
+  tab2Root: any = ChatsPage;
+  tab3Root: any = PerfilPage;
 
   constructor(
     public navCtrl: NavController,
     public navParam: NavParams,
-    
-    ) {
-      
-  }
- 
-  ionViewDidLoad(){
-   
-  } 
 
-    
+  ) {
+
+  }
+
+  ionViewDidLoad() {
+
+  }
+
+
 }
 

@@ -8,22 +8,22 @@
   </ion-header>
   <ion-content id="side-menu21">
     <ion-list>
-      <button ion-item (click)="openPage(eventsPage)">
+      <button ion-item (click)="openPage(eventsPage)" menuClose>
         Todos Projetos
       </button>
-      <button ion-item (click)="openProjeto()">
+      <button ion-item (click)="openProjeto()" menuClose>
         Meus Projetos
       </button>
-      <button ion-item (click)="openPage(friendsPage)">
+      <button ion-item (click)="openPage(friendsPage)" menuClose>
         Projetos Finalizados
       </button>
-      <button ion-item (click)="openPage(eventsPage)">
+      <button ion-item (click)="openPage(eventsPage)" menuClose>
         Chuva de Ideias
       </button>
-      <button ion-item (click)="openPage(eventsPage)">
+      <button ion-item (click)="openPage(eventsPage)" menuClose>
         Feedback
       </button>
-      <button ion-item (click)="Logout()">
+      <button ion-item (click)="Logout()" menuClose>
         Sair
       </button>
     </ion-list>
