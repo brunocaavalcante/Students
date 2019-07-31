@@ -35,7 +35,7 @@
                     <ion-card-header>
                         <ion-item>
                             <ion-avatar item-start>
-                                <img src="../../assets/imgs/p2.jpg">
+                                <img [src]="item.photo || '../../assets/imgs/p2.jpg'">
                             </ion-avatar>
                             <h2> {{ item.nome }} </h2>
                             <p> {{ item.email }}</p>
@@ -59,8 +59,8 @@
                             </p><br>
                         </ng-template>
 
-                        <button ion-button outline clear small color="danger" (click)="presentShowConfirm(item)">EXCLUIR</button>
-                        <button ion-button outline clear small (click)="presentPrompt(item)">ALTERAR</button>
+                        <button ion-button outline clear small color="danger" *ngIf="projeto.adm" (click)="presentShowConfirm(item)">EXCLUIR</button>
+                        <button ion-button outline clear small *ngIf="projeto.adm" (click)="presentPrompt(item,'update')">ALTERAR</button>
                         <button ion-button outline clear small (click)="goToTarefas(item)">CARTÕES</button>
                     </ion-card-content>
                 </ion-card>
@@ -103,9 +103,9 @@
                     <ion-icon name="attach" item-end></ion-icon>
                 </ion-item>
 
-                <div *ngIf="adm">
+                <div *ngIf="projeto.adm">
 
-                    <ion-item (click)="presentAddParticipante()" class="icon-btn">
+                    <ion-item (click)="presentPrompt(item,'insert')" class="icon-btn">
                         Adicionar Participantes
                         <ion-icon name="person-add" item-end></ion-icon>
                     </ion-item>
@@ -115,7 +115,7 @@
                         <ion-icon name="settings" item-end></ion-icon>
                     </ion-item>
 
-                    <ion-item (click)="presentAddParticipante()" outline class="icon-btn">
+                    <ion-item (click)=" finalizarProjeto()" outline class="icon-btn">
                         Finalizar Projeto
                         <ion-icon name="information-circle" item-end></ion-icon>
                     </ion-item>

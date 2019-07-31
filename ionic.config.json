@@ -1,7 +1,7 @@
 {
-  "name": "myapp",
-  "type": "ionic-angular",
-  "integrations": {
-    "cordova": {}
-  }
+    "name": "Students",
+    "type": "ionic-angular",
+    "integrations": {
+        "cordova": {}
+    }
 }

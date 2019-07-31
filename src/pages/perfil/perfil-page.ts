@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ValidateConfirmPassword } from '../../validators/confirmPassword';
 import { UserProvider } from '../../providers/user/user';
 import { Observable } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'page-perfil',
@@ -13,19 +13,22 @@ import { Observable } from 'rxjs';
 })
 export class PerfilPage {
 
-
+  filePhoto: File;
   user;
   list: Observable<any>;
+  uploadPercent: Observable<number>;
+  downloadURL: Observable<string>;
   disable: string;
   updateForm: FormGroup;
+  percent: number;
 
   constructor(
     public navCtrl: NavController,
     public afAuth: AngularFireAuth,
-    public db: AngularFireDatabase,
     public formbuilder: FormBuilder,
     public alertCtrl: AlertController,
-    public usuario: UserProvider
+    public usuario: UserProvider,
+    public storage: AngularFireStorage
   ) {
     this.updateForm = this.formbuilder.group({
       sobrenome: [null, [Validators.required, Validators.minLength(3)]],
@@ -38,8 +41,6 @@ export class PerfilPage {
       sexo: [null],
       nome: [null, [Validators.required, Validators.minLength(3)]],
       email: [null, [Validators.required, Validators.email]],
-      password: [null, [Validators.required, Validators.minLength(5)]],
-      confirmPassword: [null, [Validators.required, Validators.minLength(5), ValidateConfirmPassword]],
     })
 
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
@@ -47,15 +48,10 @@ export class PerfilPage {
   }
 
   ionViewDidLoad() {
-    this.list = this.usuario.find(this.user.email);
+    this.list = this.usuario.find('email',this.user.email);
     this.disable = "1";
   }
 
-  ativeCad() {
-    this.disable = "2";
-  }
-
-  //Botão submit enviando dados e criando um novo usuario no fire base
   submitForm() {
     this.usuario.update(this.user.uid, this.updateForm.value);
     this.presentAlert("Cadastro Atalizado", "Cadastro atualizado com sucesso!");
@@ -70,6 +66,27 @@ export class PerfilPage {
     });
     alert.present();
   }
+
+  uploadFile(event) {
+    const file = event.target.files[0];
+    const filePath = 'users/' + this.user.uid + "/" + file.name;
+    const fileRef = this.storage.ref("users").child(this.user.uid + '/' + file.name);
+    const task = this.storage.upload(filePath, file);
+    this.uploadPercent = task.percentageChanges();
+    this.uploadPercent.subscribe(itens => {
+      this.percent = Math.round(itens);
+    })
+    task.snapshotChanges().pipe(
+      finalize(() => {
+        fileRef.getDownloadURL().subscribe(itens => {
+          this.usuario.update(this.user.uid, { photo: itens });
+        });
+      })
+    )
+      .subscribe()
+    this.percent = null;
+  }
+
 }
 
 

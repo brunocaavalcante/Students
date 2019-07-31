@@ -5,6 +5,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { HttpClient } from '@angular/common/http';
 import { SubtarefaProvider } from '../../../providers/subtarefa/subtarefa';
 import { TarefaProvider } from '../../../providers/tarefa/tarefa';
+import { Observable } from 'rxjs';
 
 @IonicPage()
 @Component({
@@ -13,12 +14,10 @@ import { TarefaProvider } from '../../../providers/tarefa/tarefa';
 })
 export class SubTarefasPage {
   tarefa;
-  t=[];
   titulo;
   descricao;
   user;
-  check;
-  list = [];
+  list: Observable<any>;
 
   constructor(
     public navCtrl: NavController,
@@ -27,7 +26,7 @@ export class SubTarefasPage {
     public db: AngularFireDatabase, //Banco de dados Firebase
     public alertCtrl: AlertController,
     public subtafera: SubtarefaProvider,
-    public tf:TarefaProvider,
+    public tf: TarefaProvider,
     public afAuth: AngularFireAuth) {
 
     this.tarefa = this.navParams.get('item');
@@ -41,20 +40,16 @@ export class SubTarefasPage {
 
   insertSub(descricao, titulo) {
 
-    var id = this.db.database.ref('subTarefas').push().key;
     var sub = {
       titulo: titulo,
       descricao: descricao,
-      id: id,
       id_tarefa: this.tarefa.id,
       data: this.getData(),
       id_criador: this.user.email,
       checked: false
     }
-    this.db.database.ref('tarefas/'+sub.id_tarefa).once("value",snapshot=>{
-      var tarefa = snapshot.val();
-      this.subtafera.insert(tarefa,sub);
-    })
+    this.updatePercent(sub, 1, "insert");
+    this.subtafera.insert(sub);
     this.titulo = "";
     this.descricao = "";
 
@@ -62,18 +57,43 @@ export class SubTarefasPage {
   }
 
   deleteSub(item) {
-    this.db.database.ref('tarefas/'+item.id_tarefa).once("value",snapshot=>{
-      var tarefa = snapshot.val();
-      this.subtafera.delete(tarefa,item);
-      this.list.pop();
-    })    
+    this.updatePercent(item, -1, "delete");
+    this.subtafera.delete(item);
+
   }
 
   updateCheck(item) {
-    this.db.database.ref('tarefas/'+item.id_tarefa).once("value",snapshot=>{
-      var tarefa = snapshot.val();
-      this.subtafera.updateCheck(tarefa,item);
-    }) 
+    this.subtafera.update(item);
+    this.updatePercent(item, 1, "check");
+  }
+
+  updatePercent(item, n, op) {
+
+    switch (op) {
+      case "insert": {
+        this.tarefa.qtd_sub = this.tarefa.qtd_sub + n;
+        break;
+      }
+      case "delete": {
+        if (item.checked == true) {
+          this.tarefa.qtd_sub_ok = this.tarefa.qtd_sub_ok + n;
+          this.tarefa.qtd_sub = this.tarefa.qtd_sub + n;
+        } else {
+          this.tarefa.qtd_sub = this.tarefa.qtd_sub + n;
+        }
+        break;
+      }
+      case "check": {
+        if (item.checked == true) {
+          this.tarefa.qtd_sub_ok = this.tarefa.qtd_sub_ok + n;
+        } else {
+          this.tarefa.qtd_sub_ok = this.tarefa.qtd_sub_ok - n;
+        }
+        break;
+      }
+    }
+    this.tarefa.status = (this.tarefa.qtd_sub_ok / this.tarefa.qtd_sub) * 100
+    this.tf.update(this.tarefa);
   }
 
   presentShowConfirm(item) {

@@ -4,10 +4,12 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-
-    <ion-title>
-      Feed
-    </ion-title>
+    <ion-buttons end>
+      <button ion-button  icon-only (click)="OpenCamera()">
+        <ion-icon style="margin-right: 10px" name="camera"></ion-icon>
+      </button>
+    </ion-buttons>
+    
   </ion-navbar>
 
 </ion-header>
@@ -51,5 +53,6 @@
     </ion-row>
 
   </ion-card>
+  <p align="center"><img src="{{ foto }}"></p>
 
 </ion-content>

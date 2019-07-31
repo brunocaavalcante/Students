@@ -9,6 +9,19 @@
 
   <form novalidate [formGroup]="updateForm">
     <ion-list *ngFor="let user of list | async">
+      <div class="background-perfil">
+      </div>
+      <div class="photo">
+        <img style="width: 100%;height: 100%;" class="round" [src]="( user.photo ) || '../assets/imgs/user.png'" />
+      </div>
+      <h3 style="text-align: center;margin-top: 141px">{{user.nome}} {{ user.sobrenome}}</h3>
+
+      <ion-item>
+        <ion-icon name="ios-image-outline"></ion-icon>
+        <label for="file">Escolher foto</label>
+        <input name="file" id="file" class="inputfile" type="file" (change)="uploadFile($event)" />
+        <progress-bar *ngIf="(percent < 99 )" [progress]="percent"></progress-bar>
+      </ion-item>
 
       <ion-item>
         <ion-label stacked>Nome:</ion-label>
@@ -17,7 +30,7 @@
 
       <ion-item>
         <ion-label stacked>Sobre Nome:</ion-label>
-        <ion-input type="text" [disabled]="disable == 1" value="{{ user.sobrenome }}"  formControlName="sobrenome">
+        <ion-input type="text" [disabled]="disable == 1" value="{{ user.sobrenome }}" formControlName="sobrenome">
         </ion-input>
       </ion-item>
 
@@ -54,7 +67,7 @@
         <ion-input type="text" [disabled]="disable == 1" formControlName="campus" value="{{ user.campus }}"></ion-input>
       </ion-item>
 
-      <ion-item> 
+      <ion-item>
         <ion-label stacked>Semestre:</ion-label>
         <ion-input type="text" [disabled]="disable == 1" formControlName="semestre" value="{{ user.semestre }}">
         </ion-input>
@@ -65,21 +78,9 @@
         <ion-input type="email" [disabled]="disable == 1" value="{{ user.email }}" formControlName="email"></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label stacked>Senha:</ion-label>
-        <ion-input type="password" [disabled]="disable == 1" value="{{ user.email }}" formControlName="password">
-        </ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label stacked>Redigite a Senha:</ion-label>
-        <ion-input type="password" [disabled]="disable == 1" value="{{ user.email }}" formControlName="confirmPassword">
-        </ion-input>
-      </ion-item>
-
       <button ion-button [disabled]="disable == 1 || updateForm.invalid" block class="add" (click)="submitForm()">Salvar
         Alterações</button>
-      <button ion-button color="danger" [disabled]="disable == 2" block class="add" (click)="ativeCad()">Alterar
+      <button ion-button color="danger" [disabled]="disable == 2" block class="add" (click)="disable = 2">Alterar
         Cadastro</button>
     </ion-list>
   </form>

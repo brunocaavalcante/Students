@@ -5,6 +5,7 @@ import { AlertController } from 'ionic-angular';
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 
 
 @Injectable()
@@ -14,63 +15,49 @@ export class UserProvider {
   lista: AngularFireList<any>;
   ref: AngularFireObject<any>;
   item: Observable<any>;
-  items;
+  private userCollection: AngularFirestoreCollection<any>;
+  items: Observable<any[]>;
 
   constructor(
     public http: HttpClient,
-    public afAuth: AngularFireAuth,
     public alertCtrl: AlertController,
-    public db: AngularFireDatabase, ) {
-    this.ref = db.object('cadastro');
+    private afs: AngularFirestore) {
+    this.userCollection = this.afs.collection<any>('cadastro');
   }
 
-  find(email) {
-    this.lista = this.db.list('cadastro', ref => ref.orderByChild('email').equalTo(email).limitToFirst(1));
-    this.users = this.lista.snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c => ({ key: c.payload.key, ...c.payload.val() }))
-      )
-    );
+  find(campo:string,value) {
+    this.users = this.afs.collection('cadastro' , ref => ref.where(campo, '==', value)).valueChanges();
     return this.users;
   }
 
   list() {
-    this.lista = this.db.list('cadastro');
-    // Use snapshotChanges().map() to store the key
-    this.users = this.lista.snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c => ({ key: c.payload.key, ...c.payload.val() }))
-      )
-    );
+    this.users = this.userCollection.valueChanges();
     return this.users;
   }
 
-  insert(id,user) {
-    
-    const ref = this.db.database.ref('cadastro/' + id)
-    ref.set({
-      campus: user.campus == null ? "" : user.campus,
-      curso: user.curso == null ? "" : user.curso,
-      data_nasc: user.data_nasc == null ? "" : user.data_nasc,
-      email: user.email == null ? "" : user.email,
-      faculdade: user.faculdade == null ? "" : user.faculdade,
-      id: id == null ? "" : id,
-      nome: user.nome == null ? "" : user.nome,
-      password: user.password == null ? "" : user.password,
-      semestre: user.semestre == null ? "" : user.semestre,
-      sexo: user.sexo == null ? "" : user.sexo,
-      situacao: user.situacao == null ? "" : user.situacao,
-      sobrenome: user.sobrenome == null ? "" : user.sobrenome
-    });
+  insert(id, user) {
+    this.userCollection.doc(id).set(user);
+    this.userCollection.doc(id).update({ id: id });
   }
 
-  update(id,user) {
-    console.log(id);
-    this.db.database.ref('cadastro/'+id).update(user);
+  update(id, user) {
+    this.userCollection.doc(id).update(user);
   }
 
   delete(user) {
-    this.ref = this.db.object('cadastro/' + user.id);
-    this.ref.remove();
+    this.userCollection.doc(user.id).delete();
+  }
+
+  listCondicion(condicion) {
+
+    this.items = this.afs.collection('cadastro', ref => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      if (condicion.sexo) query = query.where('sexo', '==', condicion.sexo != undefined ? condicion.sexo : "");
+      if (condicion.faculdade) query = query.where('faculdade', '==', condicion.faculdade != undefined ? condicion.faculdade : "");
+      if (condicion.curso) query = query.where('curso', '==', condicion.curso != undefined ? condicion.curso : "");
+      if (condicion.campus) query = query.where('campus', '==', condicion.campus != undefined ? condicion.campus : "");
+      return query;
+    }).valueChanges();
+    return this.items;
   }
 }
