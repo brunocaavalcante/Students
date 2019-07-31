@@ -36,6 +36,7 @@ import { MessagePage } from '../pages/Menssagens/message/message';
 import { ChatsProvider } from '../providers/chats/chats';
 import { MessageBoxComponent } from '../components/message-box/message-box';
 import { ProgressBarComponent } from '../components/progress-bar/progress-bar';
+import { NewGrupMessagePage } from '../pages/Menssagens/new-grup-message/new-grup-message';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { ProgressBarComponent } from '../components/progress-bar/progress-bar';
     FindChatsPage,
     MessagePage,
     MessageBoxComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
+    NewGrupMessagePage
   ],
   imports: [
     BrowserModule,
@@ -85,7 +87,8 @@ import { ProgressBarComponent } from '../components/progress-bar/progress-bar';
     DespesasPage,
     SubTarefasPage,
     FindChatsPage,
-    MessagePage
+    MessagePage,
+    NewGrupMessagePage
   ],
   providers: [
     StatusBar,
