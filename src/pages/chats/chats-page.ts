@@ -7,6 +7,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { ChatsProvider } from '../../providers/chats/chats';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Rx';
+import { NewGrupMessagePage } from '../Menssagens/new-grup-message/new-grup-message';
 
 @Component({
   selector: 'page-chats',
@@ -57,6 +58,10 @@ export class ChatsPage {
     }
     console.log(p);
     this.navCtrl.push(FindChatsPage, { p });
+  }
+
+  goToNewgrup(){
+    this.navCtrl.push(NewGrupMessagePage);
   }
 
   getMessages() {

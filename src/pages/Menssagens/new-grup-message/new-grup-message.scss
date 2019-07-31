@@ -1,0 +1,16 @@
+page-new-grup-message {
+  .nome-grupo {
+    left: 72px;
+    top: 0px;
+    position: absolute;
+    width: 75%;
+  }
+  .icon-camera {
+    width: 64px;
+    height: 38px;
+    cursor: pointer;
+  }
+  .image-upload > input {
+    display: none;
+  }
+}

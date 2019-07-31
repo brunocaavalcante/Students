@@ -56,4 +56,8 @@ export class ChatsProvider {
     return this.items;
   }
 
+  createGroup(item){
+    const id = this.afs.createId();
+    this.afs.collection('chats').doc(item.id).collection('grupos').doc(id).set(id);
+  }
 }
