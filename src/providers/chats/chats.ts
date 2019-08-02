@@ -23,12 +23,16 @@ export class ChatsProvider {
     this.afs.doc('messages/' + ref).collection('msg').add(item);
   }
 
+  insertGrup(grupo){
+    this.afs.collection('grupos-chats').doc(grupo.id).set(grupo);
+  }
+
   addContato(id, item) {
     this.afs.collection('chats').doc(id).collection('contatos').doc(item.id).set(item);
   }
 
   getContatos(id) {
-    this.items = this.afs.collection('chats').doc(id).collection('contatos',ref=>ref.limit(30)).valueChanges();
+    this.items = this.afs.collection('chats').doc(id).collection('contatos', ref => ref.limit(30)).valueChanges();
     return this.items;
   }
 
@@ -41,8 +45,13 @@ export class ChatsProvider {
     return this.items;
   }
 
-  filter(colecao:string,ordem:string,start,end){
-    return this.afs.collection(colecao, ref=>
+  getGrupos(id){
+    this.items = this.afs.collection('chats').doc(id).collection('grupos').valueChanges();
+    return this.items;
+  }
+
+  filter(colecao: string, ordem: string, start, end) {
+    return this.afs.collection(colecao, ref =>
       ref.orderBy(ordem).startAt(start).endAt(end)).valueChanges();
   }
 
@@ -50,14 +59,19 @@ export class ChatsProvider {
     this.items = this.afs.collection('chats').doc(id_1).collection('messages').doc(id_2).valueChanges();
     return this.items;
   }
-
+  
+  findGrupo(id){
+    this.items = this.afs.collection('grupos-chats').doc(id).valueChanges();
+    return this.items;
+   }
+ 
   chatsUser(id_1) {
     this.items = this.afs.collection('chats/' + id_1 + "/messages", ref => ref.orderBy('timestamp', 'desc').limit(30)).valueChanges();
     return this.items;
   }
 
-  createGroup(item){
-    const id = this.afs.createId();
-    this.afs.collection('chats').doc(item.id).collection('grupos').doc(id).set(id);
+  addUserToGroup(grupo,id_user) {
+    console.log(grupo.id," - "+id_user)
+    this.afs.collection('chats').doc(id_user).collection('grupos').doc(grupo.id).set({id:grupo.id});  
   }
 }

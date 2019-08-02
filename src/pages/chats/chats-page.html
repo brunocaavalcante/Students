@@ -1,133 +1,120 @@
 <ion-header>
 
-  <ion-toolbar>
-    <ion-searchbar (ionInput)="fliterItems($event)"></ion-searchbar>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-searchbar (ionInput)="fliterItems($event)"></ion-searchbar>
+    </ion-toolbar>
 
-  <ion-toolbar no-border-top>
-    <ion-segment [(ngModel)]="segment">
-      <ion-segment-button (click)="searchbar(true);" large value="conversas">
-        Conversas
-      </ion-segment-button>
-      <ion-segment-button (click)="searchbar(false);" large value="grupos">
-        Grupos
-      </ion-segment-button>
-      <ion-segment-button (click)="searchbar(true);" large value="contatos">
-        Contatos
-      </ion-segment-button>
-      <ion-segment-button (click)="searchbar(false);" large value="novaConversa">
-        <button ion-button clear icon-only>
+    <ion-toolbar no-border-top>
+        <ion-segment [(ngModel)]="segment">
+            <ion-segment-button (click)="searchbar(true);" large value="conversas">
+                Conversas
+            </ion-segment-button>
+            <ion-segment-button (click)="searchbar(false);" large value="grupos">
+                Grupos
+            </ion-segment-button>
+            <ion-segment-button (click)="searchbar(true);" large value="contatos">
+                Contatos
+            </ion-segment-button>
+            <ion-segment-button (click)="searchbar(false);" large value="novaConversa">
+                <button ion-button clear icon-only>
           <ion-icon name="add"></ion-icon>
         </button>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
 
 </ion-header>
 
 <ion-content padding id="page3">
 
-  <div [ngSwitch]="segment">
+    <div [ngSwitch]="segment">
 
-    <ion-list *ngSwitchCase="'conversas'">
+        <ion-list *ngSwitchCase="'conversas'">
 
-      <ion-item *ngFor="let item of messages | async " (click)="goToMessage(item)">
-        <ion-avatar item-start>
-          <img style="width: 50px;height: 50px;" [src]="(item.photo) || '../../assets/imgs/user-icon-msg.png'">
-        </ion-avatar>
-        <h2>{{ item.nome }}</h2>
-        <p *ngIf="item.lastMessage">{{ item.lastMessage }} - {{ item.timestamp | date:'dd/MM/y' }}</p>
-      </ion-item>
+            <ion-item *ngFor="let item of messages | async " (click)="goToMessage(item)">
+                <ion-avatar item-start>
+                    <img style="width: 50px;height: 50px;" [src]="(item.photo) || '../../assets/imgs/user-icon-msg.png'">
+                </ion-avatar>
+                <h2>{{ item.nome }}</h2>
+                <p *ngIf="item.lastMessage">{{ item.lastMessage }} - {{ item.timestamp | date:'dd/MM/y' }}</p>
+            </ion-item>
 
-    </ion-list>
+        </ion-list>
 
-    <ion-list *ngSwitchCase="'grupos'">
-      <button  ion-button (click)="goToNewgrup()" small full>
+        <ion-list *ngSwitchCase="'grupos'">
+            <button ion-button (click)="goToNewgrup()" small full>
         <ion-icon style="margin-right: 10px;font-size: 1.8em" name="ios-people"></ion-icon>
         Novo Grupo
       </button>
-      <ion-item (click)="goToMessage()">
-        <ion-card>
-          <img src="../../assets/imgs/projeto_1.jpg" />
-          <div class="card-title">São Paulo</div>
-          <div class="card-subtitle">Projeto Cultural</div>
-        </ion-card>
-      </ion-item>
 
-      <ion-item>
-        <ion-card>
-          <img src="../../assets/imgs/projeto_2.jpg" />
-          <div class="card-title">Amsterdam</div>
-          <div class="card-subtitle">64 Listings</div>
-        </ion-card>
-      </ion-item>
+            <ion-item *ngFor="let item of grupos" (click)="goToMessage(item)">
+                <ion-avatar item-start>
+                    <img style="width: 50px;height: 50px;" [src]="(item.photo) || '../../assets/imgs/user-icon-msg.png'">
+                </ion-avatar>
+                <h2>{{ item.nome }}</h2>
+            </ion-item>
+        </ion-list>
 
+        <ion-list *ngSwitchCase="'contatos'">
+            <ion-item (click)="goToMessage(item)" *ngFor="let item of contacts | async ">
+                <ion-thumbnail item-start>
+                    <img [src]="(item.photo) || '../../assets/imgs/user-icon-msg.png'">
+                </ion-thumbnail>
+                <h2>{{ item.nome }}</h2>
+                <p>Faculdade: {{ item.faculdade }}</p>
+                <p>Campus: {{ item.campus }}</p>
+                <p>Curso: {{ item.curso }}</p>
+            </ion-item>
+        </ion-list>
 
+        <ion-list *ngSwitchCase="'novaConversa'">
+            <ion-item>
+                <ion-label>
+                    <ion-icon style="margin-right: 10px" name="ios-people"></ion-icon>Sexo:
+                </ion-label>
+                <ion-select [(ngModel)]="sexo">
+                    <ion-option value="todos">Todos</ion-option>
+                    <ion-option value="masculino">Masculino</ion-option>
+                    <ion-option value="feminino">Femenino</ion-option>
+                </ion-select>
+            </ion-item>
 
-    </ion-list>
+            <ion-item>
+                <ion-label>
+                    <ion-icon style="margin-right: 10px" name="ios-heart-outline"></ion-icon>Faculdade:
+                </ion-label>
+                <ion-select [(ngModel)]="faculdade">
+                    <ion-option value="Uninove">Uninove</ion-option>
+                    <ion-option value="Unip">Unip</ion-option>
+                    <ion-option value="USP">USP</ion-option>
+                </ion-select>
+            </ion-item>
 
-    <ion-list *ngSwitchCase="'contatos'">
-      <ion-item (click)="goToMessage(item)" *ngFor="let item of contacts | async ">
-        <ion-thumbnail item-start>
-          <img [src]="(item.photo) || '../../assets/imgs/user-icon-msg.png'">
-        </ion-thumbnail>
-        <h2>{{ item.nome }}</h2>
-        <p>Faculdade: {{ item.faculdade }}</p>
-        <p>Campus: {{ item.campus }}</p>
-        <p>Curso: {{ item.curso }}</p>
-      </ion-item>
-    </ion-list>
+            <ion-item>
+                <ion-label>
+                    <ion-icon style="margin-right: 10px" name="list-box"></ion-icon>Cursos:
+                </ion-label>
+                <ion-select [(ngModel)]="curso">
+                    <ion-option value="Ciencias da Computação">Ciencias da Computação</ion-option>
+                    <ion-option value="Sistema da Informação">Sistema da Informação</ion-option>
+                    <ion-option value="ps">Analise e Desenvolvimento de Sistemas</ion-option>
+                </ion-select>
+            </ion-item>
 
-    <ion-list *ngSwitchCase="'novaConversa'">
+            <ion-item>
+                <ion-label>
+                    <ion-icon style="margin-right: 10px" name="pie"></ion-icon>Campus:
+                </ion-label>
+                <ion-select [(ngModel)]="campus">
+                    <ion-option value="Santo Amaro">Santo Amaro</ion-option>
+                    <ion-option value="Vergueiro">Vergueiro</ion-option>
+                    <ion-option value="Barra Funda">Barra Funda</ion-option>
+                </ion-select>
+            </ion-item>
+            <button ion-button outline id="Entrar" style="width: 140px" (click)="limpar()">REESTABELECER</button>
+            <button ion-button outline id="Entrar" style="width: 140px" (click)="goToFindChats()">OK</button>
+        </ion-list>
 
-      <ion-item>
-        <ion-label>
-          <ion-icon style="margin-right: 10px" name="ios-people"></ion-icon>Sexo:
-        </ion-label>
-        <ion-select [(ngModel)]="sexo">
-          <ion-option value="todos">Todos</ion-option>
-          <ion-option value="masculino">Masculino</ion-option>
-          <ion-option value="feminino">Femenino</ion-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>
-          <ion-icon style="margin-right: 10px" name="ios-heart-outline"></ion-icon>Faculdade:
-        </ion-label>
-        <ion-select [(ngModel)]="faculdade">
-          <ion-option value="Uninove">Uninove</ion-option>
-          <ion-option value="Unip">Unip</ion-option>
-          <ion-option value="USP">USP</ion-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>
-          <ion-icon style="margin-right: 10px" name="list-box"></ion-icon>Cursos:
-        </ion-label>
-        <ion-select [(ngModel)]="curso">
-          <ion-option value="Ciencias da Computação">Ciencias da Computação</ion-option>
-          <ion-option value="Sistema da Informação">Sistema da Informação</ion-option>
-          <ion-option value="ps">Analise e Desenvolvimento de Sistemas</ion-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>
-          <ion-icon style="margin-right: 10px" name="pie"></ion-icon>Campus:
-        </ion-label>
-        <ion-select [(ngModel)]="campus">
-          <ion-option value="Santo Amaro">Santo Amaro</ion-option>
-          <ion-option value="Vergueiro">Vergueiro</ion-option>
-          <ion-option value="Barra Funda">Barra Funda</ion-option>
-        </ion-select>
-      </ion-item>
-      <button ion-button outline id="Entrar" style="width: 140px" (click)="limpar()">REESTABELECER</button>
-      <button ion-button outline id="Entrar" style="width: 140px" (click)="goToFindChats()">OK</button>
-    </ion-list>
-
-
-  </div>
+    </div>
 
 </ion-content>

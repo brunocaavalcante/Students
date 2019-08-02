@@ -1,26 +1,25 @@
-
 <ion-header>
-  <ion-navbar>
-    <ion-title>LOGIN</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>LOGIN</ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content class="fundo_login">
-  <h1 class="titulo">Bem vindo ao Students</h1>
-<form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
-  <ion-list>
+    <h1 class="titulo">Bem vindo ao Students</h1>
+    <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+        <ion-list>
 
-    <ion-item>
-      <ion-input type="email" placeholder="E-mail" formControlName="email"></ion-input>
-    </ion-item>
-  
-    <ion-item>
-      <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
-    </ion-item>
-    
-  </ion-list>
+            <ion-item>
+                <ion-input type="email" placeholder="E-mail" formControlName="email"></ion-input>
+            </ion-item>
 
-   <button ion-button full type="submit" class="botao" [disabled]="loginForm.invalid">Fazer login</button>
-    
-  </form>
+            <ion-item>
+                <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+            </ion-item>
+
+        </ion-list>
+
+        <button ion-button full type="submit" class="botao" [disabled]="loginForm.invalid">Fazer login</button>
+
+    </form>
 </ion-content>

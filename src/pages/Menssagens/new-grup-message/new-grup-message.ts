@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ChatsProvider } from '../../../providers/chats/chats';
+import { UserProvider } from '../../../providers/user/user';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 
 
@@ -14,6 +16,7 @@ export class NewGrupMessagePage {
 
   participante = [];
   nome;
+  img;
   user;
 
   constructor(
@@ -21,7 +24,9 @@ export class NewGrupMessagePage {
     public navParams: NavParams,
     public alertCtrl: AlertController,
     public afth: AngularFireAuth,
-    public chats: ChatsProvider
+    public chats: ChatsProvider,
+    public usuario: UserProvider,
+    public afs: AngularFirestore
   ) {
     this.user = this.afth.auth.currentUser;
   }
@@ -29,9 +34,20 @@ export class NewGrupMessagePage {
   ionViewDidLoad() {
   }
 
-  createGrupo(){
-    console.log(this.nome,this.participante);
-    this.chats.createGroup(this.user.uid);
+  createGrupo() {
+    this.participante.push({ email: this.user.email });
+    const id = this.afs.createId();
+    let grupo = {
+      id:id,
+      nome: this.nome,
+      url: this.img || ''
+    }
+    this.participante.forEach(data => {
+      this.usuario.find('email', data.email).subscribe(itens => {
+        this.chats.addUserToGroup(grupo,itens[0].id);
+      })
+    });
+    this.chats.insertGrup(grupo);
   }
 
   presentPrompt() {
@@ -67,5 +83,6 @@ export class NewGrupMessagePage {
   removeParticipante() {
     this.participante.pop()
   }
+
 
 }

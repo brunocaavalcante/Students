@@ -22,6 +22,7 @@ export class ChatsPage {
   mostrar = true;
   sexo;
   user;
+  grupos=[];
   contacts: Observable<any>;
   messages: Observable<any>;
   startAt = new Subject();
@@ -39,6 +40,7 @@ export class ChatsPage {
     this.user = this.afth.auth.currentUser;
     this.getMessages();
     this.getContato();
+    this.getGrupos();
   }
 
   ionViewDidLoad() {
@@ -96,6 +98,16 @@ export class ChatsPage {
     })
   }
 
+  getGrupos(){
+    this.chats.getGrupos(this.user.uid).subscribe(itens=>{
+      itens.forEach(item => {
+        this.chats.findGrupo(item.id).subscribe(i=>{
+          this.grupos.push(i);
+        })
+      });
+    })
+  }
+
   limpar() {
     this.campus = "";
     this.curso = "";
@@ -134,6 +146,4 @@ export class ChatsPage {
       }
     }
   }
-
-
 }
