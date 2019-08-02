@@ -1,34 +1,34 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>Novo Grupo</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>Novo Grupo</ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
+    <ion-list>
 
-    <div class="image-upload">
-      <label for="file-input">
+        <div class="image-upload">
+            <label for="file-input">
         <img src="../../../assets/imgs/icon-camera.png" class="icon-camera" />
       </label>
-      <input id="file-input" type="file" />
-    </div>
-    
-    <ion-item class="nome-grupo">
-      <ion-label floating>Nome do Grupo</ion-label>
-      <ion-input [(ngModel)]="nome" type="text"></ion-input>
-    </ion-item><br><br>
+            <input id="file-input" type="file" (change)="uploadFile($event)" />
+        </div>
 
-    <ion-item *ngFor="let p of participante">
-      <p>{{ p.email }}</p>
-    </ion-item>
+        <ion-item class="nome-grupo">
+            <ion-label floating>Nome do Grupo</ion-label>
+            <ion-input [(ngModel)]="nome" type="text"></ion-input>
+        </ion-item><br><br>
 
-    <ion-item>
-      Adicionar Paticipantes:
-      <ion-icon name="remove-circle" item-end color="danger" (click)="removeParticipante()"></ion-icon>
-      <ion-icon name="add-circle" item-end color="primary" (click)="presentPrompt()"></ion-icon>
-    </ion-item>
-    <button ion-button block outline (click)="createGrupo()">Criar Grupo</button>
+        <ion-item *ngFor="let p of participante">
+            <p>{{ p.email }}</p>
+        </ion-item>
 
-  </ion-list>
+        <ion-item>
+            Adicionar Paticipantes:
+            <ion-icon name="remove-circle" item-end color="danger" (click)="removeParticipante()"></ion-icon>
+            <ion-icon name="add-circle" item-end color="primary" (click)="presentPrompt()"></ion-icon>
+        </ion-item>
+        <button ion-button block outline (click)="createGrupo()">Criar Grupo</button>
+
+    </ion-list>
 </ion-content>

@@ -31,37 +31,53 @@ export class MessagePage {
 
     this.destino = this.navParams.get('item');
     this.u = this.afth.auth.currentUser;
-    this.usuario.find('email',this.u.email).subscribe(item => {
+    this.usuario.find('email', this.u.email).subscribe(item => {
       this.user = item[0];
       let doSubscription = () => {
         this.messages.subscribe(() => {
           this.scrollToBottom();
         });
       }
-      this.chats.getMessages(this.user.id, this.destino.id).subscribe(itens => {
-        if (itens.length === 0) {
-          this.messages = this.chats.getMessages(this.destino.id, this.user.id);
-          this.ref = this.destino.id + " - " + this.user.id;
-          doSubscription();
-        } else {
-          this.messages = this.chats.getMessages(this.user.id, this.destino.id);
-          this.ref = this.user.id + " - " + this.destino.id;
-          doSubscription();
-        }
+      if (this.destino.tipo == "grupo") {
+        this.messages = this.chats.getMessagesGrupo(this.destino.id);
+        doSubscription();
         this.OrdenarMessages(this.messages);
-      });
+      } else {
+        this.chats.getMessages(this.user.id, this.destino.id).subscribe(itens => {
+          if (itens.length === 0) {
+            this.messages = this.chats.getMessages(this.destino.id, this.user.id);
+            this.ref = this.destino.id + " - " + this.user.id;
+            doSubscription();
+          } else {
+            this.messages = this.chats.getMessages(this.user.id, this.destino.id);
+            this.ref = this.user.id + " - " + this.destino.id;
+            doSubscription();
+          }
+          this.OrdenarMessages(this.messages);
+        });
+      }     
     });
   }
 
   sendMessage(newMessage: string): void {
+    var date = new Date();
+    var time = date.getTime();
+    let msg = {
+      id_user: this.user.id,
+      timestamp: time,
+      msg: newMessage,
+      nome: this.user.nome + " " + this.user.sobrenome
+    };
     if (newMessage) {
-      this.createChat(newMessage);
-      var date = new Date();
-      var time = date.getTime();
-      let msg = { id_user: this.user.id, timestamp: time, msg: newMessage };
-      this.chats.insertMessages(this.ref, msg);
+      if (this.destino.tipo == "grupo") {
+        this.ref = this.destino.id;
+        this.chats.insertMessages(this.ref, msg);
+      } else {
+        this.createChat(newMessage);
+        let msg = { id_user: this.user.id, timestamp: time, msg: newMessage };
+        this.chats.insertMessages(this.ref, msg);
+      }
       this.scrollToBottom();
-
     }
   }
 
@@ -87,8 +103,9 @@ export class MessagePage {
     messages.subscribe(itens => {
       itens.sort(function (x, y) {
         return x.timestamp - y.timestamp;
-      }); 
+      });
       this.items = itens;
     });
   }
+
 }

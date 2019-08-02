@@ -4,8 +4,9 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { ChatsProvider } from '../../../providers/chats/chats';
 import { UserProvider } from '../../../providers/user/user';
 import { AngularFirestore } from '@angular/fire/firestore';
-
-
+import { AngularFireStorage } from '@angular/fire/storage';
+import { finalize } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @IonicPage()
 @Component({
@@ -18,6 +19,11 @@ export class NewGrupMessagePage {
   nome;
   img;
   user;
+  msg;
+  uploadPercent: Observable<number>;
+  downloadURL: Observable<string>;
+  percent;
+  id_foto = null;
 
   constructor(
     public navCtrl: NavController,
@@ -26,6 +32,7 @@ export class NewGrupMessagePage {
     public afth: AngularFireAuth,
     public chats: ChatsProvider,
     public usuario: UserProvider,
+    public storage:AngularFireStorage,
     public afs: AngularFirestore
   ) {
     this.user = this.afth.auth.currentUser;
@@ -37,11 +44,16 @@ export class NewGrupMessagePage {
   createGrupo() {
     this.participante.push({ email: this.user.email });
     const id = this.afs.createId();
-    let grupo = {
-      id:id,
+    console.log(this.img);
+     let grupo = {
+      id: this.id_foto || id,
       nome: this.nome,
-      url: this.img || ''
+      url: this.img || '',
+      tipo:'grupo'
     }
+    console.log(grupo);
+    console.log("foto_id = "+this.id_foto);
+    console.log("id = "+id);
     this.participante.forEach(data => {
       this.usuario.find('email', data.email).subscribe(itens => {
         this.chats.addUserToGroup(grupo,itens[0].id);
@@ -84,5 +96,24 @@ export class NewGrupMessagePage {
     this.participante.pop()
   }
 
-
+  uploadFile(event) {
+    this.id_foto = this.afs.createId();
+    const file = event.target.files[0];
+    const filePath = 'grupos-chats/' + this.id_foto + "/" + file.name;
+    const fileRef = this.storage.ref("grupos-chats").child(this.id_foto + '/' + file.name);
+    const task = this.storage.upload(filePath, file);
+    this.uploadPercent = task.percentageChanges();
+    this.uploadPercent.subscribe(itens => {
+      this.percent = Math.round(itens);
+    })
+    task.snapshotChanges().pipe(
+      finalize(() => {
+        fileRef.getDownloadURL().subscribe(itens => {
+          this.img = itens;
+        });
+      })
+    )
+      .subscribe()
+    this.percent = null;
+  }
 }

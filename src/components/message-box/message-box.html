@@ -1,6 +1,6 @@
 <div class="text" [ngClass]="{'destino': isTrue}">
-  
-  <p>{{ message.msg }}</p>
-  <p class="timestamp">{{ message.timestamp | date: 'dd/MM/y HH:mm'}}</p>
+    <p class="nome" *ngIf="message.nome && !isTrue">{{ message.nome }}</p>
+    <p>{{ message.msg }}</p>
+    <p class="timestamp">{{ message.timestamp | date: 'dd/MM/y HH:mm'}}</p>
 
 </div>

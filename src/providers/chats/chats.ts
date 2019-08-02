@@ -45,6 +45,15 @@ export class ChatsProvider {
     return this.items;
   }
 
+  getMessagesGrupo(id){
+    this.items = this.afs.collection('messages/' + id + "/msg", ref => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      query = query.orderBy('timestamp', 'desc').limit(25);
+      return query;
+    }).valueChanges();
+    return this.items;
+  }
+
   getGrupos(id){
     this.items = this.afs.collection('chats').doc(id).collection('grupos').valueChanges();
     return this.items;
