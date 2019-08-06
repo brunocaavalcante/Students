@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, Segment } from 'ionic-angular';
+import { NavController, Segment, AlertController } from 'ionic-angular';
 import { FindChatsPage } from '../Menssagens/find-chats/find-chats';
 import { MessagePage } from '../Menssagens/message/message';
 import { UserProvider } from '../../providers/user/user';
@@ -22,7 +22,7 @@ export class ChatsPage {
   mostrar = true;
   sexo;
   user;
-  grupos=[];
+  grupos = [];
   contacts: Observable<any>;
   messages: Observable<any>;
   startAt = new Subject();
@@ -36,7 +36,8 @@ export class ChatsPage {
     public navCtrl: NavController,
     public usuario: UserProvider,
     public chats: ChatsProvider,
-    public afth: AngularFireAuth) {
+    public afth: AngularFireAuth,
+    public alertCtrl: AlertController) {
     this.user = this.afth.auth.currentUser;
     this.getMessages();
     this.getContato();
@@ -45,6 +46,11 @@ export class ChatsPage {
 
   ionViewDidLoad() {
     this.segment.value = 'conversas';
+  }
+
+  deleteGrupo(item){
+    this.chats.deleteGrupo(item,this.user.uid);
+    
   }
 
   goToMessage(item) {
@@ -62,7 +68,7 @@ export class ChatsPage {
     this.navCtrl.push(FindChatsPage, { p });
   }
 
-  goToNewgrup(){
+  goToNewgrup() {
     this.navCtrl.push(NewGrupMessagePage);
   }
 
@@ -98,11 +104,19 @@ export class ChatsPage {
     })
   }
 
-  getGrupos(){
-    this.chats.getGrupos(this.user.uid).subscribe(itens=>{
+  getGrupos() {
+    let tem: boolean = false;
+    this.chats.getGrupos(this.user.uid).subscribe(itens => {
       itens.forEach(item => {
-        this.chats.findGrupo(item.id).subscribe(i=>{
-          this.grupos.push(i);
+        this.chats.findGrupo(item.id).subscribe(i => {
+          if (this.grupos.length > 0) {
+            this.grupos.forEach(dt => {
+              if (dt.id == i.id) { tem = true; }
+            });
+            if (!tem) {
+              this.grupos.push(i);
+            }
+          } else { this.grupos.push(i) }
         })
       });
     })
@@ -113,6 +127,31 @@ export class ChatsPage {
     this.curso = "";
     this.faculdade = "";
     this.sexo = "";
+  }
+
+  presentShowConfirm(item) {
+
+    const alert = this.alertCtrl.create({
+      title: "Excluir o Grupo?",
+      message: "A exclusão será permanente",
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+
+          }
+        },
+        {
+          text: 'Excluir',
+          role: 'excluir',
+          handler: () => {
+            this.deleteGrupo(item);
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   searchbar(item) {

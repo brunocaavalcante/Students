@@ -3,7 +3,7 @@
   <ion-navbar>
     <ion-item color="transp">
       <ion-avatar item-start>
-        <img  [src]="(destino.photo) || '../../assets/imgs/user-icon-msg.png'">
+        <img [src]="(destino.photo) || (destino.url) || '../../assets/imgs/user-icon-msg.png'">
       </ion-avatar>
       <ion-title>{{ destino.nome }}</ion-title>
     </ion-item>
