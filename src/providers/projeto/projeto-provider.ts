@@ -25,10 +25,14 @@ export class ProjetoProvider {
 
   insert(projeto) {
     const id_participante = this.afs.createId();
-    console.log(id_participante);
     this.projetoCollection.doc(id_participante).set(projeto);
     this.projetoCollection.doc(id_participante).update({ id_participante: id_participante });
     return id_participante;
+  }
+
+  insertDespesas(despesa){
+    despesa.id = this.afs.createId();
+    this.afs.collection("despesas").doc(despesa.id).set(despesa);
   }
 
   update(id, projeto) {
@@ -38,7 +42,6 @@ export class ProjetoProvider {
   delete(projeto) {
     this.projetoCollection.doc(projeto.id_participante).delete();
     this.tarefa.deleteAll(projeto.id);
-
   }
 
   get(email) {

@@ -51,9 +51,6 @@ export class NewGrupMessagePage {
       url: this.img || '',
       tipo:'grupo'
     }
-    console.log(grupo);
-    console.log("foto_id = "+this.id_foto);
-    console.log("id = "+id);
     this.participante.forEach(data => {
       this.usuario.find('email', data.email).subscribe(itens => {
         this.chats.addUserToGroup(grupo,itens[0].id);
@@ -116,4 +113,5 @@ export class NewGrupMessagePage {
       .subscribe()
     this.percent = null;
   }
+
 }

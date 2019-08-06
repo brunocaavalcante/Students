@@ -22,7 +22,7 @@ export class ChatsPage {
   mostrar = true;
   sexo;
   user;
-  grupos=[];
+  grupos = [];
   contacts: Observable<any>;
   messages: Observable<any>;
   startAt = new Subject();
@@ -62,7 +62,7 @@ export class ChatsPage {
     this.navCtrl.push(FindChatsPage, { p });
   }
 
-  goToNewgrup(){
+  goToNewgrup() {
     this.navCtrl.push(NewGrupMessagePage);
   }
 
@@ -98,11 +98,19 @@ export class ChatsPage {
     })
   }
 
-  getGrupos(){
-    this.chats.getGrupos(this.user.uid).subscribe(itens=>{
+  getGrupos() {
+    this.chats.getGrupos(this.user.uid).subscribe(itens => {
       itens.forEach(item => {
-        this.chats.findGrupo(item.id).subscribe(i=>{
-          this.grupos.push(i);
+        this.chats.findGrupo(item.id).subscribe(i => {
+          if (this.grupos.length > 0) {
+            this.grupos.forEach(data => {
+              if (data.id != i.id) {
+                this.grupos.push(i);
+              }
+            });
+          } else {
+            this.grupos.push(i);
+          }
         })
       });
     })

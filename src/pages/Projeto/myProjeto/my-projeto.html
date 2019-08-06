@@ -132,31 +132,14 @@
 
         <ion-list *ngSwitchCase="'chats'">
 
-            <ion-item no-lines>
-                <div class="chat-status" text-center>
-                    <span class="chat-date">26/07/2019</span>
-                    <span class="chat-content-center">chat.message</span>
-                </div>
-                <ng-template #message>
-                    <div class="chat-message" text-right>
-                        <div class="right-bubble">
-                            <span class="msg-name">Me</span>
-                            <span class="msg-date">2019</span>
-                            <p text-wrap>ola wello word</p>
-                        </div>
-                    </div>
-                    <div class="chat-message" text-left>
-                        <div class="left-bubble">
-                            <span class="msg-name">bruno</span>
-                            <span class="msg-date">2019</span>
-                            <p text-wrap>ola tudo bem</p>
-                        </div>
-                    </div>
-                </ng-template>
+            <ion-item *ngFor="let item of messages | async " (click)="goToMessage(item)">
+                <ion-avatar item-start>
+                    <img style="width: 50px;height: 50px;" [src]="(item.photo) || '../../assets/imgs/user-icon-msg.png'">
+                </ion-avatar>
+                <h2>{{ item.nome }}</h2>
+                <p *ngIf="item.lastMessage">{{ item.lastMessage }} - {{ item.timestamp | date:'dd/MM/y' }}</p>
             </ion-item>
         </ion-list>
-
-
     </div>
 
 </ion-content>

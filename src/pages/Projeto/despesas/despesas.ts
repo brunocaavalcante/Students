@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { ProjetoProvider } from '../../../providers/projeto/projeto-provider';
 
 
 @IonicPage()
@@ -13,34 +14,34 @@ export class DespesasPage {
 
   projeto;
   list = [];
+  testCheckboxOpen;
+  testCheckboxResult;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public afAuth: AngularFireAuth,
     public alertCtrl: AlertController,
+    public pj :ProjetoProvider,
     public db: AngularFireDatabase//Banco de dados Firebase
   ) {
     this.projeto = this.navParams.get('projeto');
     this.getDespesas();
   }
   insertDespesa(item) {
-    var id = this.db.database.ref('despesas').push().key;
-    this.db.database.ref('despesas/' + id).update({
-      id_despesa: id,
+    let despesa = {
       titulo: item.titulo,
       descricao: item.descricao,
       valor: item.valor,
       vencimento: item.vencimento,
-      // prioridade: item.prioridade,
+      prioridade: item.prioridade,
       id_projeto: this.projeto.id,
       id_criador: this.afAuth.auth.currentUser.email,
       checked: "false"
-    })
-      .then(() => {
-        this.presentAlert("Despesa Cadastrada", "");
-        this.ionViewDidLoad();
-      })
+    }
+    this.pj.insertDespesas(despesa);
+    this.presentAlert("Despesa Cadastrada", "");
+    this.ionViewDidLoad();
   }
 
   getDespesas() {
@@ -131,12 +132,14 @@ export class DespesasPage {
     alert.present();
   }
 
-  public test() {
-    //this.alerta.presentAlert("Teste", "Testando");
+  public teste() {
+    console.log("teste");
   }
 
   ionViewDidLoad() {
 
   }
+
+
 
 }
