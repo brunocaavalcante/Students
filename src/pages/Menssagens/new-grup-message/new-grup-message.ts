@@ -45,27 +45,25 @@ export class NewGrupMessagePage {
   createGrupo() {
     this.participante.push({ email: this.user.email });
     const id = this.afs.createId();
-    let participantes = []
     let grupo = {
       id: this.id_foto || id,
       nome: this.nome,
       url: this.img || '',
       tipo: 'grupo',
-      lastMessage: '',
-      user: ''
+      lastMessage: ''
     }
+    this.chats.insertGrup(grupo);
     this.participante.forEach(data => {
       this.usuario.find('email', data.email).subscribe(itens => {
-        // this.chats.addUserToGroup(grupo, itens[0].id);
-        participantes.push(itens[0].id);
+        if (itens[0]) {
+          this.chats.addUserToGroup(grupo, itens[0]);
+        } else {
+          this.presentAlert("Email não cadastro!", "Por favor solicitar que o email: " + data.email + ", faça o cadastro");
+        }
       })
     });
-    var teste = this.participante.concat(participantes);
-    console.log(teste);
-    // this.chats.insertGrup(grupo);
-    this.presentAlert('Grupo Criado', grupo.nome);
+    this.presentAlert('Grupo ' + grupo.nome + ' criado', '');
     this.navCtrl.setRoot(ChatsPage);
-
   }
 
   presentPrompt() {

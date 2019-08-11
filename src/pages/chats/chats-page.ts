@@ -48,9 +48,21 @@ export class ChatsPage {
     this.segment.value = 'conversas';
   }
 
-  deleteGrupo(item){
-    this.chats.deleteGrupo(item,this.user.uid);
-    
+  deleteGrupo(item) {
+
+    this.chats.getMessagesGrupo(item.id).subscribe(m => {
+      m.forEach(msg => {
+        this.chats.deleteMessages(msg.id);
+      });
+    })
+    this.chats.getParticipantes(item).subscribe(itens => {
+      itens.forEach(p => {
+        this.chats.deleteChats(p.id, 'grupos', item.id);
+      });
+    });
+    this.chats.deleteGrupo(item);
+    this.grupos.pop();
+
   }
 
   goToMessage(item) {
@@ -109,14 +121,16 @@ export class ChatsPage {
     this.chats.getGrupos(this.user.uid).subscribe(itens => {
       itens.forEach(item => {
         this.chats.findGrupo(item.id).subscribe(i => {
-          if (this.grupos.length > 0) {
-            this.grupos.forEach(dt => {
-              if (dt.id == i.id) { tem = true; }
-            });
-            if (!tem) {
-              this.grupos.push(i);
-            }
-          } else { this.grupos.push(i) }
+          if (i) {
+            if (this.grupos.length > 0) {
+              this.grupos.forEach(dt => {
+                if (dt.id == i.id) { tem = true; }
+              });
+              if (!tem) {
+                this.grupos.push(i);
+              }
+            } else { this.grupos.push(i) }
+          }
         })
       });
     })
@@ -185,4 +199,5 @@ export class ChatsPage {
       }
     }
   }
+
 }
