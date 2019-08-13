@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController } from 'ionic-angular';
-import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/database';
+import { AngularFireList, AngularFireObject } from '@angular/fire/database';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 
 
@@ -25,8 +23,8 @@ export class UserProvider {
     this.userCollection = this.afs.collection<any>('cadastro');
   }
 
-  find(campo:string,value) {
-    this.users = this.afs.collection('cadastro' , ref => ref.where(campo, '==', value)).valueChanges();
+  find(campo: string, value) {
+    this.users = this.afs.collection('cadastro', ref => ref.where(campo, '==', value)).valueChanges();
     return this.users;
   }
 

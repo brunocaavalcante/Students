@@ -19,7 +19,7 @@
       <ion-item>
         <ion-icon name="ios-image-outline"></ion-icon>
         <label for="file">Escolher foto</label>
-        <input name="file" id="file" class="inputfile" type="file" (change)="uploadFile($event)" />
+        <input name="file" accept="image/*" id="file" class="inputfile" type="file" (change)="uploadFile($event)" />
         <progress-bar *ngIf="(percent < 99 )" [progress]="percent"></progress-bar>
       </ion-item>
 

@@ -3,8 +3,8 @@
         <ion-title>Meus Projetos</ion-title>
         <ion-buttons end>
             <button ion-button icon-only (click)="addProjeto()">
-        <ion-icon style="margin-right: 15px;font-size: 34px" name="ios-add-circle"></ion-icon>
-      </button>
+                <ion-icon style="margin-right: 15px;font-size: 34px" name="ios-add-circle"></ion-icon>
+            </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
@@ -31,7 +31,8 @@
                     </div>
 
                 </ion-card-content>
-                <button ion-button clear color="danger" (click)="presentShowConfirm(item)" *ngIf="item.adm" class="btn_p">Excluir</button>
+                <button ion-button clear color="danger" (click)="presentShowConfirm(item)" *ngIf="item.adm"
+                    class="btn_p">Excluir</button>
                 <button ion-button clear (click)="goToProjetos(item)" class="btn_p">Detalhes</button>
             </ion-card>
         </ion-item>
@@ -39,12 +40,10 @@
 
 
     <div [hidden]="!operacao">
-
         <form novalidate [formGroup]="newProjectForm">
-
             <div>
                 <img class="img-new" [src]="img || '../../../assets/imgs/camera-icon2.png'">
-                <input type="file" (change)="uploadFile($event)">
+                <input type="file" accept="image/*" (change)="uploadFile($event)">
             </div>
             <ion-list>
 

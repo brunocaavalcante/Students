@@ -55,40 +55,46 @@ export class MessagePage {
           }
           this.OrdenarMessages(this.messages);
         });
-      }     
+      }
     });
   }
 
   sendMessage(newMessage: string): void {
     var date = new Date();
     var time = date.getTime();
-    let msg = {
-      id_user: this.user.id,
-      timestamp: time,
-      msg: newMessage,
-      nome: this.user.nome + " " + this.user.sobrenome
-    };
+   
     if (newMessage) {
       if (this.destino.tipo == "grupo") {
+        let msg = {
+          id_user: this.user.id,
+          timestamp: time,
+          msg: newMessage,
+          nome: this.user.nome + " " + this.user.sobrenome
+        };
         this.ref = this.destino.id;
+        this.createChat(newMessage);
         this.chats.insertMessages(this.ref, msg);
       } else {
         this.createChat(newMessage);
         let msg = { id_user: this.user.id, timestamp: time, msg: newMessage };
         this.chats.insertMessages(this.ref, msg);
       }
-      this.scrollToBottom();
     }
   }
 
   createChat(lastMessage) {
     var date = new Date();
     var time = date.getTime();
-    console.log(this.destino);
-    let chat1 = { lastMessage: lastMessage, timestamp: time, nome: this.destino.nome, photo: (this.destino.photo) || '', id: this.destino.id }
-    this.chats.insertChat(chat1, this.user.id, this.destino.id);
-    let chat2 = { lastMessage: lastMessage, timestamp: time, nome: this.user.nome, photo: (this.user.photo) || '', id: this.user.id }
-    this.chats.insertChat(chat2, this.destino.id, this.user.id);
+    if (this.destino.tipo == "grupo") {
+      this.destino.lastMessage = lastMessage;
+      this.destino.user = this.user.nome;
+      this.chats.updateGrup(this.destino);
+    } else {
+      let chat1 = { lastMessage: lastMessage, timestamp: time, nome: this.destino.nome, photo: (this.destino.photo) || '', id: this.destino.id }
+      this.chats.insertChat(chat1, this.user.id, this.destino.id);
+      let chat2 = { lastMessage: lastMessage, timestamp: time, nome: this.user.nome, photo: (this.user.photo) || '', id: this.user.id }
+      this.chats.insertChat(chat2, this.destino.id, this.user.id);
+    }
   }
 
   scrollToBottom(duration?: number): void { // A ? significa que o parametro é opcional

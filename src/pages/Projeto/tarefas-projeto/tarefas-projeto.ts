@@ -4,7 +4,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { SubTarefasPage } from '../sub-tarefas/sub-tarefas';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { TarefaProvider } from '../../../providers/tarefa/tarefa';
 import { Observable } from 'rxjs';
 

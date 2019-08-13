@@ -49,6 +49,9 @@ export class ProjetosPage {
     this.operacao = false;
     let loading: Loading = this.showLoading();
     this.items = this.projeto.get(this.user.email);
+    this.items.subscribe(i=>{
+      console.log(i);
+    })
     setTimeout(() => {
       loading.dismiss();
     }, 1200)
@@ -96,7 +99,7 @@ export class ProjetosPage {
   }
 
   goToProjetos(item) {
-
+    console.log(item);
     var projeto = {
       nome: item.nome,
       descricao: item.descricao,

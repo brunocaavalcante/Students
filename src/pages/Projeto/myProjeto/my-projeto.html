@@ -129,16 +129,20 @@
             </div>
         </ion-list>
 
-
         <ion-list *ngSwitchCase="'chats'">
-
-            <ion-item *ngFor="let item of messages | async " (click)="goToMessage(item)">
-                <ion-avatar item-start>
-                    <img style="width: 50px;height: 50px;" [src]="(item.photo) || '../../assets/imgs/user-icon-msg.png'">
-                </ion-avatar>
-                <h2>{{ item.nome }}</h2>
-                <p *ngIf="item.lastMessage">{{ item.lastMessage }} - {{ item.timestamp | date:'dd/MM/y' }}</p>
-            </ion-item>
+            <div>
+                <message-box *ngFor="let item of itens" [message]="item" [isTrue]="(item.id_user === user.id)"></message-box>
+            </div>
+            <ion-footer>
+                <ion-toolbar>
+                    <ion-item no-lines>
+                        <ion-input type="text" (keyup.enter)="sendMessage(newMessage); newMessage=''" placeholder="Messagem..." [(ngModel)]="newMessage"></ion-input>
+                        <button ion-button item-right (click)="sendMessage(newMessage); newMessage=''">
+                    <ion-icon name="send"></ion-icon>
+                  </button>
+                    </ion-item>
+                </ion-toolbar>
+            </ion-footer>
         </ion-list>
     </div>
 

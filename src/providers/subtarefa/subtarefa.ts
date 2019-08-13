@@ -10,7 +10,7 @@ export class SubtarefaProvider {
 
   check;
   tarefa;
-  private tarefaCollection: AngularFirestoreCollection<any>;
+  tarefaCollection: AngularFirestoreCollection<any>;
   list: Observable<any>;
   constructor(
     public http: HttpClient,

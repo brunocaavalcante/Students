@@ -7,6 +7,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { ChatsPage } from '../../chats/chats-page';
 
 @IonicPage()
 @Component({
@@ -32,7 +33,7 @@ export class NewGrupMessagePage {
     public afth: AngularFireAuth,
     public chats: ChatsProvider,
     public usuario: UserProvider,
-    public storage:AngularFireStorage,
+    public storage: AngularFireStorage,
     public afs: AngularFirestore
   ) {
     this.user = this.afth.auth.currentUser;
@@ -44,19 +45,27 @@ export class NewGrupMessagePage {
   createGrupo() {
     this.participante.push({ email: this.user.email });
     const id = this.afs.createId();
-    console.log(this.img);
-     let grupo = {
+    let participantes = []
+    let grupo = {
       id: this.id_foto || id,
       nome: this.nome,
       url: this.img || '',
-      tipo:'grupo'
+      tipo: 'grupo',
+      lastMessage: '',
+      user: ''
     }
     this.participante.forEach(data => {
       this.usuario.find('email', data.email).subscribe(itens => {
-        this.chats.addUserToGroup(grupo,itens[0].id);
+        // this.chats.addUserToGroup(grupo, itens[0].id);
+        participantes.push(itens[0].id);
       })
     });
-    this.chats.insertGrup(grupo);
+    var teste = this.participante.concat(participantes);
+    console.log(teste);
+    // this.chats.insertGrup(grupo);
+    this.presentAlert('Grupo Criado', grupo.nome);
+    this.navCtrl.setRoot(ChatsPage);
+
   }
 
   presentPrompt() {
@@ -114,4 +123,12 @@ export class NewGrupMessagePage {
     this.percent = null;
   }
 
+  public presentAlert(title: string, subtitle: string) {
+    let alert = this.alertCtrl.create({
+      title: title,
+      subTitle: subtitle,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
 }

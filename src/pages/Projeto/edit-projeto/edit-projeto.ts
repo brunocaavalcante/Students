@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { ProjetosPage } from '../projetos/projetos';
 import { ProjetoProvider } from '../../../providers/projeto/projeto-provider';
 
 
@@ -42,7 +41,6 @@ export class EditProjetoPage {
   }
 
   alterProjeto() {
-    
    this.pj.find(this.p).subscribe(itens=>{
     var data = Object.keys(itens).map(i => itens[i]);
     data.forEach(dt => {
