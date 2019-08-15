@@ -52,7 +52,8 @@ export class ChatsPage {
 
     this.chats.getMessagesGrupo(item.id).subscribe(m => {
       m.forEach(msg => {
-        this.chats.deleteMessages(msg.id);
+        console.log(msg);
+        this.chats.deleteMessages(item.id,msg.id);
       });
     })
     this.chats.getParticipantes(item).subscribe(itens => {
@@ -62,7 +63,6 @@ export class ChatsPage {
     });
     this.chats.deleteGrupo(item);
     this.grupos.pop();
-
   }
 
   goToMessage(item) {
