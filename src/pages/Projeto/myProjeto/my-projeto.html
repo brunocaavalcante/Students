@@ -129,34 +129,21 @@
             </div>
         </ion-list>
 
-
         <ion-list *ngSwitchCase="'chats'">
-
-            <ion-item no-lines>
-                <div class="chat-status" text-center>
-                    <span class="chat-date">26/07/2019</span>
-                    <span class="chat-content-center">chat.message</span>
-                </div>
-                <ng-template #message>
-                    <div class="chat-message" text-right>
-                        <div class="right-bubble">
-                            <span class="msg-name">Me</span>
-                            <span class="msg-date">2019</span>
-                            <p text-wrap>ola wello word</p>
-                        </div>
-                    </div>
-                    <div class="chat-message" text-left>
-                        <div class="left-bubble">
-                            <span class="msg-name">bruno</span>
-                            <span class="msg-date">2019</span>
-                            <p text-wrap>ola tudo bem</p>
-                        </div>
-                    </div>
-                </ng-template>
-            </ion-item>
+            <div>
+                <message-box *ngFor="let item of itens" [message]="item" [isTrue]="(item.id_user === user.id)"></message-box>
+            </div>
+            <ion-footer>
+                <ion-toolbar>
+                    <ion-item no-lines>
+                        <ion-input type="text" (keyup.enter)="sendMessage(newMessage); newMessage=''" placeholder="Messagem..." [(ngModel)]="newMessage"></ion-input>
+                        <button ion-button item-right (click)="sendMessage(newMessage); newMessage=''">
+                    <ion-icon name="send"></ion-icon>
+                  </button>
+                    </ion-item>
+                </ion-toolbar>
+            </ion-footer>
         </ion-list>
-
-
     </div>
 
 </ion-content>

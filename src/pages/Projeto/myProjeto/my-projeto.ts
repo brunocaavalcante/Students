@@ -8,6 +8,8 @@ import { EditProjetoPage } from '../edit-projeto/edit-projeto';
 import { DespesasPage } from '../despesas/despesas';
 import { ProjetoProvider } from '../../../providers/projeto/projeto-provider';
 import { UserProvider } from '../../../providers/user/user';
+import { ChatsProvider } from '../../../providers/chats/chats';
+import { Observable } from 'rxjs';
 
 
 
@@ -27,6 +29,8 @@ export class MyProjetoPage {
   user;
   list = [];
   projeto;
+  items: Observable<any>;
+  itens =[];
   id;
   @ViewChild(Segment) segment: Segment;
 
@@ -38,15 +42,20 @@ export class MyProjetoPage {
     public menuCtrl: MenuController,
     public pj: ProjetoProvider,
     private usuario: UserProvider,
+    public chats: ChatsProvider,
     public afAuth: AngularFireAuth,
 
   ) {
-    this.user = this.afAuth.auth.currentUser;//pega usuario logado
+    var u = this.afAuth.auth.currentUser;//pega usuario logado
+    this.usuario.find('id', u.uid).subscribe(itens => {
+      this.user = itens[0];
+    });
     this.projeto = this.navParams.get('projeto');
+    this.getMessages();
+    this.OrdenarMessages(this.items);
   }
-  
+
   ionViewDidLoad() {
-    this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.segment.value = 'sobre';
     this.getParticipantes();
   }
@@ -56,7 +65,7 @@ export class MyProjetoPage {
       var participantes = Object.keys(itens).map(i => itens[i]);
       if (participantes.length > 0) {
         for (let i = 0; i < participantes.length; i++) {
-          this.usuario.find('email',participantes[i].email).subscribe(data => {
+          this.usuario.find('email', participantes[i].email).subscribe(data => {
             this.p = Object.keys(data).map(i => data[i]);
             if (this.p.length > 0) {
               this.list[i] = ({
@@ -70,7 +79,7 @@ export class MyProjetoPage {
                 desc_f: participantes[i].descricao_f,
                 email: participantes[i].email,
                 adm: participantes[i].adm,
-                photo:this.p[0].photo
+                photo: this.p[0].photo
               });
             } else {
               this.list[i] = ({
@@ -86,6 +95,27 @@ export class MyProjetoPage {
         }
       }
     })
+  }
+
+  getMessages() {
+
+    this.items = this.chats.getMessagesGrupo(this.projeto.id);
+  }
+
+  sendMessage(newMessage: string): void {
+    var date = new Date();
+    var time = date.getTime();
+
+    if (newMessage) {
+      let msg = {
+        id_user: this.user.id,
+        timestamp: time,
+        msg: newMessage,
+        nome: this.user.nome + " " + this.user.sobrenome
+      };
+      var ref = this.projeto.id;
+      this.chats.insertMessages(ref, msg);
+    }
   }
 
   updateParticipante(data, item) {
@@ -105,11 +135,20 @@ export class MyProjetoPage {
   }
 
   insertParticipante(item) {
-    console.log(item);
-    var id = this.pj.insert(this.projeto);
-    this.pj.update(id, { id_participante: id, adm: false, id: this.projeto.id, email: item.email });
+    this.projeto.email = item.email;
+    this.projeto.adm = false;
+    this.pj.insert(this.projeto);
     this.presentAlert("Participante adicionado", "");
 
+  }
+
+  OrdenarMessages(messages: Observable<any>) {
+    messages.subscribe(itens => {
+      itens.sort(function (x, y) {
+        return x.timestamp - y.timestamp;
+      });
+      this.itens = itens;
+    });
   }
 
   public presentAlert(title: string, subtitle: string) {
