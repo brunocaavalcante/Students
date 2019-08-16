@@ -69,14 +69,14 @@ export class MessagePage {
           id_user: this.user.id,
           timestamp: time,
           msg: newMessage,
-          nome: this.user.nome + " " + this.user.sobrenome
+          nome: this.user.nome + " " + this.user.sobrenome,
         };
         this.ref = this.destino.id;
         this.createChat(newMessage);
         this.chats.insertMessages(this.ref, msg);
       } else {
         this.createChat(newMessage);
-        let msg = { id_user: this.user.id, timestamp: time, msg: newMessage };
+        let msg = { id_user: this.user.id, timestamp: time, msg: newMessage,photo:this.user.photo };
         this.chats.insertMessages(this.ref, msg);
       }
     }

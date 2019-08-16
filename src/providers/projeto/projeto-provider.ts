@@ -51,7 +51,7 @@ export class ProjetoProvider {
 
   getDespesas(id) {
     this.items = this.afs.collection('despesas').doc(id).collection('despesa').valueChanges();
-   return this.items;
+    return this.items;
   }
 
   find(projeto) {
