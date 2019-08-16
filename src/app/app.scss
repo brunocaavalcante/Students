@@ -5,3 +5,35 @@
 .auth-icon{
     font-size: 4.0em;
 }
+.top-menu{
+    padding: 56px;
+    background-color: rgba(12, 137, 141, 0.87);
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+}
+.photo{
+position: relative;
+z-index: 2;
+}
+.round{
+    top: 31px;
+    border-radius: 49px;
+    position: relative;
+    left: 16px;
+    width: 89px;
+    box-shadow: 1px 1px 14px  rgba(89, 223, 241, 0.87);
+}
+.list-itens{
+    margin-top: 98px;
+}
+.inf{
+    position: relative;
+    top: -4px;
+    left: 71px;
+    color: white;
+}
+.icons-menu{
+    margin-right: 9%;
+    font-size: 1.3em;
+}

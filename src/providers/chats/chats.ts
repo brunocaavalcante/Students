@@ -36,15 +36,21 @@ export class ChatsProvider {
 
   deleteGrupo(item) {
     this.afs.collection("grupos-chats").doc(item.id).delete();
+    this.afs.collection("grupos-chats").doc(item.id).collection('participantes')
+      .valueChanges().subscribe(itens => {
+        itens.forEach(i => {
+          this.afs.collection("grupos-chats").doc(item.id).collection('participantes').doc(i.id).delete();
+        });
+      });
   }
 
   deleteChats(uid, ref, id) {
     this.afs.collection('chats').doc(uid).collection(ref).doc(id).delete();
   }
 
-  deleteMessages(uid) {
-    this.afs.collection('messages').doc(uid).delete();
-    console.log(uid);
+  deleteMessages(id, msg) {
+    console.log(id, msg);
+    this.afs.collection('messages').doc(id).collection("msg").doc(msg).delete();
   }
 
   filter(colecao: string, ordem: string, start, end) {
@@ -100,7 +106,8 @@ export class ChatsProvider {
   }
 
   insertMessages(ref, item) {
-    this.afs.doc('messages/' + ref).collection('msg').add(item);
+    item.id = this.afs.createId();
+    this.afs.doc('messages/' + ref).collection('msg').doc(item.id).set(item);
   }
 
   insertGrup(grupo) {

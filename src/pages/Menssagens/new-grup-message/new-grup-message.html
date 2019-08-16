@@ -6,12 +6,12 @@
 
 <ion-content padding>
     <ion-list>
-
         <div class="image-upload">
             <label for="file-input">
-        <img src="../../../assets/imgs/icon-camera.png" class="icon-camera" />
-      </label>
-            <input id="file-input" type="file" (change)="uploadFile($event)" />
+                <img [src]="(img) || '../../../assets/imgs/icon-camera.png'" class="icon-camera" />
+            </label>
+            <input id="file-input" type="file" (change)="uploadFile($event)" /><br>
+            <progress-bar *ngIf="(percent < 99 )" [progress]="percent"></progress-bar>
         </div>
 
         <ion-item class="nome-grupo">
