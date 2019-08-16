@@ -98,7 +98,6 @@ export class MyProjetoPage {
   }
 
   getMessages() {
-
     this.items = this.chats.getMessagesGrupo(this.projeto.id);
   }
 

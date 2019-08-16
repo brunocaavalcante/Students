@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { ProjetoProvider } from '../../../providers/projeto/projeto-provider';
-
+import { Observable } from 'rxjs';
 
 @IonicPage()
 @Component({
@@ -16,55 +15,33 @@ export class DespesasPage {
   list = [];
   testCheckboxOpen;
   testCheckboxResult;
+  items: Observable<any>;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public afAuth: AngularFireAuth,
     public alertCtrl: AlertController,
-    public pj :ProjetoProvider,
-    public db: AngularFireDatabase//Banco de dados Firebase
+    public pj: ProjetoProvider,
   ) {
     this.projeto = this.navParams.get('projeto');
     this.getDespesas();
   }
+
   insertDespesa(item) {
-    let despesa = {
-      titulo: item.titulo,
-      descricao: item.descricao,
-      valor: item.valor,
-      vencimento: item.vencimento,
-      prioridade: item.prioridade,
-      id_projeto: this.projeto.id,
-      id_criador: this.afAuth.auth.currentUser.email,
-      checked: "false"
-    }
-    this.pj.insertDespesas(despesa);
+    item.id_projeto = this.projeto.id;
+    item.id_criador = this.afAuth.auth.currentUser.email;
+    item.checked = false;
+    this.pj.insertDespesas(item);
     this.presentAlert("Despesa Cadastrada", "");
     this.ionViewDidLoad();
   }
 
   getDespesas() {
-
-    this.db.database.ref('despesas').orderByChild('id_projeto') //Pega tarefas
-      .equalTo(this.projeto.id).on("value", snapshot => {
-        console.log(this.projeto.id);
-        console.log(snapshot.val());
-        if (snapshot) {
-          let i = 0;
-
-          snapshot.forEach(data => {
-            this.list[i] = data.val();
-            i++;
-          });
-        } else {
-          console.log("não tem despesas");
-        }
-      });
+    this.items = this.pj.getDespesas(this.projeto.id);
   }
 
   presentInsertDespesa() {
-
     let alert = this.alertCtrl.create({
       title: 'Nova Despesa',
       inputs: [
@@ -113,13 +90,6 @@ export class DespesasPage {
         }
       ]
     });
-    alert.addInput({
-      name: 'ck1',
-      type: 'checkbox',
-      label: 'Bespin',
-      value: 'value2'
-    })
-
     alert.present();
   }
 
@@ -132,12 +102,7 @@ export class DespesasPage {
     alert.present();
   }
 
-  public teste() {
-    console.log("teste");
-  }
-
   ionViewDidLoad() {
-
   }
 
 
