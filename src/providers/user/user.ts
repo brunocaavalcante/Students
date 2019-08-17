@@ -50,10 +50,10 @@ export class UserProvider {
 
     this.items = this.afs.collection('cadastro', ref => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
-      if (condicion.sexo) query = query.where('sexo', '==', condicion.sexo != undefined ? condicion.sexo : "");
-      if (condicion.faculdade) query = query.where('faculdade', '==', condicion.faculdade != undefined ? condicion.faculdade : "");
-      if (condicion.curso) query = query.where('curso', '==', condicion.curso != undefined ? condicion.curso : "");
-      if (condicion.campus) query = query.where('campus', '==', condicion.campus != undefined ? condicion.campus : "");
+      if (condicion.sexo) query = query.where('sexo', '==', condicion.sexo || "");
+      if (condicion.faculdade) query = query.where('faculdade', '==', condicion.faculdade || "");
+      if (condicion.curso) query = query.where('curso', '==', condicion.curso || "");
+      if (condicion.campus) query = query.where('campus', '==', condicion.campus || "");
       return query;
     }).valueChanges();
     return this.items;

@@ -114,6 +114,7 @@ export class NewGrupMessagePage {
       finalize(() => {
         fileRef.getDownloadURL().subscribe(itens => {
           this.img = itens;
+          console.log(itens);
         });
       })
     )

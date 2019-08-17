@@ -63,6 +63,7 @@ export class ChatsPage {
     });
     this.chats.deleteGrupo(item);
     this.grupos.pop();
+    this.navCtrl.setRoot(ChatsPage);
   }
 
   goToMessage(item) {

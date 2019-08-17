@@ -6,7 +6,7 @@
     font-size: 4.0em;
 }
 .top-menu{
-    padding: 56px;
+    //padding: 56px;
     background-color: rgba(12, 137, 141, 0.87);
     position: relative;
     z-index: 0;
@@ -17,7 +17,7 @@ position: relative;
 z-index: 2;
 }
 .round{
-    top: 31px;
+    top: -29px;
     border-radius: 49px;
     position: relative;
     left: 16px;
@@ -27,8 +27,8 @@ z-index: 2;
 
 .inf{
     position: relative;
-    top: -4px;
-    left: 71px;
+    top: 51px;
+    left: 50%;
     color: white;
 }
 .icons-menu{

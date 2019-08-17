@@ -1,6 +1,13 @@
-<div class="text" [ngClass]="{'destino': isTrue}">
-    <p class="nome" *ngIf="message.nome && !isTrue">{{ message.nome }}</p>
-    <p>{{ message.msg }}</p>
-    <p class="timestamp">{{ message.timestamp | date: 'dd/MM/y HH:mm'}}</p>
+<div class="content-msg">
+    <ion-item class="user-icon" [ngClass]="{'destino-icon': isTrue}">
+        <ion-avatar item-start>
+            <img [src]="(message.photo) || (message.url) || '../../assets/imgs/user-icon-msg.png'">
+        </ion-avatar>
+    </ion-item>
+    <div class="text" [ngClass]="{'destino': isTrue}">
 
+        <p class="nome" *ngIf="message.nome && !isTrue">{{ message.nome }}</p>
+        <p>{{ message.msg }}</p>
+        <p class="timestamp">{{ message.timestamp | date: 'dd/MM/y HH:mm'}}</p>
+    </div>
 </div>

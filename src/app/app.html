@@ -1,16 +1,16 @@
 <ion-menu [content]="mainContent">
 
-  <ion-content id="side-menu21">
+  <ion-content style="background-color: darkcyan" id="side-menu21">
     <div class="top-menu">
       <div class="inf">
         <h5 style="font-family: cursive;margin-top: 4px">Cida Cavalcante</h5>
         <p style="font-family: cursive;margin-top: 1px">cida@gmail.com</p>
       </div>
-    </div>
-    <div class="photo" *ngFor="let item of u | async">
-      <img class="round" [src]="(item.photo) || '../assets/imgs/p1.jpg'" />
-    </div>
-    <ion-list>
+      <div class="photo">
+        <img class="round" src="../assets/imgs/p1.jpg" />
+      </div>
+    </div>   
+    <ion-list class="list-itens">
 
       <button ion-item style="color:cadetblue" (click)="openPage(eventsPage)" menuClose>
         <ion-icon class="icons-menu" name="ios-copy-outline"></ion-icon>

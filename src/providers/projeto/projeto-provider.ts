@@ -30,9 +30,9 @@ export class ProjetoProvider {
     return id_participante;
   }
 
-  insertDespesas(despesa){
+  insertDespesas(despesa) {
     despesa.id = this.afs.createId();
-    this.afs.collection("despesas").doc(despesa.id).set(despesa);
+    this.afs.collection("despesas").doc(despesa.id_projeto).collection('despesa').doc(despesa.id).set(despesa);
   }
 
   update(id, projeto) {
@@ -46,6 +46,11 @@ export class ProjetoProvider {
 
   get(email) {
     this.items = this.afs.collection('projetos', ref => ref.where('email', '==', email)).valueChanges();
+    return this.items;
+  }
+
+  getDespesas(id) {
+    this.items = this.afs.collection('despesas').doc(id).collection('despesa').valueChanges();
     return this.items;
   }
 

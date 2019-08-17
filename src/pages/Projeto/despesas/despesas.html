@@ -1,14 +1,14 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>despesas</ion-title>
+        <ion-title>Despesas</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-    <button ion-button block color="primary" (click)="showCheckbox()">Adicionar despesa</button>
+    <button ion-button block color="primary" (click)="presentInsertDespesa()">Adicionar despesa</button>
 
     <h4>Lista de Despesas:</h4><br>
-    <ion-list *ngFor="let item of list">
+    <ion-list *ngFor="let item of items | async">
         <ion-card>
             <ion-card-header>
                 <ion-card-title> {{ item.titulo }} </ion-card-title>
