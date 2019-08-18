@@ -1,14 +1,12 @@
 <ion-header>
-
-    <ion-navbar>
-        <ion-item color="transp">
+    <ion-navbar color="primary">
+        <ion-item color="primary">
             <ion-avatar item-start>
                 <img [src]="(destino.photo) || (destino.url) || '../../assets/imgs/user-icon-msg.png'">
             </ion-avatar>
             <ion-title>{{ destino.nome }}</ion-title>
         </ion-item>
     </ion-navbar>
-
 </ion-header>
 
 <ion-content padding>
@@ -18,16 +16,13 @@
 </ion-content>
 
 <ion-footer>
-
     <ion-toolbar>
-
         <ion-item no-lines>
-            <ion-input type="text" (keyup.enter)="sendMessage(newMessage); newMessage=''" placeholder="Messagem..." [(ngModel)]="newMessage"></ion-input>
+            <ion-input type="text" (keyup.enter)="sendMessage(newMessage); newMessage=''" placeholder="Messagem..."
+                [(ngModel)]="newMessage"></ion-input>
             <button ion-button item-right (click)="sendMessage(newMessage); newMessage=''">
-        <ion-icon name="send"></ion-icon>
-      </button>
+                <ion-icon name="send"></ion-icon>
+            </button>
         </ion-item>
-
     </ion-toolbar>
-
 </ion-footer>

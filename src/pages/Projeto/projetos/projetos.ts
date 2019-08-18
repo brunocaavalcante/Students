@@ -9,6 +9,7 @@ import { ProjetoProvider } from '../../../providers/projeto/projeto-provider';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
+import { ChatsProvider } from '../../../providers/chats/chats';
 
 @IonicPage()
 @Component({
@@ -41,15 +42,15 @@ export class ProjetosPage {
     public alertCtrl: AlertController,
     public usuario: UserProvider,
     public projeto: ProjetoProvider,
+    public chats: ChatsProvider,
     private afs: AngularFirestore,
     public loadingCtrl: LoadingController,
   ) {
-
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.operacao = false;
     let loading: Loading = this.showLoading();
     this.items = this.projeto.get(this.user.email);
-    this.items.subscribe(i=>{
+    this.items.subscribe(i => {
       console.log(i);
     })
     setTimeout(() => {
@@ -72,7 +73,7 @@ export class ProjetosPage {
   }
 
   createProjeto() {
-
+    this.id = this.afs.createId();
     this.participante.push({ id: "", email: this.user.email });
     //verifica se o participante esta cadastrado no sistema 
     for (let i = 1; i < this.participante.length; i++) {
@@ -86,7 +87,7 @@ export class ProjetosPage {
         nome: this.newProjectForm.get('nome').value,
         email: this.participante[i].email,
         situacao: "ativo",
-        id: this.id || this.afs.createId(),
+        id: this.id,
         dono: this.user.email,
         adm: (this.participante[i].email == this.user.email ? true : false),
         status: 0,
@@ -122,13 +123,17 @@ export class ProjetosPage {
   }
 
   deleteProjeto(item) {
+    this.chats.getMessagesGrupo(item.id).subscribe(itens => {
+      itens.forEach(msg => {
+        this.chats.deleteMessages(item.id, msg.id);
+      });
+    });
     this.projeto.find(item).subscribe(itens => {
       var p = Object.keys(itens).map(i => itens[i]);
       p.forEach(data => {
         this.projeto.delete(data);
       });
-    })
-
+    });
     this.presentAlert("Projeto Excluido", "Projeto excluido com sucesso!");
   }
 

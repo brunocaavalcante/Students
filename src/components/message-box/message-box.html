@@ -1,11 +1,20 @@
-<div class="content-msg">
-    <ion-item class="user-icon" [ngClass]="{'destino-icon': isTrue}">
+<div [ngClass]="{
+'destino-content-grup':(isTrue && (message.nome)),
+'destino-content':(isTrue && (!message.nome)),
+'content-msg-grup':(!isTrue && (message.nome)),
+'content-msg':(!isTrue && (!message.nome))
+}">
+    <ion-item *ngIf="(message.nome)" [ngClass]="{'destino-icon': isTrue, 'user-icon': (!isTrue)}">
         <ion-avatar item-start>
             <img [src]="(message.photo) || (message.url) || '../../assets/imgs/user-icon-msg.png'">
         </ion-avatar>
     </ion-item>
-    <div class="text" [ngClass]="{'destino': isTrue}">
-
+    <div [ngClass]="{
+    'destino': (isTrue && !message.nome),
+    'destino-grup': (isTrue && message.nome),
+    'text': (!isTrue && !message.nome),
+    'text-grup':(!isTrue && message.nome)
+}">
         <p class="nome" *ngIf="message.nome && !isTrue">{{ message.nome }}</p>
         <p>{{ message.msg }}</p>
         <p class="timestamp">{{ message.timestamp | date: 'dd/MM/y HH:mm'}}</p>

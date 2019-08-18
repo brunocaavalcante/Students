@@ -110,7 +110,8 @@ export class MyProjetoPage {
         id_user: this.user.id,
         timestamp: time,
         msg: newMessage,
-        nome: this.user.nome + " " + this.user.sobrenome
+        nome: this.user.nome + " " + this.user.sobrenome,
+        photo: this.user.photo
       };
       var ref = this.projeto.id;
       this.chats.insertMessages(ref, msg);
