@@ -39,4 +39,12 @@ page-despesas {
       color: #fff;
     }
   }
+  .despesa-p {
+    font-weight: 500;
+    white-space: normal;
+    font-size: smaller;
+  }
+  .list-md .item-block .item-inner {
+    border-bottom: 1.3px solid rgba(37, 149, 153, 0.8804);
+  }
 }
