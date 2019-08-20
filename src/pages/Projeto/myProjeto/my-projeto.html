@@ -59,8 +59,10 @@
                             </p><br>
                         </ng-template>
 
-                        <button ion-button outline clear small color="danger" *ngIf="projeto.adm" (click)="presentShowConfirm(item)">EXCLUIR</button>
-                        <button ion-button outline clear small *ngIf="projeto.adm" (click)="presentPrompt(item,'update')">ALTERAR</button>
+                        <button ion-button outline clear small color="danger" *ngIf="projeto.adm"
+                            (click)="presentShowConfirm(item)">EXCLUIR</button>
+                        <button ion-button outline clear small *ngIf="projeto.adm"
+                            (click)="presentPrompt(item,'update')">ALTERAR</button>
                         <button ion-button outline clear small (click)="goToTarefas(item)">CARTÕES</button>
                     </ion-card-content>
                 </ion-card>
@@ -131,19 +133,22 @@
 
         <ion-list *ngSwitchCase="'chats'">
             <div>
-                <message-box *ngFor="let item of itens" [message]="item" [isTrue]="(item.id_user === user.id)"></message-box>
+                <message-box *ngFor="let item of itens" [message]="item" [isTrue]="(item.id_user === user.id)">
+                </message-box>
             </div>
-            <ion-footer>
-                <ion-toolbar>
-                    <ion-item no-lines>
-                        <ion-input type="text" (keyup.enter)="sendMessage(newMessage); newMessage=''" placeholder="Messagem..." [(ngModel)]="newMessage"></ion-input>
-                        <button ion-button item-right (click)="sendMessage(newMessage); newMessage=''">
-                    <ion-icon name="send"></ion-icon>
-                  </button>
-                    </ion-item>
-                </ion-toolbar>
-            </ion-footer>
         </ion-list>
     </div>
 
 </ion-content>
+
+<ion-footer *ngIf="this.segment.value == 'chats'">
+    <ion-toolbar>
+        <ion-item no-lines>
+            <ion-input type="text" (keyup.enter)="sendMessage(newMessage); newMessage=''" placeholder="Messagem..."
+                [(ngModel)]="newMessage"></ion-input>
+            <button ion-button item-right (click)="sendMessage(newMessage); newMessage=''">
+                <ion-icon name="send"></ion-icon>
+            </button>
+        </ion-item>
+    </ion-toolbar>
+</ion-footer>

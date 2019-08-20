@@ -48,9 +48,8 @@ export class ChatsProvider {
     this.afs.collection('chats').doc(uid).collection(ref).doc(id).delete();
   }
 
-  deleteMessages(id, msg) {
-    console.log(id, msg);
-    this.afs.collection('messages').doc(id).collection("msg").doc(msg).delete();
+  deleteMessages(id, id_msg) {
+    this.afs.collection('messages').doc(id).collection("msg").doc(id_msg).delete();
   }
 
   filter(colecao: string, ordem: string, start, end) {

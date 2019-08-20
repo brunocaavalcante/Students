@@ -1,9 +1,42 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>find-chats</ion-title>
+        <ion-title>Novos Amigos</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content padding>
+    <ion-list *ngFor="let user of users | async">
+
+        <ion-card>
+            <ion-item>
+                <ion-avatar item-start>
+                    <img [src]="(user.photo) || '../../../assets/imgs/user-icon-msg.png'">
+                </ion-avatar>
+                <h2>{{ user.nome }} {{ user.sobrenome }}</h2>
+                <p>{{ user.email }}</p>
+            </ion-item>
+
+            <ion-card-content>
+                <p>Faculdade:{{ user.faculdade }}</p>
+                <p>Curso: {{ user.curso }}</p>
+                <p>Campus: {{ user.campus }}</p>
+            </ion-card-content>
+            <ion-row>
+                <ion-col>
+                    <button ion-button icon-start clear small (click)="presentPrompt(user)">
+                        <ion-icon name="md-person-add"></ion-icon>
+                        <div>Add Contato</div>
+                    </button>
+                </ion-col>
+                <ion-col>
+                    <button ion-button icon-start clear small (click)="goToMessage(user)">
+                        <ion-icon name="text"></ion-icon>
+                        <div>Conversar</div>
+                    </button>
+                </ion-col>
+            </ion-row>
+        </ion-card>
+
+    </ion-list>
 
 </ion-content>

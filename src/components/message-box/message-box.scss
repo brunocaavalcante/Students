@@ -1,6 +1,5 @@
 message-box {
     display: flex;
-    margin-bottom: 10px;
     .text {
         background-color: #efefef;
         padding: 7px 5px;
@@ -8,10 +7,9 @@ message-box {
         box-shadow: 1px 1px 3px #ccc;
         color: #333;
         position: relative;
-        left: 36px;
-        top: -36px;
+        left: 2px;
+        top: 4px;
         z-index: 1;
-        width: 90%;
         p {
             font-size: 1.1em;
             margin: 0;
@@ -28,40 +26,114 @@ message-box {
             color: rgb(80, 77, 77);
         }
     }
-    .user-icon {
-        width: 46px;
-        position: relative;
-        top: 14px;
-        padding: 0;
-        left: -12px;
-    }
     .destino {
         background-color: cadetblue;
-        width: 90%;
-        border-radius: 6%;
-        margin-bottom: 29px;
         color: white;
         position: relative;
-        top: -35px;
-        left: -2px;
+        padding: 7px 5px;
+        -webkit-box-shadow: 1px 1px 3px #ccc;
+        box-shadow: 1px 1px 3px #ccc;
+        top: 4px;
+        left: 0px;
         z-index: 1;
         p.timestamp {
             font-size: 0.8em;
             margin-top: 5px;
             color: white;
         }
-    }
-    .destino-icon {
-        position: absolute;
-        width: 44px;
-        position: relative;
-        left: 315px;
-        padding: 0;
-        top: 14px;
+        p {
+            font-size: 1.1em;
+            margin: 0;
+        }
     }
     .content-msg {
         //background-color: red;
-        width: 100%;
-        height: 72px;
+        height: 58px;
+        margin-bottom: 5px;
+        position: relative;
+        width: max-content;
+    }
+    .destino-content {
+        // background-color: blue;
+        height: 58px;
+        margin-bottom: 5px;
+        position: relative;
+        width: max-content;
+    }
+    /*Css para msg Grupos**/
+    .destino-icon {
+        width: 44px;
+        position: relative;
+        left: 271px;
+        padding: 0;
+        top: 3px;
+    }
+    .destino-content-grup {
+        width: 92%;
+        height: 60px;
+        margin-bottom: 5px;
+        position: relative;
+        //background-color: red;
+    }
+    .destino-grup {
+        background-color: cadetblue;
+        color: white;
+        position: relative;
+        padding: 7px 5px;
+        -webkit-box-shadow: 1px 1px 3px #ccc;
+        box-shadow: 1px 1px 3px #ccc;
+        top: -49px;
+        left: 2px;
+        width: 85%;
+        p.timestamp {
+            font-size: 0.8em;
+            margin-top: 5px;
+            color: white;
+        }
+        p {
+            font-size: 1.1em;
+            margin: 0;
+        }
+    }
+    .user-icon {
+        width: 40px;
+        position: relative;
+        top: 3px;
+        padding: 0;
+        left: -12px;
+    }
+    .content-msg-grup {
+        width: 92%;
+        height: 77px;
+        margin-bottom: 5px;
+        //background-color: blue;
+        position: relative;
+    }
+    .text-grup {
+        background-color: #efefef;
+        padding: 7px 5px;
+        -webkit-box-shadow: 1px 1px 3px #ccc;
+        box-shadow: 1px 1px 3px #ccc;
+        color: #333;
+        position: relative;
+        left: 31px;
+        top: -50px;
+        z-index: 1;
+        width: 85%;
+        p {
+            font-size: 1.1em;
+            margin: 0;
+        }
+        p.timestamp {
+            font-size: 0.8em;
+            margin-top: 5px;
+            color: #999;
+        }
+        p.nome {
+            font-size: 0.9em;
+            margin-top: 1px;
+            margin-bottom: 2px;
+            color: rgb(80, 77, 77);
+        }
     }
 }
