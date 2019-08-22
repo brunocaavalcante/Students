@@ -30,7 +30,7 @@ export class MyProjetoPage {
   list = [];
   projeto;
   items: Observable<any>;
-  itens =[];
+  itens = [];
   id;
   @ViewChild(Segment) segment: Segment;
 
@@ -53,11 +53,24 @@ export class MyProjetoPage {
     this.projeto = this.navParams.get('projeto');
     this.getMessages();
     this.OrdenarMessages(this.items);
+    console.log(this.projeto);
   }
 
   ionViewDidLoad() {
     this.segment.value = 'sobre';
     this.getParticipantes();
+  }
+
+  deleteParticipante(item) {
+    this.pj.deleteParticipante(item.id_participante);
+    this.presentAlert("Participante Excluido", "");
+    this.list.pop();
+  }
+
+  finalizarProjeto() {
+    for (let i = 0; i < this.list.length; i++) {
+      this.pj.update(this.list[i].id_participante, { situacao: "finalizado", status: 100 });
+    }
   }
 
   getParticipantes() {
@@ -101,37 +114,20 @@ export class MyProjetoPage {
     this.items = this.chats.getMessagesGrupo(this.projeto.id);
   }
 
-  sendMessage(newMessage: string): void {
-    var date = new Date();
-    var time = date.getTime();
-
-    if (newMessage) {
-      let msg = {
-        id_user: this.user.id,
-        timestamp: time,
-        msg: newMessage,
-        nome: this.user.nome + " " + this.user.sobrenome,
-        photo: this.user.photo
-      };
-      var ref = this.projeto.id;
-      this.chats.insertMessages(ref, msg);
-    }
+  goToTarefas(participante) {
+    var p = this.projeto;
+    this.navCtrl.push(TarefasProjetoPage, { p, participante });
   }
 
-  updateParticipante(data, item) {
-    this.pj.update(item.id_participante, data);
+  goToEditProjeto() {
+    var p = this.projeto;
+    var participantes = this.list;
+    this.navCtrl.push(EditProjetoPage, { p, participantes });
   }
 
-  deleteParticipante(item) {
-    this.pj.deleteParticipante(item.id_participante);
-    this.presentAlert("Participante Excluido", "");
-    this.list.pop();
-  }
-
-  finalizarProjeto() {
-    for (let i = 0; i < this.list.length; i++) {
-      this.pj.update(this.list[i].id_participante, { situacao: "concluido" });
-    }
+  goToDespesas() {
+    var projeto = this.projeto
+    this.navCtrl.push(DespesasPage, { projeto });
   }
 
   insertParticipante(item) {
@@ -233,20 +229,112 @@ export class MyProjetoPage {
     alert.present();
   }
 
-  goToTarefas(participante) {
-    var p = this.projeto;
-    this.navCtrl.push(TarefasProjetoPage, { p, participante });
+  presentShow(op) {
+    let titulo, sub, btn;
+
+    if (op == 'finalizar') {
+      titulo = "Deseja Finalizar o Projeto?";
+      sub = "Esse projeto irá para area de projetos finalizados"
+      btn = "Finalizar"
+    } else {
+      titulo = "Deseja Sair do Projeto?";
+      sub = "O voçê não terá mais acesso a esse projeto a menos que seja novamente convidado a participar do projeto."
+      btn = "Sair"
+    }
+    const alert = this.alertCtrl.create({
+      title: titulo,
+      message: sub,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+
+          }
+        },
+        {
+          text: btn,
+          role: btn,
+          handler: () => {
+            if (btn == "Finalizar") {
+              this.finalizarProjeto();
+            } else {
+              this.sairProjeto();
+            }
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
-  goToEditProjeto() {
-    var p = this.projeto;
-    var participantes = this.list;
-    this.navCtrl.push(EditProjetoPage, { p, participantes });
+  sairProjeto() {
+    if (this.projeto.dono == this.user.email) {
+      this.presentAlertRadio();
+    }
   }
 
-  goToDespesas() {
-    var projeto = this.projeto
-    this.navCtrl.push(DespesasPage, { projeto });
+  async presentAlertRadio() {
+    const alert = await this.alertCtrl.create({
+      subTitle: 'Escolha um integrante para ser o novo adm do Projeto',
+
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'danger',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: (data) => {
+            this.updateDonoProjeto(data);
+          }
+        }
+      ]
+    });
+    this.list.forEach(p => {
+      if (this.user.email != p.email) {
+        alert.addInput(
+          {
+            name: 'checkbox6',
+            type: 'checkbox',
+            label: p.email,
+            value: p.email
+          }
+        )
+      }
+    });
+    await alert.present();
+  }
+
+  sendMessage(newMessage: string): void {
+    var date = new Date();
+    var time = date.getTime();
+
+    if (newMessage) {
+      let msg = {
+        id_user: this.user.id,
+        timestamp: time,
+        msg: newMessage,
+        nome: this.user.nome + " " + this.user.sobrenome,
+        photo: this.user.photo
+      };
+      var ref = this.projeto.id;
+      this.chats.insertMessages(ref, msg);
+    }
+  }
+
+
+  updateParticipante(data, item) {
+    this.pj.update(item.id_participante, data);
+  }
+
+  updateDonoProjeto(email) {
+    for (let i = 0; i < this.list.length; i++) {
+      this.pj.update(this.list[i].id_participante, { dono: email[0], adm: true });
+    }
   }
 
 }

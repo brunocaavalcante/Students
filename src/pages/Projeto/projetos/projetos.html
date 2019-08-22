@@ -19,9 +19,8 @@
                     <ion-card-title>
                         {{ item.nome }}
                     </ion-card-title>
-                    <p>
-                        {{ item.descricao }}
-                    </p>
+                    <p> Descrição: {{ item.descricao }} </p>
+                    <p>Status: {{ item.situacao }}</p>
                     <div class="progressBar">
                         <div class="progress html" [ngClass]="{
               'baixo' : item.status < 30,
@@ -31,8 +30,7 @@
                     </div>
 
                 </ion-card-content>
-                <button ion-button clear color="danger" (click)="presentShowConfirm(item)" *ngIf="item.adm"
-                    class="btn_p">Excluir</button>
+                <button ion-button clear color="danger" (click)="presentShowConfirm(item)" *ngIf="item.adm" class="btn_p">Excluir</button>
                 <button ion-button clear (click)="goToProjetos(item)" class="btn_p">Detalhes</button>
             </ion-card>
         </ion-item>

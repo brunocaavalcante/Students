@@ -49,10 +49,8 @@ export class ProjetosPage {
     this.user = this.afAuth.auth.currentUser;//pega usuario logado
     this.operacao = false;
     let loading: Loading = this.showLoading();
-    this.items = this.projeto.get(this.user.email);
-    this.items.subscribe(i => {
-      console.log(i);
-    })
+    this.user.situacao = 'ativo';
+    this.items = this.projeto.get(this.user);
     setTimeout(() => {
       loading.dismiss();
     }, 1200)
@@ -112,7 +110,8 @@ export class ProjetosPage {
       campus: item.campus,
       dono: item.dono,
       id_participante: item.id_participante,
-      url: item.url
+      url: item.url,
+      situacao:item.situacao || ''
     }
 
     this.navCtrl.push(MyProjetoPage, { projeto });

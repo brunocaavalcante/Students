@@ -43,9 +43,14 @@ export class ProjetoProvider {
     this.projetoCollection.doc(projeto.id_participante).delete();
     this.tarefa.deleteAll(projeto.id);
   }
-
-  get(email) {
-    this.items = this.afs.collection('projetos', ref => ref.where('email', '==', email)).valueChanges();
+  
+  get(condicion){
+    this.items = this.afs.collection('projetos', ref => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      if (condicion.email) query = query.where('email', '==', condicion.email || "");
+      if (condicion.situacao) query = query.where('situacao', '==', condicion.situacao || "");
+      return query;
+    }).valueChanges();
     return this.items;
   }
 

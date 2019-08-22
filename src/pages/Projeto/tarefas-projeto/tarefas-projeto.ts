@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, MenuController, AlertController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, MenuController, AlertController, Segment } from 'ionic-angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { SubTarefasPage } from '../sub-tarefas/sub-tarefas';
@@ -23,10 +23,11 @@ export class TarefasProjetoPage {
   descricao;
   participante;
   id_dono;
-  list : Observable<any>;
+  list: Observable<any>;
   subTarefas = [];
   projeto;
   check: boolean;
+  @ViewChild(Segment) segment: Segment;
 
   constructor(
     public navCtrl: NavController,
@@ -41,12 +42,12 @@ export class TarefasProjetoPage {
     this.participante = this.navParams.get('participante');
     const user = this.afAuth.auth.currentUser;//pega usuario logado
     this.uid = user.uid;
-    this.list= this.tarefa.get(this.projeto, this.participante);
-    console.log(this.list);
+    this.list = this.tarefa.get(this.projeto, this.participante);
+    console.log(this.projeto);
   }
 
   ionViewDidLoad() {
-
+    this.segment.value = 'cartoes'
   }
 
   addTarefa(descricao, nome, status) {
@@ -59,12 +60,13 @@ export class TarefasProjetoPage {
       qtd_sub: 0,
       qtd_sub_ok: 0,
       id_projeto: this.projeto.id,
-      id_criador: this.projeto.dono!=null?this.projeto.dono:"",
+      id_criador: this.projeto.dono != null ? this.projeto.dono : "",
       id_participante: this.participante.id_participante
     })
     this.tarefa.insert(tf);
     this.nome = "";
     this.descricao = "";
+    this.presentAlert("Tarefas Cadastrada", "");
     this.ionViewDidLoad();
   }
 
