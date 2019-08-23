@@ -28,13 +28,27 @@
 
     <div [ngSwitch]="despesas">
         <ion-list *ngSwitchCase="'despesas-list'">
-            <ion-item *ngFor="let item of items | async">
-                <p class="despesa-p">Despesa criada em 19/08/2019 por {{ item.id_criador}}</p>
-                <p> Despesa: {{ item.titulo }}</p>
-                <p> Descrição: {{ item.descricao }}</p>
-                <p> Valor: {{ item.valor }},00 R$</p>
-                <p>Vencimento: {{ item.vencimento }}</p>
-            </ion-item>
+
+            <ion-item-sliding #item>
+                <ion-item *ngFor="let item of items |async">
+                    <p class="despesa-p">Despesa criada em 19/08/2019 por {{ item.id_criador}}</p>
+                    <p> Despesa: {{ item.titulo }}</p>
+                    <p> Descrição: {{ item.descricao }}</p>
+                    <p> Valor: {{ item.valor }},00 R$</p>
+                    <p> Vencimento: {{ item.vencimento }}</p>
+                    <p> Pagamento: {{(item.pago)?'Concluido':'Pendente'}}
+                        <ion-icon [color]="item.pago ?'secondary':'danger'" [name]="item.pago ? 'ios-checkmark-circle' :'information-circle'"></ion-icon>
+                    </p>
+                </ion-item>
+                <ion-item-options side="right">
+                    <button ion-button color="danger" icon-only (click)="showDelete()">
+                                    <ion-icon name="trash"></ion-icon>
+                            </button>
+                    <button ion-button color="secondary" icon-only (click)="favorite()">
+                                <ion-icon name="checkmark-circle"></ion-icon>
+                            </button>
+                </ion-item-options>
+            </ion-item-sliding>
         </ion-list>
 
         <ion-list *ngSwitchCase="'new-despesa'">

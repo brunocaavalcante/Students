@@ -10,6 +10,7 @@ import { ProjetoProvider } from '../../../providers/projeto/projeto-provider';
 import { UserProvider } from '../../../providers/user/user';
 import { ChatsProvider } from '../../../providers/chats/chats';
 import { Observable } from 'rxjs';
+import { TabsControllerPage } from '../../tabs-controller/tabs-controller';
 
 
 
@@ -134,6 +135,7 @@ export class MyProjetoPage {
     this.projeto.email = item.email;
     this.projeto.adm = false;
     this.pj.insert(this.projeto);
+    this.projeto.adm = true;
     this.presentAlert("Participante adicionado", "");
 
   }
@@ -272,6 +274,9 @@ export class MyProjetoPage {
     if (this.projeto.dono == this.user.email) {
       this.presentAlertRadio();
     }
+    this.pj.delete(this.projeto);
+    this.presentAlert("Você já não pertence ao projeto", "Você ja não é mais um participante do projeto");
+    this.navCtrl.setRoot(TabsControllerPage);
   }
 
   async presentAlertRadio() {
@@ -295,13 +300,14 @@ export class MyProjetoPage {
       ]
     });
     this.list.forEach(p => {
+
       if (this.user.email != p.email) {
         alert.addInput(
           {
             name: 'checkbox6',
             type: 'checkbox',
             label: p.email,
-            value: p.email
+            value: p
           }
         )
       }
@@ -331,10 +337,14 @@ export class MyProjetoPage {
     this.pj.update(item.id_participante, data);
   }
 
-  updateDonoProjeto(email) {
+  updateDonoProjeto(item) {
+    console.log(item);
     for (let i = 0; i < this.list.length; i++) {
-      this.pj.update(this.list[i].id_participante, { dono: email[0], adm: true });
+      this.pj.update(this.list[i].id_participante, { dono: item[0].email });
     }
+    item.forEach(p => {
+      this.pj.update(p.id_participante, { adm: true });
+    });
   }
 
 }

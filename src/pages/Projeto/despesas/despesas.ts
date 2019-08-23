@@ -123,7 +123,9 @@ export class DespesasPage {
       }, 150);
     }
   }
+  showDelete() {
 
+  }
 
 
 }
