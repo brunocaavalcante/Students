@@ -25,7 +25,8 @@
                 <ion-label floating>Descricao da Tarefa</ion-label>
                 <ion-input type="text" [(ngModel)]="descricao"></ion-input>
             </ion-item>
-            <button ion-button block class="add" (click)="addTarefa(descricao,nome,0)" [disabled]="!nome || nome.length < 3">Adicionar Tarefa</button>
+            <button ion-button block class="add" (click)="addTarefa(descricao,nome,0)"
+                [disabled]="!nome || nome.length < 3">Adicionar Tarefa</button>
             <!--Na linha acima estamos dizendo que o botão ficará desabilitado caso não exista a variavel
             tarefa ou se essa variavel tiver menos de 3 char assim o usuario não criara tarefas vazias -->
 
@@ -35,7 +36,6 @@
             <ion-list *ngFor="let item of list | async">
                 <ion-card>
                     <ion-card-header style="white-space: normal;">
-
                         <h5 class="divisor_tracejado"><b>Criador:</b> {{ item.id_criador }}</h5>
                         <p class="divisor_tracejado"><b>Data:</b> {{ item.data }}</p>
                         <p class="divisor_tracejado"><b>TÍTULO:</b> {{ item.tarefa }}</p>
@@ -59,8 +59,10 @@
                             </div>
 
                         </ion-item>
-                        <button ion-button class="button-p" outline clear small color="danger" (click)="presentShowConfirm(item)">EXCLUIR</button>
-                        <button ion-button class="button-p" outline clear small (click)="goToSubTarefas(item)">TAREFAS</button>
+                        <button ion-button class="button-p" outline clear small color="danger"
+                            (click)="presentShowConfirm(item)">EXCLUIR</button>
+                        <button ion-button class="button-p" outline clear small
+                            (click)="goToSubTarefas(item)">TAREFAS</button>
                         <button ion-button class="button-p" outline clear small>FINALIZAR</button>
                     </ion-card-content>
                 </ion-card>

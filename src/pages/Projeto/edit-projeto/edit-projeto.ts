@@ -49,6 +49,15 @@ export class EditProjetoPage {
    })
   }
 
+  deleteParticipante(item) {
+    let ok;
+    ok = this.pj.presentShowConfirm(item,'Deseja remover o participante?','','participante');
+    if(ok == true){
+      this.participantes.pop();
+    }
+    
+  }
+
   updateCheck(item) {
 
     this.check = item.adm;

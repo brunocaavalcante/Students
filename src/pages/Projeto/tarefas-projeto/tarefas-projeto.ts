@@ -23,6 +23,7 @@ export class TarefasProjetoPage {
   descricao;
   participante;
   id_dono;
+  mostrar: boolean;
   list: Observable<any>;
   subTarefas = [];
   projeto;
@@ -37,17 +38,17 @@ export class TarefasProjetoPage {
     public menuCtrl: MenuController,
     public tarefa: TarefaProvider,
     public afAuth: AngularFireAuth) {
-
     this.projeto = this.navParams.get('p');
     this.participante = this.navParams.get('participante');
     const user = this.afAuth.auth.currentUser;//pega usuario logado
     this.uid = user.uid;
     this.list = this.tarefa.get(this.projeto, this.participante);
     console.log(this.projeto);
+    
   }
 
   ionViewDidLoad() {
-    this.segment.value = 'cartoes'
+    this.segment.value = 'cartoes';
   }
 
   addTarefa(descricao, nome, status) {

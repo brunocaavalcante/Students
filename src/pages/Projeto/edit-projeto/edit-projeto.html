@@ -35,7 +35,8 @@
 
             <ion-item>
                 <ion-label>Faculdade</ion-label>
-                <ion-select multiple="false" cancelText="Cancelar" value="okText='Ok!'" formControlName="faculdade" interface="action-sheet">
+                <ion-select multiple="false" cancelText="Cancelar" value="okText='Ok!'" formControlName="faculdade"
+                    interface="action-sheet">
                     <ion-option value="Uninove" selected="true">{{ p.faculdade }}</ion-option>
                     <ion-option value="Unip" selected="false">Unip</ion-option>
                 </ion-select>
@@ -61,7 +62,7 @@
                 </ion-avatar>
                 <h2>{{ item.nome }} {{ item.sobrenome}}
                 </h2>
-                <ion-icon name="close"></ion-icon>
+                <ion-icon name="close" (click)="deleteParticipante(item)" color="danger" item-end></ion-icon>
                 <p>{{ item.email }}</p>
             </ion-item>
 
