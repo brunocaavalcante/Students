@@ -55,22 +55,22 @@
             <form novalidate [formGroup]="newDespesaForm" (ngSubmit)="insertDespesa(); myNgForm.resetForm()" #myNgForm="ngForm">
                 <ion-list>
                     <ion-item>
-                        <ion-label floating colo="primary">Título</ion-label>
+                        <ion-label floating color="primary">Título</ion-label>
                         <ion-input formControlName="titulo" type="text" value=""></ion-input>
                     </ion-item>
 
                     <ion-item>
-                        <ion-label floating colo="primary">Descrição da Despesa:</ion-label>
+                        <ion-label floating color="primary">Descrição da Despesa:</ion-label>
                         <ion-textarea formControlName="descricao"></ion-textarea>
                     </ion-item>
 
                     <ion-item>
-                        <ion-label floating colo="primary">Valor</ion-label>
+                        <ion-label floating color="primary">Valor</ion-label>
                         <ion-input formControlName="valor" type="number"></ion-input>
                     </ion-item>
 
                     <ion-item>
-                        <ion-label floating colo="primary">Vencimento</ion-label>
+                        <ion-label floating color="primary">Vencimento</ion-label>
                         <ion-input formControlName="venc" type="date"></ion-input>
                     </ion-item>
                 </ion-list>
