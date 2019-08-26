@@ -33,18 +33,24 @@ export class ProjetoProvider {
   insertDespesas(despesa) {
     despesa.id = this.afs.createId();
     this.afs.collection("despesas").doc(despesa.id_projeto).collection('despesa').doc(despesa.id).set(despesa);
+    this.presentAlert("Despesa Cadastrada", "");
   }
 
   update(id, projeto) {
     this.projetoCollection.doc(id).update(projeto);
   }
 
+  updateDespesa(item) {
+    this.afs.collection("despesas").doc(item.id_projeto).collection("despesa").doc(item.id).update(item);
+    this.presentAlert("Despesa Alterada!", "");
+  }
+
   delete(projeto) {
     this.projetoCollection.doc(projeto.id_participante).delete();
     this.tarefa.deleteAll(projeto.id);
   }
-  
-  get(condicion){
+
+  get(condicion) {
     this.items = this.afs.collection('projetos', ref => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
       if (condicion.email) query = query.where('email', '==', condicion.email || "");
@@ -66,6 +72,12 @@ export class ProjetoProvider {
 
   deleteParticipante(id) {
     this.projetoCollection.doc(id).delete();
+    this.presentAlert("Participante excluido com sucesso!", "");
+  }
+
+  deleteDespesa(item) {
+    this.afs.collection('despesas').doc(item.id_projeto).collection('despesa').doc(item.id).delete();
+    this.presentAlert("Despesa Excluida", "A despesa foi excluida com sucesso!");
   }
 
   //Função para apresenta alertas
@@ -74,6 +86,33 @@ export class ProjetoProvider {
       title: title,
       subTitle: subtitle,
       buttons: ['OK']
+    });
+    alert.present();
+  }
+
+  presentShowConfirm(item, title, msg, op) {
+    const alert = this.alertCtrl.create({
+      title: title,
+      message: msg,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Excluir',
+          role: 'excluir',
+          handler: () => {
+            switch (op) {
+              case "despesas": { this.deleteDespesa(item); break; }
+              case "participante": { this.deleteParticipante(item.id); break; }
+            }
+            return true;
+          }
+        }
+      ]
     });
     alert.present();
   }

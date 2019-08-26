@@ -13,9 +13,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class DespesasPage {
   @ViewChild('barCanvas') barCanvas;
+  @ViewChild('pieCanvas') pieCanvas;
   @ViewChild(Segment) segment: Segment;
 
   barChart: any;
+  pieChart: any;
   newDespesaForm: FormGroup;
   projeto;
   list = [];
@@ -40,13 +42,21 @@ export class DespesasPage {
     })
   }
 
+  deleteDespesa(item) {
+    this.pj.presentShowConfirm(item, "Deseja deletar a despesa?", "", "despesas");
+  }
+
+  finalizaDesp(item) {
+    item.pago = true;
+    this.pj.updateDespesa(item);
+  }
+
   insertDespesa() {
     var item = this.newDespesaForm.value;
     item.id_projeto = this.projeto.id;
     item.id_criador = this.afAuth.auth.currentUser.email;
     item.pago = false;
     this.pj.insertDespesas(this.newDespesaForm.value);
-    this.presentAlert("Despesa Cadastrada", "");
   }
 
   getDespesas() {
@@ -88,17 +98,19 @@ export class DespesasPage {
         }]
       }
     }
-
     return this.getChart(this.barCanvas.nativeElement, 'bar', data, options);
   }
 
-  public presentAlert(title: string, subtitle: string) {
-    let alert = this.alertCtrl.create({
-      title: title,
-      subTitle: subtitle,
-      buttons: ['OK']
-    });
-    alert.present();
+  getPieChart(){
+    const data = {
+      labels: ['Orçamento', 'Gastos'],
+      datasets: [{
+        data: [300-75, 75],
+        backgroundColor: ['rgb(36, 0, 255)','rgb(200, 6, 0)']
+      }]
+    }
+
+    return this.getChart(this.pieCanvas.nativeElement, 'pie', data);
   }
 
   ionViewDidLoad() {
@@ -110,22 +122,16 @@ export class DespesasPage {
     this.segment._inputUpdated();
     setTimeout(() => {
       this.barChart = this.getBarChart();
-      // this.lineChart = this.getLineChart();
     }, 150)
-
   }
 
   segmentChanged(ev: any) {
     if (ev._value == 'geral') {
       setTimeout(() => {
         this.barChart = this.getBarChart();
-        // this.doughnutChart1 = this.getDoughnutChart1();
+        this.pieChart = this.getPieChart();
       }, 150);
     }
   }
-  showDelete() {
-
-  }
-
 
 }

@@ -47,4 +47,7 @@ page-despesas {
   .list-md .item-block .item-inner {
     border-bottom: 1.3px solid rgba(37, 149, 153, 0.8804);
   }
+  ion-item-options .button:last-child {
+    padding-right: 0em;
+  }
 }
