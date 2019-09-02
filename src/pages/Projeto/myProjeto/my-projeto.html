@@ -93,29 +93,29 @@
             </fieldset><br>
 
             <div>
-                <ion-item (click)="goToDespesas()" class="icon-btn">
+                <ion-item (click)="goToDespesas()" color="primary">
                     Orçamento do Projeto
                     <ion-icon name="card" item-end></ion-icon>
                 </ion-item>
 
-                <ion-item (click)="goToArquivos()" outline class="icon-btn">
+                <ion-item (click)="goToArquivos()" outline color="primary">
                     Arquivos
                     <ion-icon name="attach" item-end></ion-icon>
                 </ion-item>
 
                 <div *ngIf="projeto.adm">
 
-                    <ion-item (click)="presentPrompt(item,'insert')" class="icon-btn">
+                    <ion-item (click)="presentPrompt(item,'insert')" color="primary">
                         Adicionar Participantes
                         <ion-icon name="person-add" item-end></ion-icon>
                     </ion-item>
 
-                    <ion-item (click)="goToEditProjeto()" class="icon-btn2">
+                    <ion-item (click)="goToEditProjeto()" color="primary">
                         Editar Informações do Projeto
                         <ion-icon name="settings" item-end></ion-icon>
                     </ion-item>
 
-                    <ion-item (click)=" presentShow('finalizar')" outline class="icon-btn">
+                    <ion-item (click)=" presentShow('finalizar')" outline color="primary">
                         Finalizar Projeto
                         <ion-icon name="information-circle" item-end></ion-icon>
                     </ion-item>
