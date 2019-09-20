@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'show-projetcs',
@@ -6,11 +6,10 @@ import { Component } from '@angular/core';
 })
 export class ShowProjetcsComponent {
 
-  text: string;
+  @Input() pj;
 
   constructor() {
-    console.log('Hello ShowProjetcsComponent Component');
-    this.text = 'Hello World';
+
   }
 
 }

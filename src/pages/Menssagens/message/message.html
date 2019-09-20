@@ -11,15 +11,16 @@
 
 <ion-content padding>
 
-    <message-box *ngFor="let item of items" [message]="item" [isTrue]="(item.id_user === user.id)"></message-box>
+    <ion-item>
+        <message-box *ngFor="let item of items" [message]="item" [isTrue]="(item.id_user === user.id)"></message-box>
+    </ion-item>
 
 </ion-content>
 
 <ion-footer>
     <ion-toolbar>
         <ion-item no-lines>
-            <ion-input type="text" (keyup.enter)="sendMessage(newMessage); newMessage=''" placeholder="Messagem..."
-                [(ngModel)]="newMessage"></ion-input>
+            <ion-input type="text" (keyup.enter)="sendMessage(newMessage); newMessage=''" placeholder="Messagem..." [(ngModel)]="newMessage"></ion-input>
             <button ion-button item-right (click)="sendMessage(newMessage); newMessage=''">
                 <ion-icon name="send"></ion-icon>
             </button>

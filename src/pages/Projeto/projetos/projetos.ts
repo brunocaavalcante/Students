@@ -67,7 +67,6 @@ export class ProjetosPage {
   }
 
   ionViewDidLoad() {
-
   }
 
   createProjeto() {
@@ -111,7 +110,7 @@ export class ProjetosPage {
       dono: item.dono,
       id_participante: item.id_participante,
       url: item.url,
-      situacao:item.situacao || ''
+      situacao: item.situacao || ''
     }
 
     this.navCtrl.push(MyProjetoPage, { projeto });

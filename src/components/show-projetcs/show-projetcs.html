@@ -1,3 +1,20 @@
-<div>
-    {{text}}
-</div>
+<ion-card>
+    <img [src]="pj.url || '../../assets/imgs/projeto_1.jpg'">
+    <ion-card-content style="white-space: normal;">
+        <ion-card-title>
+            {{ pj.nome }}
+        </ion-card-title>
+        <p> Descrição: {{ pj.descricao }} </p>
+        <p>Status: {{ pj.situacao }}</p>
+        <div class="progressBar">
+            <div class="progress html" [ngClass]="{
+          'baixo' : pj.status < 30,
+          'medio' : pj.status > 30 && item.status < 60,
+          'alto' :  pj.status > 60
+       }" [style.width.%]="pj.status"></div>
+        </div>
+
+    </ion-card-content>
+    <button ion-button clear color="danger" (click)="presentShowConfirm(pj)" *ngIf="pj.adm" class="btn_p">Excluir</button>
+    <button ion-button clear (click)="goTopjs(pj)" class="btn_p">Detalhes</button>
+</ion-card>
