@@ -15,6 +15,6 @@
         </div>
 
     </ion-card-content>
-    <button ion-button clear color="danger" (click)="presentShowConfirm(pj)" *ngIf="pj.adm" class="btn_p">Excluir</button>
-    <button ion-button clear (click)="goTopjs(pj)" class="btn_p">Detalhes</button>
+    <button ion-button clear color="danger" (click)="deleteProjeto(pj)" *ngIf="(pj.email == pj.dono)" class="btn_p">Excluir</button>
+    <button ion-button clear (click)="goToProjeto(pj)" class="btn_p">Detalhes</button>
 </ion-card>

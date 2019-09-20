@@ -48,13 +48,17 @@ export class ProjetoProvider {
   delete(projeto) {
     this.projetoCollection.doc(projeto.id_participante).delete();
     this.tarefa.deleteAll(projeto.id);
+    this.presentAlert("Projeto Excluido", "Projeto excluido com sucesso!");
   }
 
-  get(condicion) {
+  get(condicion?) {
     this.items = this.afs.collection('projetos', ref => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
-      if (condicion.email) query = query.where('email', '==', condicion.email || "");
-      if (condicion.situacao) query = query.where('situacao', '==', condicion.situacao || "");
+      if (condicion) {
+        if (condicion.email) query = query.where('email', '==', condicion.email || "");
+        if (condicion.situacao) query = query.where('situacao', '==', condicion.situacao || "");
+        if (condicion.adm) query = query.where('adm', '==', condicion.adm || "");
+      }
       return query;
     }).valueChanges();
     return this.items;
@@ -108,6 +112,7 @@ export class ProjetoProvider {
             switch (op) {
               case "despesas": { this.deleteDespesa(item); break; }
               case "participante": { this.deleteParticipante(item.id); break; }
+              case "projeto": { this.delete(item); break }
             }
             return true;
           }

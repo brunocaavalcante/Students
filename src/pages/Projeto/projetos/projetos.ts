@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Loading, LoadingController } from 'ionic-angular';
-import { MyProjetoPage } from '../myProjeto/my-projeto';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
@@ -96,43 +95,8 @@ export class ProjetosPage {
     this.operacao = false;
   }
 
-  goToProjetos(item) {
-    console.log(item);
-    var projeto = {
-      nome: item.nome,
-      descricao: item.descricao,
-      data_ini: item.data_ini,
-      data_fim: item.data_fim,
-      faculdade: item.faculdade,
-      id: item.id,
-      adm: item.adm,
-      campus: item.campus,
-      dono: item.dono,
-      id_participante: item.id_participante,
-      url: item.url,
-      situacao: item.situacao || ''
-    }
-
-    this.navCtrl.push(MyProjetoPage, { projeto });
-  }
-
   addProjeto() {
     this.operacao = true;
-  }
-
-  deleteProjeto(item) {
-    this.chats.getMessagesGrupo(item.id).subscribe(itens => {
-      itens.forEach(msg => {
-        this.chats.deleteMessages(item.id, msg.id);
-      });
-    });
-    this.projeto.find(item).subscribe(itens => {
-      var p = Object.keys(itens).map(i => itens[i]);
-      p.forEach(data => {
-        this.projeto.delete(data);
-      });
-    });
-    this.presentAlert("Projeto Excluido", "Projeto excluido com sucesso!");
   }
 
   removeParticipante() {
@@ -148,61 +112,6 @@ export class ProjetosPage {
     return loading;
   }
 
-  presentPrompt() {
-    let alert = this.alertCtrl.create({
-      title: 'Participante',
-      inputs: [
-        {
-          name: 'email',
-          placeholder: 'Digite o Email do Participante',
-          type: 'email'
-        },
-
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: data => {
-
-          }
-        },
-        {
-          text: 'OK',
-          handler: data => {
-            this.participante.push(data);
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
-
-  presentShowConfirm(pj) {
-
-    const alert = this.alertCtrl.create({
-      title: "Atenção deseja excluir o projeto?",
-      message: "A exclusão será permanente",
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          handler: () => {
-            alert.dismiss(false);
-            return false;;
-          }
-        },
-        {
-          text: 'Excluir',
-          role: 'excluir',
-          handler: () => {
-            this.deleteProjeto(pj);
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
   //Função para apresenta alertas
   public presentAlert(title: string, subtitle: string) {
     let alert = this.alertCtrl.create({

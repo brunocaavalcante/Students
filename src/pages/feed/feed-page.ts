@@ -1,16 +1,27 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { CameraOptions, Camera } from '@ionic-native/camera';
+import { ProjetoProvider } from '../../providers/projeto/projeto-provider';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'page-feed',
   templateUrl: 'feed-page.html'
 })
 export class FeedPage {
-foto:any;
-  constructor(public navCtrl: NavController,
-    public camera: Camera) {
+  foto: any;
+  items: Observable<any>;
+
+  constructor(
+    public navCtrl: NavController,
+    public camera: Camera,
+    public projetos: ProjetoProvider) {
   }
+
+  ionViewDidLoad() {
+    this.items = this.projetos.get({ adm: true });
+  }
+
   OpenCamera() {
     const options: CameraOptions = {
       quality: 70,
